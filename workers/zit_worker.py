@@ -1123,18 +1123,7 @@ extra_pnginfo = build_extra_pnginfo()
 
 
 # Workflow execution
-def generate(prompt_text: str, seed: int, width: int, height: int, steps: int, loras: list[tuple[str, float]], unload_models: bool | None = None):
-    """Generate image using ZIT workflow.
-    
-    Args:
-        prompt_text: The text prompt for image generation
-        seed: Random seed for generation
-        width: Output image width
-        height: Output image height
-        steps: Number of sampling steps
-        loras: List of (name, weight) tuples for LoRA models
-        unload_models: Whether to unload models after generation
-    """
+def main(unload_models: bool | None = None):
     bootstrap_comfyui_runtime()
     add_extra_model_paths()
     import_custom_nodes()
@@ -1160,7 +1149,7 @@ def generate(prompt_text: str, seed: int, width: int, height: int, steps: int, l
             vaeloader_57_29 = vaeloader.load_vae(vae_name="ae.safetensors")
             emptysd3latentimage = NODE_CLASS_MAPPINGS["EmptySD3LatentImage"]()
             emptysd3latentimage_57_13 = emptysd3latentimage.EXECUTE_NORMALIZED(
-                width=width, height=height, batch_size=1
+                width=1024, height=1024, batch_size=1
             )
             unetloader = UNETLoader()
             unetloader_57_28 = unetloader.load_unet(
@@ -1171,15 +1160,9 @@ def generate(prompt_text: str, seed: int, width: int, height: int, steps: int, l
             cliploader_57_30 = cliploader.load_clip(
                 clip_name="qwen_3_4b.safetensors", type="lumina2", device="default"
             )
-            
-            # Build prompt text with LoRA tags
-            full_prompt = prompt_text
-            for lora_name, lora_weight in loras:
-                full_prompt += f"\n<lora:{lora_name}:{lora_weight}>"
-            
             loratagloader = NODE_CLASS_MAPPINGS["LoraTagLoader"]()
             loratagloader_57_66 = loratagloader.load_lora(
-                text=full_prompt,
+                text="Hatsune Miku with red outfit.\n<lora:76N0PGDVMCA64NA75C2NW7V600:1>",
                 model=get_value_at_index(unetloader_57_28, 0),
                 clip=get_value_at_index(cliploader_57_30, 0),
             )
@@ -1200,10 +1183,12 @@ def generate(prompt_text: str, seed: int, width: int, height: int, steps: int, l
                 conditioningzeroout_57_33 = conditioningzeroout.zero_out(
                     conditioning=get_value_at_index(cliptextencode_57_27, 0)
                 )
-                node_57_3_seed = prompt["57:3"]["inputs"]["seed"] = seed
+                node_57_3_seed = prompt["57:3"]["inputs"]["seed"] = random.randint(
+                    1, 2**64
+                )
                 ksampler_57_3 = ksampler.sample(
                     seed=node_57_3_seed,
-                    steps=steps,
+                    steps=8,
                     cfg=1,
                     sampler_name="res_multistep",
                     scheduler="simple",
@@ -1223,7 +1208,10 @@ def generate(prompt_text: str, seed: int, width: int, height: int, steps: int, l
                     prompt=prompt,
                     extra_pnginfo=extra_pnginfo,
                 )
-                # Return the generated image
-                return get_value_at_index(vaedecode_57_8, 0)
     finally:
         cleanup_comfyui_runtime(unload_models=unload_models)
+
+
+# Entrypoint
+if __name__ == "__main__":
+    main()
