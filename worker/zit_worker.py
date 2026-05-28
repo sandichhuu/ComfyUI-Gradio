@@ -1118,12 +1118,25 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
 
 
 workflow = build_workflow()
-prompt = json.loads(json.dumps(workflow))
-extra_pnginfo = build_extra_pnginfo()
 
 
 # Workflow execution
-def main(unload_models: bool | None = None):
+def generate(prompt_text="", seed=None, width=1024, height=1024, steps=8, loras=None, unload_models=None):
+    if seed is None:
+        seed = random.randint(1, 2**64)
+    if loras is None:
+        loras = []
+    
+    # Build LoRA text
+    lora_text_parts = [prompt_text] if prompt_text else []
+    for name, weight in loras:
+        if name:
+            lora_text_parts.append(f"<lora:{name}:{weight}>")
+    lora_text = "\n".join(lora_text_parts)
+    
+    prompt = json.loads(json.dumps(build_workflow()))
+    extra_pnginfo = build_extra_pnginfo()
+    
     bootstrap_comfyui_runtime()
     add_extra_model_paths()
     import_custom_nodes()
@@ -1149,7 +1162,7 @@ def main(unload_models: bool | None = None):
             vaeloader_57_29 = vaeloader.load_vae(vae_name="ae.safetensors")
             emptysd3latentimage = NODE_CLASS_MAPPINGS["EmptySD3LatentImage"]()
             emptysd3latentimage_57_13 = emptysd3latentimage.EXECUTE_NORMALIZED(
-                width=1024, height=1024, batch_size=1
+                width=int(width), height=int(height), batch_size=1
             )
             unetloader = UNETLoader()
             unetloader_57_28 = unetloader.load_unet(
@@ -1162,7 +1175,7 @@ def main(unload_models: bool | None = None):
             )
             loratagloader = NODE_CLASS_MAPPINGS["LoraTagLoader"]()
             loratagloader_57_66 = loratagloader.load_lora(
-                text="Hatsune Miku with red outfit.\n<lora:76N0PGDVMCA64NA75C2NW7V600:1>",
+                text=lora_text,
                 model=get_value_at_index(unetloader_57_28, 0),
                 clip=get_value_at_index(cliploader_57_30, 0),
             )
@@ -1183,12 +1196,10 @@ def main(unload_models: bool | None = None):
                 conditioningzeroout_57_33 = conditioningzeroout.zero_out(
                     conditioning=get_value_at_index(cliptextencode_57_27, 0)
                 )
-                node_57_3_seed = prompt["57:3"]["inputs"]["seed"] = random.randint(
-                    1, 2**64
-                )
+                node_57_3_seed = prompt["57:3"]["inputs"]["seed"] = int(seed)
                 ksampler_57_3 = ksampler.sample(
                     seed=node_57_3_seed,
-                    steps=8,
+                    steps=int(steps),
                     cfg=1,
                     sampler_name="res_multistep",
                     scheduler="simple",
@@ -1208,10 +1219,7 @@ def main(unload_models: bool | None = None):
                     prompt=prompt,
                     extra_pnginfo=extra_pnginfo,
                 )
+                # Return the generated image
+                return get_value_at_index(vaedecode_57_8, 0)
     finally:
         cleanup_comfyui_runtime(unload_models=unload_models)
-
-
-# Entrypoint
-if __name__ == "__main__":
-    main()

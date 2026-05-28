@@ -1301,12 +1301,25 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
 
 
 workflow = build_workflow()
-prompt = json.loads(json.dumps(workflow))
-extra_pnginfo = build_extra_pnginfo()
 
 
 # Workflow execution
-def main(unload_models: bool | None = None):
+def generate(prompt_text="", seed=None, width=1024, height=1024, steps=4, loras=None, toggle_ref=False, input_img1=None, input_img2=None, unload_models=None):
+    if seed is None:
+        seed = random.randint(1, 2**64)
+    if loras is None:
+        loras = []
+    
+    # Build LoRA text
+    lora_text_parts = [prompt_text] if prompt_text else []
+    for name, weight in loras:
+        if name:
+            lora_text_parts.append(f"<lora:{name}:{weight}>")
+    lora_text = "\n".join(lora_text_parts)
+    
+    prompt = json.loads(json.dumps(build_workflow()))
+    extra_pnginfo = build_extra_pnginfo()
+    
     bootstrap_comfyui_runtime()
     add_extra_model_paths()
     import_custom_nodes()
@@ -1327,18 +1340,46 @@ def main(unload_models: bool | None = None):
     )
 
     import torch
+    import numpy as np
+    import PIL.Image
+    import io
+
+    def numpy_to_pil(img_np):
+        if img_np is None:
+            return None
+        if isinstance(img_np, np.ndarray):
+            if img_np.dtype == np.float32 or img_np.dtype == np.float64:
+                img_np = (img_np * 255).astype(np.uint8)
+            return PIL.Image.fromarray(img_np)
+        return img_np
 
     try:
         with torch.inference_mode():
             loadimage = LoadImage()
-            loadimage_159 = loadimage.load_image(image="full.png")
-            loadimage_163 = loadimage.load_image(image="upper__gfpgan_restore.png")
+            
+            # Handle input images
+            if toggle_ref and input_img1 is not None:
+                img1_pil = numpy_to_pil(input_img1)
+                img1_bytes = io.BytesIO()
+                img1_pil.save(img1_bytes, format='PNG')
+                img1_bytes.seek(0)
+                loadimage_159 = loadimage.load_image(image=img1_bytes)
+            else:
+                loadimage_159 = loadimage.load_image(image="full.png")
+            
+            if toggle_ref and input_img2 is not None:
+                img2_pil = numpy_to_pil(input_img2)
+                img2_bytes = io.BytesIO()
+                img2_pil.save(img2_bytes, format='PNG')
+                img2_bytes.seek(0)
+                loadimage_163 = loadimage.load_image(image=img2_bytes)
+            else:
+                loadimage_163 = loadimage.load_image(image="upper__gfpgan_restore.png")
+            
             ksamplerselect = NODE_CLASS_MAPPINGS["KSamplerSelect"]()
             ksamplerselect_179 = ksamplerselect.EXECUTE_NORMALIZED(sampler_name="euler")
             randomnoise = NODE_CLASS_MAPPINGS["RandomNoise"]()
-            node_181_noise_seed = prompt["181"]["inputs"]["noise_seed"] = (
-                random.randint(1, 2**64)
-            )
+            node_181_noise_seed = prompt["181"]["inputs"]["noise_seed"] = int(seed)
             randomnoise_181 = randomnoise.EXECUTE_NORMALIZED(
                 noise_seed=node_181_noise_seed
             )
@@ -1389,7 +1430,7 @@ def main(unload_models: bool | None = None):
             )
             loratagloader = NODE_CLASS_MAPPINGS["LoraTagLoader"]()
             loratagloader_219 = loratagloader.load_lora(
-                text="remove bicycle.\n<lora:76N0PGDVMCA64NA75C2NW7V600:1>",
+                text=lora_text,
                 model=get_value_at_index(loraloader_190, 0),
                 clip=get_value_at_index(loraloader_190, 1),
             )
@@ -1399,7 +1440,7 @@ def main(unload_models: bool | None = None):
                 clip=get_value_at_index(loratagloader_219, 1),
             )
             primitiveboolean = NODE_CLASS_MAPPINGS["PrimitiveBoolean"]()
-            primitiveboolean_220 = primitiveboolean.EXECUTE_NORMALIZED(value=False)
+            primitiveboolean_220 = primitiveboolean.EXECUTE_NORMALIZED(value=toggle_ref)
             pathchsageattentionkj = NODE_CLASS_MAPPINGS["PathchSageAttentionKJ"]()
             referencelatent = NODE_CLASS_MAPPINGS["ReferenceLatent"]()
             comfyswitchnode = NODE_CLASS_MAPPINGS["ComfySwitchNode"]()
@@ -1448,7 +1489,7 @@ def main(unload_models: bool | None = None):
                     unique_id=3009007390752143449,
                 )
                 flux2scheduler_184 = flux2scheduler.EXECUTE_NORMALIZED(
-                    steps=4,
+                    steps=int(steps),
                     width=get_value_at_index(getimagesize_185, 0),
                     height=get_value_at_index(getimagesize_185, 1),
                 )
@@ -1474,10 +1515,7 @@ def main(unload_models: bool | None = None):
                     prompt=prompt,
                     extra_pnginfo=extra_pnginfo,
                 )
+                # Return the generated image
+                return get_value_at_index(vaedecode_180, 0)
     finally:
         cleanup_comfyui_runtime(unload_models=unload_models)
-
-
-# Entrypoint
-if __name__ == "__main__":
-    main()
