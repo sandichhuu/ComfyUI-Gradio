@@ -1118,25 +1118,23 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
 
 
 workflow = build_workflow()
+prompt = json.loads(json.dumps(workflow))
+extra_pnginfo = build_extra_pnginfo()
 
 
 # Workflow execution
-def generate(prompt_text="", seed=None, width=1024, height=1024, steps=8, loras=None, unload_models=None):
-    if seed is None:
-        seed = random.randint(1, 2**64)
-    if loras is None:
-        loras = []
+def generate(prompt_text: str, seed: int, width: int, height: int, steps: int, loras: list[tuple[str, float]], unload_models: bool | None = None):
+    """Generate image using ZIT workflow.
     
-    # Build LoRA text
-    lora_text_parts = [prompt_text] if prompt_text else []
-    for name, weight in loras:
-        if name:
-            lora_text_parts.append(f"<lora:{name}:{weight}>")
-    lora_text = "\n".join(lora_text_parts)
-    
-    prompt = json.loads(json.dumps(build_workflow()))
-    extra_pnginfo = build_extra_pnginfo()
-    
+    Args:
+        prompt_text: The text prompt for image generation
+        seed: Random seed for generation
+        width: Output image width
+        height: Output image height
+        steps: Number of sampling steps
+        loras: List of (name, weight) tuples for LoRA models
+        unload_models: Whether to unload models after generation
+    """
     bootstrap_comfyui_runtime()
     add_extra_model_paths()
     import_custom_nodes()
@@ -1162,7 +1160,7 @@ def generate(prompt_text="", seed=None, width=1024, height=1024, steps=8, loras=
             vaeloader_57_29 = vaeloader.load_vae(vae_name="ae.safetensors")
             emptysd3latentimage = NODE_CLASS_MAPPINGS["EmptySD3LatentImage"]()
             emptysd3latentimage_57_13 = emptysd3latentimage.EXECUTE_NORMALIZED(
-                width=int(width), height=int(height), batch_size=1
+                width=width, height=height, batch_size=1
             )
             unetloader = UNETLoader()
             unetloader_57_28 = unetloader.load_unet(
@@ -1173,9 +1171,15 @@ def generate(prompt_text="", seed=None, width=1024, height=1024, steps=8, loras=
             cliploader_57_30 = cliploader.load_clip(
                 clip_name="qwen_3_4b.safetensors", type="lumina2", device="default"
             )
+            
+            # Build prompt text with LoRA tags
+            full_prompt = prompt_text
+            for lora_name, lora_weight in loras:
+                full_prompt += f"\n<lora:{lora_name}:{lora_weight}>"
+            
             loratagloader = NODE_CLASS_MAPPINGS["LoraTagLoader"]()
             loratagloader_57_66 = loratagloader.load_lora(
-                text=lora_text,
+                text=full_prompt,
                 model=get_value_at_index(unetloader_57_28, 0),
                 clip=get_value_at_index(cliploader_57_30, 0),
             )
@@ -1196,10 +1200,10 @@ def generate(prompt_text="", seed=None, width=1024, height=1024, steps=8, loras=
                 conditioningzeroout_57_33 = conditioningzeroout.zero_out(
                     conditioning=get_value_at_index(cliptextencode_57_27, 0)
                 )
-                node_57_3_seed = prompt["57:3"]["inputs"]["seed"] = int(seed)
+                node_57_3_seed = prompt["57:3"]["inputs"]["seed"] = seed
                 ksampler_57_3 = ksampler.sample(
                     seed=node_57_3_seed,
-                    steps=int(steps),
+                    steps=steps,
                     cfg=1,
                     sampler_name="res_multistep",
                     scheduler="simple",

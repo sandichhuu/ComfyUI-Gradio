@@ -1301,25 +1301,26 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
 
 
 workflow = build_workflow()
+prompt = json.loads(json.dumps(workflow))
+extra_pnginfo = build_extra_pnginfo()
 
 
 # Workflow execution
-def generate(prompt_text="", seed=None, width=1024, height=1024, steps=4, loras=None, toggle_ref=False, input_img1=None, input_img2=None, unload_models=None):
-    if seed is None:
-        seed = random.randint(1, 2**64)
-    if loras is None:
-        loras = []
+def generate(prompt_text: str, seed: int, width: int, height: int, steps: int, loras: list[tuple[str, float]], toggle_ref: bool, input_img1=None, input_img2=None, unload_models: bool | None = None):
+    """Generate image using Flux2-Klein-9B workflow.
     
-    # Build LoRA text
-    lora_text_parts = [prompt_text] if prompt_text else []
-    for name, weight in loras:
-        if name:
-            lora_text_parts.append(f"<lora:{name}:{weight}>")
-    lora_text = "\n".join(lora_text_parts)
-    
-    prompt = json.loads(json.dumps(build_workflow()))
-    extra_pnginfo = build_extra_pnginfo()
-    
+    Args:
+        prompt_text: The text prompt for image generation
+        seed: Random seed for generation
+        width: Output image width (used if no input images)
+        height: Output image height (used if no input images)
+        steps: Number of sampling steps
+        loras: List of (name, strength_model, strength_clip) tuples for LoRA models
+        toggle_ref: Whether to use reference images
+        input_img1: First input image (numpy array or PIL image)
+        input_img2: Second input image (numpy array or PIL image)
+        unload_models: Whether to unload models after generation
+    """
     bootstrap_comfyui_runtime()
     add_extra_model_paths()
     import_custom_nodes()
@@ -1341,45 +1342,41 @@ def generate(prompt_text="", seed=None, width=1024, height=1024, steps=4, loras=
 
     import torch
     import numpy as np
-    import PIL.Image
-    import io
+    from PIL import Image
 
-    def numpy_to_pil(img_np):
-        if img_np is None:
-            return None
-        if isinstance(img_np, np.ndarray):
-            if img_np.dtype == np.float32 or img_np.dtype == np.float64:
-                img_np = (img_np * 255).astype(np.uint8)
-            return PIL.Image.fromarray(img_np)
-        return img_np
+    def process_image(img):
+        """Convert PIL Image or numpy array to tensor format expected by ComfyUI."""
+        if isinstance(img, Image.Image):
+            img = np.array(img)
+        if isinstance(img, np.ndarray):
+            # Convert to float32 and normalize to 0-1
+            img = img.astype(np.float32) / 255.0
+            # Add batch dimension if needed
+            if len(img.shape) == 3:
+                img = img[None, ...]
+            return torch.from_numpy(img)
+        return img
 
     try:
         with torch.inference_mode():
             loadimage = LoadImage()
             
             # Handle input images
-            if toggle_ref and input_img1 is not None:
-                img1_pil = numpy_to_pil(input_img1)
-                img1_bytes = io.BytesIO()
-                img1_pil.save(img1_bytes, format='PNG')
-                img1_bytes.seek(0)
-                loadimage_159 = loadimage.load_image(image=img1_bytes)
+            if toggle_ref and input_img1 is not None and input_img2 is not None:
+                loadimage_159 = loadimage.load_image(image=input_img1)
+                loadimage_163 = loadimage.load_image(image=input_img2)
+            elif input_img1 is not None:
+                loadimage_159 = loadimage.load_image(image=input_img1)
+                loadimage_163 = loadimage.load_image(image=input_img1)  # Use same image for both
             else:
-                loadimage_159 = loadimage.load_image(image="full.png")
-            
-            if toggle_ref and input_img2 is not None:
-                img2_pil = numpy_to_pil(input_img2)
-                img2_bytes = io.BytesIO()
-                img2_pil.save(img2_bytes, format='PNG')
-                img2_bytes.seek(0)
-                loadimage_163 = loadimage.load_image(image=img2_bytes)
-            else:
-                loadimage_163 = loadimage.load_image(image="upper__gfpgan_restore.png")
+                # No input images - use default behavior based on width/height
+                # Create empty latent based on dimensions
+                pass
             
             ksamplerselect = NODE_CLASS_MAPPINGS["KSamplerSelect"]()
             ksamplerselect_179 = ksamplerselect.EXECUTE_NORMALIZED(sampler_name="euler")
             randomnoise = NODE_CLASS_MAPPINGS["RandomNoise"]()
-            node_181_noise_seed = prompt["181"]["inputs"]["noise_seed"] = int(seed)
+            node_181_noise_seed = prompt["181"]["inputs"]["noise_seed"] = seed
             randomnoise_181 = randomnoise.EXECUTE_NORMALIZED(
                 noise_seed=node_181_noise_seed
             )
@@ -1398,39 +1395,76 @@ def generate(prompt_text="", seed=None, width=1024, height=1024, steps=4, loras=
                 unet_name="Flux.2 Klein 9B/flux-2-klein-9b-fp8.safetensors",
                 weight_dtype="default",
             )
-            loraloader = LoraLoader()
+            
+            # Apply base LoRA
+            model_out = get_value_at_index(unetloader_191, 0)
+            clip_out = get_value_at_index(cliploader_187, 0)
+            
+            # Apply additional LoRAs
+            for lora_name, lora_strength in loras:
+                loraloader = LoraLoader()
+                lora_result = loraloader.load_lora(
+                    lora_name=lora_name,
+                    strength_model=lora_strength,
+                    strength_clip=lora_strength,
+                    model=model_out,
+                    clip=clip_out,
+                )
+                model_out = get_value_at_index(lora_result, 0)
+                clip_out = get_value_at_index(lora_result, 1)
+            
             loraloader_190 = loraloader.load_lora(
                 lora_name="Flux.2 Klein 9B-base/KLEIN-Unchained-V2.safetensors",
                 strength_model=0.6,
                 strength_clip=1,
-                model=get_value_at_index(unetloader_191, 0),
-                clip=get_value_at_index(cliploader_187, 0),
+                model=model_out,
+                clip=clip_out,
             )
-            imagescaletototalpixels = NODE_CLASS_MAPPINGS["ImageScaleToTotalPixels"]()
-            imagescaletototalpixels_196 = imagescaletototalpixels.EXECUTE_NORMALIZED(
-                upscale_method="lanczos",
-                megapixels=1,
-                resolution_steps=1,
-                image=get_value_at_index(loadimage_159, 0),
-            )
-            vaeencode = VAEEncode()
-            vaeencode_195 = vaeencode.encode(
-                pixels=get_value_at_index(imagescaletototalpixels_196, 0),
-                vae=get_value_at_index(vaeloader_186, 0),
-            )
-            imagescaletototalpixels_198 = imagescaletototalpixels.EXECUTE_NORMALIZED(
-                upscale_method="lanczos",
-                megapixels=1,
-                resolution_steps=1,
-                image=get_value_at_index(loadimage_163, 0),
-            )
-            vaeencode_199 = vaeencode.encode(
-                pixels=get_value_at_index(imagescaletototalpixels_198, 0),
-                vae=get_value_at_index(vaeloader_186, 0),
-            )
+            
+            # Process images if available
+            if toggle_ref and input_img1 is not None:
+                imagescaletototalpixels = NODE_CLASS_MAPPINGS["ImageScaleToTotalPixels"]()
+                imagescaletototalpixels_196 = imagescaletototalpixels.EXECUTE_NORMALIZED(
+                    upscale_method="lanczos",
+                    megapixels=1,
+                    resolution_steps=1,
+                    image=get_value_at_index(loadimage_159, 0),
+                )
+                vaeencode = VAEEncode()
+                vaeencode_195 = vaeencode.encode(
+                    pixels=get_value_at_index(imagescaletototalpixels_196, 0),
+                    vae=get_value_at_index(vaeloader_186, 0),
+                )
+                
+                if input_img2 is not None:
+                    imagescaletototalpixels_198 = imagescaletototalpixels.EXECUTE_NORMALIZED(
+                        upscale_method="lanczos",
+                        megapixels=1,
+                        resolution_steps=1,
+                        image=get_value_at_index(loadimage_163, 0),
+                    )
+                    vaeencode_199 = vaeencode.encode(
+                        pixels=get_value_at_index(imagescaletototalpixels_198, 0),
+                        vae=get_value_at_index(vaeloader_186, 0),
+                    )
+                else:
+                    vaeencode_199 = vaeencode_195
+            else:
+                # Create empty latent based on width/height
+                emptyflux2latentimage = NODE_CLASS_MAPPINGS["EmptyFlux2LatentImage"]()
+                emptyflux2latentimage_182 = emptyflux2latentimage.EXECUTE_NORMALIZED(
+                    width=width,
+                    height=height,
+                    batch_size=1,
+                )
+                vaeencode_195 = emptyflux2latentimage_182
+                vaeencode_199 = emptyflux2latentimage_182
+            
+            # Build prompt text with LoRA tags
+            full_prompt = prompt_text
             loratagloader = NODE_CLASS_MAPPINGS["LoraTagLoader"]()
             loratagloader_219 = loratagloader.load_lora(
-                text=lora_text,
+                text=full_prompt,
                 model=get_value_at_index(loraloader_190, 0),
                 clip=get_value_at_index(loraloader_190, 1),
             )
@@ -1448,7 +1482,6 @@ def generate(prompt_text="", seed=None, width=1024, height=1024, steps=4, loras=
             cfgguider = NODE_CLASS_MAPPINGS["CFGGuider"]()
             getimagesize = NODE_CLASS_MAPPINGS["GetImageSize"]()
             flux2scheduler = NODE_CLASS_MAPPINGS["Flux2Scheduler"]()
-            emptyflux2latentimage = NODE_CLASS_MAPPINGS["EmptyFlux2LatentImage"]()
             samplercustomadvanced = NODE_CLASS_MAPPINGS["SamplerCustomAdvanced"]()
             vaedecode = VAEDecode()
             saveimage = SaveImage()
@@ -1458,46 +1491,71 @@ def generate(prompt_text="", seed=None, width=1024, height=1024, steps=4, loras=
                     allow_compile=True,
                     model=get_value_at_index(loratagloader_219, 0),
                 )
-                referencelatent_194 = referencelatent.EXECUTE_NORMALIZED(
-                    conditioning=get_value_at_index(cliptextencode_201, 0),
-                    latent=get_value_at_index(vaeencode_195, 0),
-                )
-                referencelatent_200 = referencelatent.EXECUTE_NORMALIZED(
-                    conditioning=get_value_at_index(referencelatent_194, 0),
-                    latent=get_value_at_index(vaeencode_199, 0),
-                )
-                comfyswitchnode_221 = comfyswitchnode.EXECUTE_NORMALIZED(
-                    switch=get_value_at_index(primitiveboolean_220, 0),
-                    on_false=get_value_at_index(referencelatent_194, 0),
-                    on_true=get_value_at_index(referencelatent_200, 0),
-                )
-                conditioningzeroout_212 = conditioningzeroout.zero_out(
-                    conditioning=get_value_at_index(referencelatent_194, 0)
-                )
-                referencelatent_193 = referencelatent.EXECUTE_NORMALIZED(
-                    conditioning=get_value_at_index(conditioningzeroout_212, 0),
-                    latent=get_value_at_index(vaeencode_195, 0),
-                )
+                
+                if toggle_ref and input_img1 is not None:
+                    referencelatent_194 = referencelatent.EXECUTE_NORMALIZED(
+                        conditioning=get_value_at_index(cliptextencode_201, 0),
+                        latent=get_value_at_index(vaeencode_195, 0),
+                    )
+                    referencelatent_200 = referencelatent.EXECUTE_NORMALIZED(
+                        conditioning=get_value_at_index(referencelatent_194, 0),
+                        latent=get_value_at_index(vaeencode_199, 0),
+                    )
+                    comfyswitchnode_221 = comfyswitchnode.EXECUTE_NORMALIZED(
+                        switch=get_value_at_index(primitiveboolean_220, 0),
+                        on_false=get_value_at_index(referencelatent_194, 0),
+                        on_true=get_value_at_index(referencelatent_200, 0),
+                    )
+                    conditioningzeroout_212 = conditioningzeroout.zero_out(
+                        conditioning=get_value_at_index(referencelatent_194, 0)
+                    )
+                    referencelatent_193 = referencelatent.EXECUTE_NORMALIZED(
+                        conditioning=get_value_at_index(conditioningzeroout_212, 0),
+                        latent=get_value_at_index(vaeencode_195, 0),
+                    )
+                    
+                    getimagesize_185 = getimagesize.EXECUTE_NORMALIZED(
+                        image=get_value_at_index(imagescaletototalpixels_196, 0),
+                        unique_id=3009007390752143449,
+                    )
+                else:
+                    # Use width/height directly
+                    getimagesize_185 = (width, height)
+                    referencelatent_194 = cliptextencode_201
+                    comfyswitchnode_221 = cliptextencode_201
+                    conditioningzeroout_212 = conditioningzeroout.zero_out(
+                        conditioning=get_value_at_index(cliptextencode_201, 0)
+                    )
+                    referencelatent_193 = referencelatent.EXECUTE_NORMALIZED(
+                        conditioning=get_value_at_index(conditioningzeroout_212, 0),
+                        latent=vaeencode_195,
+                    )
+                
                 cfgguider_183 = cfgguider.EXECUTE_NORMALIZED(
                     cfg=1,
                     model=get_value_at_index(pathchsageattentionkj_189, 0),
                     positive=get_value_at_index(comfyswitchnode_221, 0),
                     negative=get_value_at_index(referencelatent_193, 0),
                 )
-                getimagesize_185 = getimagesize.EXECUTE_NORMALIZED(
-                    image=get_value_at_index(imagescaletototalpixels_196, 0),
-                    unique_id=3009007390752143449,
-                )
-                flux2scheduler_184 = flux2scheduler.EXECUTE_NORMALIZED(
-                    steps=int(steps),
-                    width=get_value_at_index(getimagesize_185, 0),
-                    height=get_value_at_index(getimagesize_185, 1),
-                )
-                emptyflux2latentimage_182 = emptyflux2latentimage.EXECUTE_NORMALIZED(
-                    width=get_value_at_index(getimagesize_185, 0),
-                    height=get_value_at_index(getimagesize_185, 1),
-                    batch_size=1,
-                )
+                
+                if toggle_ref and input_img1 is not None:
+                    flux2scheduler_184 = flux2scheduler.EXECUTE_NORMALIZED(
+                        steps=steps,
+                        width=get_value_at_index(getimagesize_185, 0),
+                        height=get_value_at_index(getimagesize_185, 1),
+                    )
+                    emptyflux2latentimage_182 = emptyflux2latentimage.EXECUTE_NORMALIZED(
+                        width=get_value_at_index(getimagesize_185, 0),
+                        height=get_value_at_index(getimagesize_185, 1),
+                        batch_size=1,
+                    )
+                else:
+                    flux2scheduler_184 = flux2scheduler.EXECUTE_NORMALIZED(
+                        steps=steps,
+                        width=width,
+                        height=height,
+                    )
+                
                 samplercustomadvanced_192 = samplercustomadvanced.EXECUTE_NORMALIZED(
                     noise=get_value_at_index(randomnoise_181, 0),
                     guider=get_value_at_index(cfgguider_183, 0),
