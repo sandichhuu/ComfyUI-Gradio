@@ -3,6 +3,17 @@
     "context-mode": {
       "command": "context-mode",
       "directTools": true
+    },
+    "mcp-workspace": {
+      "command": "mcp-workspace",
+      "args": [
+        "--project-dir",
+        "W:\\repos_contribute\\ComfyUI-Gradio",
+        "--reference-project",
+        "docs=W:\\repos_contribute\\ComfyUI-Gradio\\markdowns",
+        "--log-level",
+        "INFO"
+      ]
     }
   }
 }
