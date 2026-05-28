@@ -15,3 +15,5 @@ loRA list have collapse function.
 this one can add more loRA item.
 each loRA has field name, weight and remove button.
 if press genegrate button, loRA tag like <name:1.0> will be merge into prompt then send. (but without see on prompt field).
+
+see implement_plan.md to more detail.
