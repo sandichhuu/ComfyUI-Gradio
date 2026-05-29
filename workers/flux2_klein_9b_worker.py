@@ -251,7 +251,7 @@ def build_workflow() -> dict[str, Any]:
         },
         "190": {
             "inputs": {
-                "lora_name": "Flux.2 Klein " "9B-base/KLEIN-Unchained-V2.safetensors",
+                "lora_name": "Flux.2 Klein 9B-base/KLEIN-Unchained-V2.safetensors",
                 "strength_model": 0.6,
                 "strength_clip": 1,
                 "model": ["191", 0],
@@ -262,7 +262,7 @@ def build_workflow() -> dict[str, Any]:
         },
         "191": {
             "inputs": {
-                "unet_name": "Flux.2 Klein " "9B/flux-2-klein-9b-fp8.safetensors",
+                "unet_name": "Flux.2 Klein 9B/flux-2-klein-9b-fp8.safetensors",
                 "weight_dtype": "default",
             },
             "class_type": "UNETLoader",
@@ -336,7 +336,7 @@ def build_workflow() -> dict[str, Any]:
         },
         "219": {
             "inputs": {
-                "text": "remove bicycle.\n" "<lora:76N0PGDVMCA64NA75C2NW7V600:1>",
+                "text": "remove bicycle.\n<lora:76N0PGDVMCA64NA75C2NW7V600:1>",
                 "model": ["190", 0],
                 "clip": ["190", 1],
             },
@@ -624,7 +624,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                         },
                     },
                     "widgets_values": [
-                        "Flux.2 Klein " "9B/flux-2-klein-9b-fp8.safetensors",
+                        "Flux.2 Klein 9B/flux-2-klein-9b-fp8.safetensors",
                         "default",
                     ],
                 },
@@ -1010,7 +1010,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     ],
                     "properties": {"Node name for S&R": "LoraLoader"},
                     "widgets_values": [
-                        "Flux.2 Klein " "9B-base/KLEIN-Unchained-V2.safetensors",
+                        "Flux.2 Klein 9B-base/KLEIN-Unchained-V2.safetensors",
                         0.6,
                         1,
                     ],
@@ -1081,7 +1081,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     ],
                     "properties": {"Node name for S&R": "LoraTagLoader"},
                     "widgets_values": [
-                        "remove bicycle.\n" "<lora:76N0PGDVMCA64NA75C2NW7V600:1>"
+                        "remove bicycle.\n<lora:76N0PGDVMCA64NA75C2NW7V600:1>"
                     ],
                 },
                 {
@@ -1305,13 +1305,20 @@ prompt = json.loads(json.dumps(workflow))
 extra_pnginfo = build_extra_pnginfo()
 
 
-# Workflow execution
-def main(unload_models: bool | None = None):
+def generate(
+    prompt_text: str,
+    seed: int,
+    width: int,
+    height: int,
+    toggle_ref: bool,
+    input_img1_path: str,
+    input_img2_path: str | None = None,
+    unload_models: bool | None = None,
+):
     bootstrap_comfyui_runtime()
     add_extra_model_paths()
     import_custom_nodes()
 
-    # Node imports
     from nodes import (
         CLIPLoader,
         CLIPTextEncode,
@@ -1325,20 +1332,54 @@ def main(unload_models: bool | None = None):
         VAEEncode,
         VAELoader,
     )
-
+    import folder_paths
+    import shutil
+    import os
     import torch
+    from PIL import Image as PILImage
+
+    input_dir = folder_paths.get_input_directory()
+
+    img1_basename = os.path.basename(input_img1_path)
+    img1_dest = os.path.join(input_dir, img1_basename)
+    shutil.copy2(input_img1_path, img1_dest)
+
+    img2_basename = None
+    if input_img2_path:
+        img2_basename = os.path.basename(input_img2_path)
+        img2_dest = os.path.join(input_dir, img2_basename)
+        shutil.copy2(input_img2_path, img2_dest)
+
+    img1 = PILImage.open(img1_dest)
+    orig_w, orig_h = img1.size
+
+    if width == 0 and height == 0:
+        width = orig_w
+        height = orig_h
+
+    img1_resized = img1.resize((width, height), PILImage.LANCZOS)
+    img1_resized.save(img1_dest)
+
+    if img2_basename:
+        img2 = PILImage.open(img2_dest)
+        img2_resized = img2.resize((width, height), PILImage.LANCZOS)
+        img2_resized.save(img2_dest)
+
+    megapixels = (width * height) / 1000000.0
 
     try:
         with torch.inference_mode():
             loadimage = LoadImage()
-            loadimage_159 = loadimage.load_image(image="full.png")
-            loadimage_163 = loadimage.load_image(image="upper__gfpgan_restore.png")
+            loadimage_159 = loadimage.load_image(image=img1_basename)
+            if img2_basename:
+                loadimage_163 = loadimage.load_image(image=img2_basename)
+            else:
+                loadimage_163 = loadimage.load_image(image=img1_basename)
+
             ksamplerselect = NODE_CLASS_MAPPINGS["KSamplerSelect"]()
             ksamplerselect_179 = ksamplerselect.EXECUTE_NORMALIZED(sampler_name="euler")
             randomnoise = NODE_CLASS_MAPPINGS["RandomNoise"]()
-            node_181_noise_seed = prompt["181"]["inputs"]["noise_seed"] = (
-                random.randint(1, 2**64)
-            )
+            node_181_noise_seed = prompt["181"]["inputs"]["noise_seed"] = seed
             randomnoise_181 = randomnoise.EXECUTE_NORMALIZED(
                 noise_seed=node_181_noise_seed
             )
@@ -1368,7 +1409,7 @@ def main(unload_models: bool | None = None):
             imagescaletototalpixels = NODE_CLASS_MAPPINGS["ImageScaleToTotalPixels"]()
             imagescaletototalpixels_196 = imagescaletototalpixels.EXECUTE_NORMALIZED(
                 upscale_method="lanczos",
-                megapixels=1,
+                megapixels=megapixels,
                 resolution_steps=1,
                 image=get_value_at_index(loadimage_159, 0),
             )
@@ -1379,7 +1420,7 @@ def main(unload_models: bool | None = None):
             )
             imagescaletototalpixels_198 = imagescaletototalpixels.EXECUTE_NORMALIZED(
                 upscale_method="lanczos",
-                megapixels=1,
+                megapixels=megapixels,
                 resolution_steps=1,
                 image=get_value_at_index(loadimage_163, 0),
             )
@@ -1389,7 +1430,7 @@ def main(unload_models: bool | None = None):
             )
             loratagloader = NODE_CLASS_MAPPINGS["LoraTagLoader"]()
             loratagloader_219 = loratagloader.load_lora(
-                text="remove bicycle.\n<lora:76N0PGDVMCA64NA75C2NW7V600:1>",
+                text=prompt_text,
                 model=get_value_at_index(loraloader_190, 0),
                 clip=get_value_at_index(loraloader_190, 1),
             )
@@ -1399,7 +1440,7 @@ def main(unload_models: bool | None = None):
                 clip=get_value_at_index(loratagloader_219, 1),
             )
             primitiveboolean = NODE_CLASS_MAPPINGS["PrimitiveBoolean"]()
-            primitiveboolean_220 = primitiveboolean.EXECUTE_NORMALIZED(value=False)
+            primitiveboolean_220 = primitiveboolean.EXECUTE_NORMALIZED(value=toggle_ref)
             pathchsageattentionkj = NODE_CLASS_MAPPINGS["PathchSageAttentionKJ"]()
             referencelatent = NODE_CLASS_MAPPINGS["ReferenceLatent"]()
             comfyswitchnode = NODE_CLASS_MAPPINGS["ComfySwitchNode"]()
@@ -1474,10 +1515,13 @@ def main(unload_models: bool | None = None):
                     prompt=prompt,
                     extra_pnginfo=extra_pnginfo,
                 )
+                output_dir = folder_paths.get_output_directory()
+                import glob as glob_module
+
+                pattern = os.path.join(output_dir, "Flux2-Klein_*.png")
+                files = sorted(glob_module.glob(pattern), key=os.path.getmtime)
+                if files:
+                    return files[-1]
+                return None
     finally:
         cleanup_comfyui_runtime(unload_models=unload_models)
-
-
-# Entrypoint
-if __name__ == "__main__":
-    main()

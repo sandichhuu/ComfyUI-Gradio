@@ -355,7 +355,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                         },
                         "revision": 0,
                         "config": {},
-                        "name": "Text to Image " "(Z-Image-Turbo)",
+                        "name": "Text to Image (Z-Image-Turbo)",
                         "inputNode": {"id": -10, "bounding": [-560, 480, 128, 208]},
                         "outputNode": {"id": -20, "bounding": [1670, 320, 128, 68]},
                         "inputs": [
@@ -469,7 +469,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                     "tabWidth": 65,
                                     "tabXOffset": 10,
                                     "hasSecondTab": False,
-                                    "secondTabText": "Send " "Back",
+                                    "secondTabText": "Send Back",
                                     "secondTabOffset": 80,
                                     "secondTabWidth": 65,
                                 },
@@ -507,7 +507,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                     "tabWidth": 65,
                                     "tabXOffset": 10,
                                     "hasSecondTab": False,
-                                    "secondTabText": "Send " "Back",
+                                    "secondTabText": "Send Back",
                                     "secondTabOffset": 80,
                                     "secondTabWidth": 65,
                                 },
@@ -552,7 +552,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                     "tabWidth": 65,
                                     "tabXOffset": 10,
                                     "hasSecondTab": False,
-                                    "secondTabText": "Send " "Back",
+                                    "secondTabText": "Send Back",
                                     "secondTabOffset": 80,
                                     "secondTabWidth": 65,
                                 },
@@ -591,7 +591,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                     "tabWidth": 65,
                                     "tabXOffset": 10,
                                     "hasSecondTab": False,
-                                    "secondTabText": "Send " "Back",
+                                    "secondTabText": "Send Back",
                                     "secondTabOffset": 80,
                                     "secondTabWidth": 65,
                                 },
@@ -662,7 +662,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                     "tabWidth": 65,
                                     "tabXOffset": 10,
                                     "hasSecondTab": False,
-                                    "secondTabText": "Send " "Back",
+                                    "secondTabText": "Send Back",
                                     "secondTabOffset": 80,
                                     "secondTabWidth": 65,
                                 },
@@ -717,7 +717,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                     "tabWidth": 65,
                                     "tabXOffset": 10,
                                     "hasSecondTab": False,
-                                    "secondTabText": "Send " "Back",
+                                    "secondTabText": "Send Back",
                                     "secondTabOffset": 80,
                                     "secondTabWidth": 65,
                                 },
@@ -763,7 +763,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                     "tabWidth": 65,
                                     "tabXOffset": 10,
                                     "hasSecondTab": False,
-                                    "secondTabText": "Send " "Back",
+                                    "secondTabText": "Send Back",
                                     "secondTabOffset": 80,
                                     "secondTabWidth": 65,
                                 },
@@ -812,7 +812,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                     "tabWidth": 65,
                                     "tabXOffset": 10,
                                     "hasSecondTab": False,
-                                    "secondTabText": "Send " "Back",
+                                    "secondTabText": "Send Back",
                                     "secondTabOffset": 80,
                                     "secondTabWidth": 65,
                                 },
@@ -917,7 +917,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                     "tabWidth": 65,
                                     "tabXOffset": 10,
                                     "hasSecondTab": False,
-                                    "secondTabText": "Send " "Back",
+                                    "secondTabText": "Send Back",
                                     "secondTabOffset": 80,
                                     "secondTabWidth": 65,
                                 },
@@ -1122,13 +1122,17 @@ prompt = json.loads(json.dumps(workflow))
 extra_pnginfo = build_extra_pnginfo()
 
 
-# Workflow execution
-def main(unload_models: bool | None = None):
+def generate(
+    prompt_text: str,
+    seed: int,
+    width: int,
+    height: int,
+    unload_models: bool | None = None,
+):
     bootstrap_comfyui_runtime()
     add_extra_model_paths()
     import_custom_nodes()
 
-    # Node imports
     from nodes import (
         CLIPLoader,
         CLIPTextEncode,
@@ -1140,7 +1144,7 @@ def main(unload_models: bool | None = None):
         VAEDecode,
         VAELoader,
     )
-
+    import folder_paths
     import torch
 
     try:
@@ -1149,7 +1153,7 @@ def main(unload_models: bool | None = None):
             vaeloader_57_29 = vaeloader.load_vae(vae_name="ae.safetensors")
             emptysd3latentimage = NODE_CLASS_MAPPINGS["EmptySD3LatentImage"]()
             emptysd3latentimage_57_13 = emptysd3latentimage.EXECUTE_NORMALIZED(
-                width=1024, height=1024, batch_size=1
+                width=width, height=height, batch_size=1
             )
             unetloader = UNETLoader()
             unetloader_57_28 = unetloader.load_unet(
@@ -1162,7 +1166,7 @@ def main(unload_models: bool | None = None):
             )
             loratagloader = NODE_CLASS_MAPPINGS["LoraTagLoader"]()
             loratagloader_57_66 = loratagloader.load_lora(
-                text="Hatsune Miku with red outfit.\n<lora:76N0PGDVMCA64NA75C2NW7V600:1>",
+                text=prompt_text,
                 model=get_value_at_index(unetloader_57_28, 0),
                 clip=get_value_at_index(cliploader_57_30, 0),
             )
@@ -1183,9 +1187,7 @@ def main(unload_models: bool | None = None):
                 conditioningzeroout_57_33 = conditioningzeroout.zero_out(
                     conditioning=get_value_at_index(cliptextencode_57_27, 0)
                 )
-                node_57_3_seed = prompt["57:3"]["inputs"]["seed"] = random.randint(
-                    1, 2**64
-                )
+                node_57_3_seed = prompt["57:3"]["inputs"]["seed"] = seed
                 ksampler_57_3 = ksampler.sample(
                     seed=node_57_3_seed,
                     steps=8,
@@ -1208,10 +1210,14 @@ def main(unload_models: bool | None = None):
                     prompt=prompt,
                     extra_pnginfo=extra_pnginfo,
                 )
+                output_dir = folder_paths.get_output_directory()
+                import os
+                import glob as glob_module
+
+                pattern = os.path.join(output_dir, "zit_*.png")
+                files = sorted(glob_module.glob(pattern), key=os.path.getmtime)
+                if files:
+                    return files[-1]
+                return None
     finally:
         cleanup_comfyui_runtime(unload_models=unload_models)
-
-
-# Entrypoint
-if __name__ == "__main__":
-    main()
