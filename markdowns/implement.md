@@ -17,3 +17,7 @@ each loRA has field name, weight and remove button.
 if press genegrate button, loRA tag like <name:1.0> will be merge into prompt then send. (but without see on prompt field).
 
 see implement_plan.md to more detail.
+
+# Code Rule:
+1. Do not use any comment on code.
+2. Do not try to run any python file. The owner will review and run manually.
