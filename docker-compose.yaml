@@ -1,0 +1,14 @@
+services:
+  ramen-ai:
+    build: .
+    container_name: ramen-ai
+    ports:
+      - 7860:7860
+    privileged: true
+    ipc: host
+    volumes:
+      - W:/apps/ComfyUI_windows_portable/ComfyUI:/comfyui
+    environment:
+      - COMFYUI_PATH=/comfyui
+      - COMFYUI_TOPYTHON_UNLOAD_MODELS=1
+    restart: unless-stopped
