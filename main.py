@@ -75,7 +75,9 @@ button.stop:hover {
     flex: 1;
     min-width: 0;
 }
-.lora-row {
+.lora-table {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radi.lora-row {
     align-items: center;
     padding: 4px 0;
     gap: 6px;
@@ -106,24 +108,17 @@ button.stop:hover {
     font-weight: bold;
     justify-content: center;
     align-self: center;
-    display: flex;
-    align-items: center;
-}
-.lora-remove-btn:hover {
-    background: #c62828 !important;
-}
-.lora-toggle .gr-checkbox {
     min-width: 20px;
     max-width: 20px;
 }
 """
 
 if __name__ == "__main__":
-    with gr.Blocks(title="ComfyUI Image Generator") as demo:
-        gr.Markdown("# ComfyUI Image Generator")
+    with gr.Blocks(title="🍥 Ramen", analytics_enabled=False) as demo:
+        gr.Markdown("# 🍥 Ramen")
 
         with gr.Tabs() as tabs:
             create_zit_tab()
             create_flux2_klein_9b_tab()
 
-    demo.launch(css=css)
+    demo.launch(css=css, pwa=True)
