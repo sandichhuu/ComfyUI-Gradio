@@ -1,35 +1,33 @@
 # ComfyUI-Gradio
 
-A Gradio-based web interface for ComfyUI, providing an intuitive UI for image generation with support for multiple models including Z-Image-Turbo (ZIT) and Flux2-Klein-9B.
+A Gradio-based web interface for ComfyUI image generation with two model tabs (ZIT and Flux2-Klein-9B) and LoRA support.
 
 ## Features
 
-- **Two Model Tabs**:
-  - **ZIT Tab**: Z-Image-Turbo model for fast image generation
-  - **Flux2-Klein-9B Tab**: Advanced model with reference image support
-- **LoRA Support**: Dynamic LoRA management with enable/disable toggles, name, and strength controls
-- **Interactive UI**:
-  - Prompt input with Generate/Stop functionality
-  - Configurable parameters: seed (with random toggle), width, height
-  - Real-time button state changes (Generate ↔ Stop)
-  - Collapsible LoRA list with add/remove functionality
-- **Image Processing**: Automatic height normalization (fix-height = 444px) for large images
-- **Session Persistence**: Web interface remains functional after browser refresh
+- **Two Model Tabs**
+  - **ZIT (Z-Image-Turbo)**: Fast text-to-image generation (8 steps, simple scheduler)
+  - **Flux2-Klein-9B**: Text-to-image with reference image support (4 steps, Flux2 scheduler, SageAttention)
+- **LoRA Management**: Collapsible list with enable/disable, name, weight, add/remove (max 6)
+- **Generate/Stop Toggle**: Button switches between Generate and Stop during generation
+- **Random Seed**: Seed=0 generates a random seed and displays it after generation
+- **Reference Images (Flux2)**: Input Image + optional Ref Image for guided generation
+- **Session Persistence**: Web interface preserves state after browser refresh
 
 ## Project Structure
 
 ```
 comfyui-gradio/
-├── main.py                 # Application entry point
+├── main.py                              # Entry point, Gradio Blocks, global CSS
 ├── views/
-│   ├── zit_view.py         # ZIT tab UI renderer
-│   └── flux2_klein_9b_view.py  # Flux2-Klein-9B tab UI renderer
+│   ├── zit_view.py                      # ZIT tab UI + event handlers
+│   └── flux2_klein_9b_view.py           # Flux2 tab UI + event handlers
 ├── workers/
-│   ├── zit_worker.py       # ZIT model worker (extracted from ComfyUI)
-│   └── flux2_klein_9b_worker.py  # Flux2-Klein-9B model worker
-├── markdowns/              # Documentation files
-├── pyproject.toml          # Project configuration
-└── README.md               # This file
+│   ├── zit_worker.py                    # ZIT ComfyUI workflow execution
+│   └── flux2_klein_9b_worker.py         # Flux2 ComfyUI workflow execution
+├── documents/                           # Full implementation docs (re-implementation guide)
+├── markdowns/                           # Original implementation specs
+├── pyproject.toml                       # Project config
+└── README.md
 ```
 
 ## Requirements
@@ -37,52 +35,53 @@ comfyui-gradio/
 - Python >= 3.13
 - uv (Python package manager)
 - Gradio >= 6.15.1
-- ComfyUI server
+- ComfyUI server (must be running)
+- ComfyUI model files (see `documents/08-dependencies-setup.md`)
 
 ## Installation
 
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd comfyui-gradio
-   ```
-
-2. Install dependencies using uv:
-   ```bash
-   uv sync
-   ```
+```bash
+git clone <repository-url>
+cd comfyui-gradio
+uv sync
+```
 
 ## Usage
 
 1. Start the ComfyUI server (ensure it's running in the background)
-
 2. Run the application:
    ```bash
    uv run python main.py
    ```
+3. Open browser at `http://localhost:7860`
 
-3. Open your browser and navigate to the URL displayed in the terminal (typically `http://localhost:7860`)
+## LoRA Format
 
-## Configuration
+LoRAs use the format `<name:weight>` and are merged into the prompt invisibly:
+- Example: `<lora:76N0PGDVMCA64NA75C2NW7V600:1>`
+- Tags are appended to the prompt text before sending to ComfyUI
 
-### ZIT Tab
-- **Prompt**: Text description for image generation
-- **Seed**: Random seed value with toggle for randomization
-- **Width/Height**: Output image dimensions
-- **LoRA List**: Enable/disable LoRAs with adjustable strength
+## Key Technical Details
 
-### Flux2-Klein-9B Tab
-- **Prompt**: Text description for image generation
-- **Seed**: Random seed value with toggle for randomization
-- **Width/Height**: Output image dimensions
-- **Toggle Ref**: Enable/disable reference image input
-- **Input Image(s)**: One or two reference images (when Toggle Ref is enabled)
-- **LoRA List**: Enable/disable LoRAs with adjustable strength
+- Workers dynamically import ComfyUI modules at runtime via `sys.path` manipulation
+- `COMFYUI_PATH` env var or parent directory search locates ComfyUI
+- `extra_model_paths.yaml` configures additional model locations
+- Images with height > 444px are displayed at 444px in the UI
+- Each generation bootstraps the full ComfyUI runtime (heavy initialization)
+- ZIT outputs are saved as `zit_*.png`, Flux2 as `Flux2-Klein_*.png`
 
-## LoRA Integration
+## Documentation
 
-LoRAs are automatically merged into prompts during generation using the format `<name:weight>`. The LoRA tags are applied internally without appearing in the prompt field.
-
-## License
-
-See the [LICENSE](LICENSE) file for details.
+See the `documents/` folder for full implementation details:
+- `00-project-overview.md` - Project overview
+- `01-architecture.md` - Architecture and data flow
+- `02-main-entry-point.md` - main.py implementation
+- `03-zit-view.md` - ZIT tab UI
+- `04-flux2-klein-9b-view.md` - Flux2 tab UI
+- `05-zit-worker.md` - ZIT worker
+- `06-flux2-klein-9b-worker.md` - Flux2 worker
+- `07-comfyui-integration.md` - ComfyUI integration
+- `08-dependencies-setup.md` - Dependencies and model files
+- `09-lora-system.md` - LoRA system
+- `10-image-processing.md` - Image processing
+- `11-ui-styling.md` - CSS styling
