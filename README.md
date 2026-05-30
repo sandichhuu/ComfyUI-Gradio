@@ -85,3 +85,7 @@ See the `documents/` folder for full implementation details:
 - `09-lora-system.md` - LoRA system
 - `10-image-processing.md` - Image processing
 - `11-ui-styling.md` - CSS styling
+
+## Preview
+
+<img width="1919" height="944" alt="image" src="https://github.com/user-attachments/assets/e3f1c979-a8bc-44dd-b102-4d1a00f42541" />
