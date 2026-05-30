@@ -1789,10 +1789,17 @@ def generate(
                     prompt=prompt,
                     extra_pnginfo=extra_pnginfo,
                 )
+
+                import folder_paths
+                import os
+                import glob as glob_module
+
+                output_dir = folder_paths.get_output_directory()
+
+                pattern = os.path.join(output_dir, "LTX23_*.png")
+                files = sorted(glob_module.glob(pattern), key=os.path.getmtime)
+                if files:
+                    return files[-1]
+                return None
     finally:
         cleanup_comfyui_runtime(unload_models=unload_models)
-
-
-# Entrypoint
-if __name__ == "__main__":
-    main()
