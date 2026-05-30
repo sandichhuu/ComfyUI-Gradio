@@ -172,7 +172,7 @@ def import_custom_nodes() -> None:
 def build_workflow() -> dict[str, Any]:
     return {
         "98": {
-            "inputs": {"image": "example.png"},
+            "inputs": {"image": "ab67616d00001e021ecdd83cdb58ea92d29ef230.png"},
             "class_type": "LoadImage",
             "_meta": {"title": "Load Image"},
         },
@@ -219,29 +219,20 @@ def build_workflow() -> dict[str, Any]:
             "class_type": "LTXVConcatAVLatent",
             "_meta": {"title": "LTXVConcatAVLatent"},
         },
-        "184": {
-            "inputs": {
-                "upscale_method": "lanczos",
-                "scale_by": 0.5,
-                "image": ["196", 0],
-            },
-            "class_type": "ImageScaleBy",
-            "_meta": {"title": "Upscale Image By"},
-        },
         "185": {
-            "inputs": {"value": 1000},
+            "inputs": {"value": 10},
             "class_type": "PrimitiveInt",
             "_meta": {"title": "Video Length"},
         },
         "188": {
-            "inputs": {"img_compression": 33, "image": ["197", 0]},
+            "inputs": {"img_compression": 33, "image": ["233", 0]},
             "class_type": "LTXVPreprocess",
             "_meta": {"title": "LTXV Preprocess"},
         },
         "189": {
             "inputs": {
-                "width": ["234", 1],
-                "height": ["234", 2],
+                "width": ["233", 1],
+                "height": ["233", 2],
                 "length": ["185", 0],
                 "batch_size": 1,
             },
@@ -262,27 +253,12 @@ def build_workflow() -> dict[str, Any]:
         "193": {
             "inputs": {
                 "cfg": 1,
-                "model": ["225", 0],
+                "model": ["230", 0],
                 "positive": ["201", 0],
                 "negative": ["201", 1],
             },
             "class_type": "CFGGuider",
             "_meta": {"title": "CFG Guider"},
-        },
-        "196": {
-            "inputs": {
-                "width": ["233", 1],
-                "height": ["233", 2],
-                "batch_size": 1,
-                "color": 0,
-            },
-            "class_type": "EmptyImage",
-            "_meta": {"title": "Empty Image"},
-        },
-        "197": {
-            "inputs": {"longer_edge": 1536, "images": ["233", 0]},
-            "class_type": "ResizeImagesByLongerEdge",
-            "_meta": {"title": "Resize Images by Longer Edge (DEPRECATED)"},
         },
         "199": {
             "inputs": {"noise_seed": 10},
@@ -349,34 +325,10 @@ def build_workflow() -> dict[str, Any]:
             "class_type": "VAEDecode",
             "_meta": {"title": "VAE Decode"},
         },
-        "215": {
-            "inputs": {"fps": 24, "images": ["214", 0], "audio": ["213", 0]},
-            "class_type": "CreateVideo",
-            "_meta": {"title": "Create Video"},
-        },
-        "216": {
-            "inputs": {
-                "filename_prefix": "video/LTX_2.3_i2v",
-                "format": "auto",
-                "codec": "auto",
-                "video": ["215", 0],
-            },
-            "class_type": "SaveVideo",
-            "_meta": {"title": "Save Video"},
-        },
         "217": {
             "inputs": {"av_latent": ["175", 1]},
             "class_type": "LTXVSeparateAVLatent",
             "_meta": {"title": "LTXVSeparateAVLatent"},
-        },
-        "225": {
-            "inputs": {
-                "sage_attention": "sageattn_qk_int8_pv_fp16_cuda",
-                "allow_compile": True,
-                "model": ["230", 0],
-            },
-            "class_type": "PathchSageAttentionKJ",
-            "_meta": {"title": "Patch Sage Attention KJ"},
         },
         "226": {
             "inputs": {"conditioning": ["203", 0]},
@@ -385,7 +337,7 @@ def build_workflow() -> dict[str, Any]:
         },
         "230": {
             "inputs": {
-                "text": "Hatsune Miku dancing",
+                "text": "The objects flying surround",
                 "model": ["212", 0],
                 "clip": ["209", 0],
             },
@@ -394,11 +346,6 @@ def build_workflow() -> dict[str, Any]:
         },
         "233": {
             "inputs": {"image": ["98", 0]},
-            "class_type": "GetImageSizeAndCount",
-            "_meta": {"title": "Get Image Size & Count"},
-        },
-        "234": {
-            "inputs": {"image": ["184", 0]},
             "class_type": "GetImageSizeAndCount",
             "_meta": {"title": "Get Image Size & Count"},
         },
@@ -412,6 +359,24 @@ def build_workflow() -> dict[str, Any]:
             "class_type": "INTConstant",
             "_meta": {"title": "FPS"},
         },
+        "238": {
+            "inputs": {
+                "frame_rate": ["236", 0],
+                "loop_count": 0,
+                "filename_prefix": "LTX23",
+                "format": "video/h264-mp4",
+                "pix_fmt": "yuv420p",
+                "crf": 19,
+                "save_metadata": False,
+                "trim_to_audio": False,
+                "pingpong": False,
+                "save_output": True,
+                "images": ["214", 0],
+                "audio": ["213", 0],
+            },
+            "class_type": "VHS_VideoCombine",
+            "_meta": {"title": "Video Combine 🎥🅥🅗🅢"},
+        },
     }
 
 
@@ -420,8 +385,8 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
         "workflow": {
             "id": "07824bbb-6672-4bb0-ac36-4313a519e35b",
             "revision": 0,
-            "last_node_id": 237,
-            "last_link_id": 548,
+            "last_node_id": 240,
+            "last_link_id": 556,
             "nodes": [
                 {
                     "id": 182,
@@ -429,7 +394,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "pos": [172.6215850900826, 3313.2982874986233],
                     "size": [225, 72],
                     "flags": {},
-                    "order": 27,
+                    "order": 22,
                     "mode": 0,
                     "inputs": [
                         {"name": "video_latent", "type": "LATENT", "link": 441},
@@ -460,12 +425,12 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                 {
                     "id": 188,
                     "type": "LTXVPreprocess",
-                    "pos": [-197.3784149099174, 3493.2982874986233],
+                    "pos": [-123.67841490991736, 3499.898287498623],
                     "size": [225, 80],
                     "flags": {},
-                    "order": 20,
+                    "order": 17,
                     "mode": 0,
-                    "inputs": [{"name": "image", "type": "IMAGE", "link": 449}],
+                    "inputs": [{"name": "image", "type": "IMAGE", "link": 556}],
                     "outputs": [
                         {"name": "output_image", "type": "IMAGE", "links": [454]}
                     ],
@@ -494,20 +459,20 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "pos": [-167.3784149099174, 3063.2982874986233],
                     "size": [270, 176],
                     "flags": {},
-                    "order": 25,
+                    "order": 18,
                     "mode": 0,
                     "inputs": [
                         {
                             "name": "width",
                             "type": "INT",
                             "widget": {"name": "width"},
-                            "link": 542,
+                            "link": 554,
                         },
                         {
                             "name": "height",
                             "type": "INT",
                             "widget": {"name": "height"},
-                            "link": 543,
+                            "link": 555,
                         },
                         {
                             "name": "length",
@@ -542,7 +507,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "pos": [172.6215850900826, 3073.2982874986233],
                     "size": [270, 156],
                     "flags": {},
-                    "order": 26,
+                    "order": 20,
                     "mode": 0,
                     "inputs": [
                         {"name": "vae", "type": "VAE", "link": 490},
@@ -570,78 +535,12 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "widgets_values": [1, False],
                 },
                 {
-                    "id": 197,
-                    "type": "ResizeImagesByLongerEdge",
-                    "pos": [-577.3784149099174, 3493.2982874986233],
-                    "size": [348.5833435058594, 104],
-                    "flags": {"collapsed": False},
-                    "order": 16,
-                    "mode": 0,
-                    "inputs": [{"name": "images", "type": "IMAGE", "link": 536}],
-                    "outputs": [{"name": "images", "type": "IMAGE", "links": [449]}],
-                    "properties": {
-                        "Node name for S&R": "ResizeImagesByLongerEdge",
-                        "cnr_id": "comfy-core",
-                        "ver": "0.5.1",
-                        "enableTabs": False,
-                        "tabWidth": 65,
-                        "tabXOffset": 10,
-                        "hasSecondTab": False,
-                        "secondTabText": "Send Back",
-                        "secondTabOffset": 80,
-                        "secondTabWidth": 65,
-                        "ue_properties": {
-                            "widget_ue_connectable": {},
-                            "version": "7.1",
-                            "input_ue_unconnectable": {},
-                        },
-                    },
-                    "widgets_values": [1536],
-                },
-                {
-                    "id": 213,
-                    "type": "LTXVAudioVAEDecode",
-                    "pos": [1361.7526335113255, 2305.4835682855396],
-                    "size": [240, 72],
-                    "flags": {},
-                    "order": 32,
-                    "mode": 0,
-                    "inputs": [
-                        {"name": "samples", "type": "LATENT", "link": 482},
-                        {
-                            "label": "Audio VAE",
-                            "name": "audio_vae",
-                            "type": "VAE",
-                            "link": 494,
-                        },
-                    ],
-                    "outputs": [{"name": "Audio", "type": "AUDIO", "links": [485]}],
-                    "properties": {
-                        "Node name for S&R": "LTXVAudioVAEDecode",
-                        "cnr_id": "comfy-core",
-                        "ver": "0.7.0",
-                        "enableTabs": False,
-                        "tabWidth": 65,
-                        "tabXOffset": 10,
-                        "hasSecondTab": False,
-                        "secondTabText": "Send Back",
-                        "secondTabOffset": 80,
-                        "secondTabWidth": 65,
-                        "ue_properties": {
-                            "widget_ue_connectable": {},
-                            "version": "7.1",
-                            "input_ue_unconnectable": {},
-                        },
-                    },
-                    "widgets_values": [],
-                },
-                {
                     "id": 217,
                     "type": "LTXVSeparateAVLatent",
-                    "pos": [1140.1859861313733, 2251.435527511771],
+                    "pos": [1089.2768952222823, 2245.0718911481345],
                     "size": [225, 72],
                     "flags": {},
-                    "order": 30,
+                    "order": 26,
                     "mode": 0,
                     "inputs": [{"name": "av_latent", "type": "LATENT", "link": 487}],
                     "outputs": [
@@ -668,44 +567,12 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "widgets_values": [],
                 },
                 {
-                    "id": 214,
-                    "type": "VAEDecode",
-                    "pos": [1361.7526335113255, 2195.4835682855396],
-                    "size": [240, 72],
-                    "flags": {},
-                    "order": 31,
-                    "mode": 0,
-                    "inputs": [
-                        {"name": "samples", "type": "LATENT", "link": 483},
-                        {"name": "vae", "type": "VAE", "link": 491},
-                    ],
-                    "outputs": [{"name": "IMAGE", "type": "IMAGE", "links": [484]}],
-                    "properties": {
-                        "Node name for S&R": "VAEDecode",
-                        "cnr_id": "comfy-core",
-                        "ver": "0.3.75",
-                        "enableTabs": False,
-                        "tabWidth": 65,
-                        "tabXOffset": 10,
-                        "hasSecondTab": False,
-                        "secondTabText": "Send Back",
-                        "secondTabOffset": 80,
-                        "secondTabWidth": 65,
-                        "ue_properties": {
-                            "widget_ue_connectable": {},
-                            "version": "7.1",
-                            "input_ue_unconnectable": {},
-                        },
-                    },
-                    "widgets_values": [],
-                },
-                {
                     "id": 175,
                     "type": "SamplerCustomAdvanced",
                     "pos": [793.7257665876041, 2193.2982874986233],
                     "size": [225, 144],
                     "flags": {},
-                    "order": 29,
+                    "order": 25,
                     "mode": 0,
                     "inputs": [
                         {"name": "noise", "type": "NOISE", "link": 427},
@@ -738,38 +605,6 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "widgets_values": [],
                 },
                 {
-                    "id": 215,
-                    "type": "CreateVideo",
-                    "pos": [1314.6416172637666, 2393.8375601617586],
-                    "size": [270, 104],
-                    "flags": {},
-                    "order": 33,
-                    "mode": 0,
-                    "inputs": [
-                        {"name": "images", "type": "IMAGE", "link": 484},
-                        {"name": "audio", "shape": 7, "type": "AUDIO", "link": 485},
-                    ],
-                    "outputs": [{"name": "VIDEO", "type": "VIDEO", "links": [486]}],
-                    "properties": {
-                        "Node name for S&R": "CreateVideo",
-                        "cnr_id": "comfy-core",
-                        "ver": "0.5.1",
-                        "enableTabs": False,
-                        "tabWidth": 65,
-                        "tabXOffset": 10,
-                        "hasSecondTab": False,
-                        "secondTabText": "Send Back",
-                        "secondTabOffset": 80,
-                        "secondTabWidth": 65,
-                        "ue_properties": {
-                            "widget_ue_connectable": {},
-                            "version": "7.1",
-                            "input_ue_unconnectable": {},
-                        },
-                    },
-                    "widgets_values": [24],
-                },
-                {
                     "id": 218,
                     "type": "Reroute",
                     "pos": [-767.2560523002735, 2406.403702535514],
@@ -795,7 +630,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "pos": [483.7257665876041, 2643.2982874986233],
                     "size": [270, 172],
                     "flags": {},
-                    "order": 28,
+                    "order": 24,
                     "mode": 0,
                     "inputs": [
                         {"name": "latent", "shape": 7, "type": "LATENT", "link": 418}
@@ -826,7 +661,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "pos": [483.7257665876041, 2343.2982874986233],
                     "size": [270, 128],
                     "flags": {},
-                    "order": 24,
+                    "order": 23,
                     "mode": 0,
                     "inputs": [
                         {"name": "model", "type": "MODEL", "link": 534},
@@ -1106,94 +941,13 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "bgcolor": "#533",
                 },
                 {
-                    "id": 98,
-                    "type": "LoadImage",
-                    "pos": [-1821.2342391601883, 2838.0374704710057],
-                    "size": [488.6333312988281, 519.2333374023438],
-                    "flags": {},
-                    "order": 6,
-                    "mode": 0,
-                    "inputs": [],
-                    "outputs": [
-                        {"name": "IMAGE", "type": "IMAGE", "links": [538]},
-                        {"name": "MASK", "type": "MASK", "links": None},
-                    ],
-                    "properties": {
-                        "Node name for S&R": "LoadImage",
-                        "cnr_id": "comfy-core",
-                        "ver": "0.5.1",
-                        "enableTabs": False,
-                        "tabWidth": 65,
-                        "tabXOffset": 10,
-                        "hasSecondTab": False,
-                        "secondTabText": "Send Back",
-                        "secondTabOffset": 80,
-                        "secondTabWidth": 65,
-                        "ue_properties": {
-                            "widget_ue_connectable": {},
-                            "version": "7.1",
-                            "input_ue_unconnectable": {},
-                        },
-                    },
-                    "widgets_values": ["example.png", "image"],
-                },
-                {
-                    "id": 216,
-                    "type": "SaveVideo",
-                    "pos": [1730.8932550383865, 2127.42919280707],
-                    "size": [1582, 3262],
-                    "flags": {"collapsed": False},
-                    "order": 34,
-                    "mode": 0,
-                    "inputs": [{"name": "video", "type": "VIDEO", "link": 486}],
-                    "outputs": [],
-                    "properties": {
-                        "cnr_id": "comfy-core",
-                        "ver": "0.5.1",
-                        "Node name for S&R": "SaveVideo",
-                        "enableTabs": False,
-                        "tabWidth": 65,
-                        "tabXOffset": 10,
-                        "hasSecondTab": False,
-                        "secondTabText": "Send Back",
-                        "secondTabOffset": 80,
-                        "secondTabWidth": 65,
-                        "ue_properties": {
-                            "widget_ue_connectable": {},
-                            "version": "7.1",
-                            "input_ue_unconnectable": {},
-                        },
-                    },
-                    "widgets_values": ["video/LTX_2.3_i2v", "auto", "auto"],
-                },
-                {
-                    "id": 230,
-                    "type": "LoraTagLoader",
-                    "pos": [-987.6860601792171, 2039.2227236663075],
-                    "size": [400, 200],
-                    "flags": {},
-                    "order": 11,
-                    "mode": 0,
-                    "inputs": [
-                        {"name": "model", "type": "MODEL", "link": 525},
-                        {"name": "clip", "type": "CLIP", "link": 526},
-                    ],
-                    "outputs": [
-                        {"name": "MODEL", "type": "MODEL", "links": [527]},
-                        {"name": "CLIP", "type": "CLIP", "links": [528]},
-                        {"name": "STRING", "type": "STRING", "links": [529]},
-                    ],
-                    "properties": {"Node name for S&R": "LoraTagLoader"},
-                    "widgets_values": ["Hatsune Miku dancing"],
-                },
-                {
                     "id": 225,
                     "type": "PathchSageAttentionKJ",
                     "pos": [-479.17056820211553, 1971.2596373930987],
-                    "size": [270, 132],
+                    "size": [524.4666748046875, 132],
                     "flags": {},
                     "order": 14,
-                    "mode": 0,
+                    "mode": 4,
                     "inputs": [{"name": "model", "type": "MODEL", "link": 527}],
                     "outputs": [{"name": "MODEL", "type": "MODEL", "links": [534]}],
                     "properties": {"Node name for S&R": "PathchSageAttentionKJ"},
@@ -1203,27 +957,27 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "id": 233,
                     "type": "GetImageSizeAndCount",
                     "pos": [-1136.8179534425788, 2932.9916756026364],
-                    "size": [323.9333343505858, 86],
+                    "size": [323.9333190917969, 144],
                     "flags": {},
-                    "order": 12,
+                    "order": 13,
                     "mode": 0,
                     "inputs": [{"name": "image", "type": "IMAGE", "link": 538}],
                     "outputs": [
-                        {"name": "image", "type": "IMAGE", "links": [536]},
+                        {"name": "image", "type": "IMAGE", "links": [556]},
                         {
-                            "label": "width",
+                            "label": "300 width",
                             "name": "width",
                             "type": "INT",
-                            "links": [539],
+                            "links": [554],
                         },
                         {
-                            "label": "height",
+                            "label": "300 height",
                             "name": "height",
                             "type": "INT",
-                            "links": [540],
+                            "links": [555],
                         },
                         {
-                            "label": "count",
+                            "label": "1 count",
                             "name": "count",
                             "type": "INT",
                             "links": None,
@@ -1233,83 +987,12 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "widgets_values": [],
                 },
                 {
-                    "id": 196,
-                    "type": "EmptyImage",
-                    "pos": [-671.923869455372, 2731.480105680441],
-                    "size": [270, 176],
-                    "flags": {},
-                    "order": 17,
-                    "mode": 0,
-                    "inputs": [
-                        {
-                            "name": "width",
-                            "type": "INT",
-                            "widget": {"name": "width"},
-                            "link": 539,
-                        },
-                        {
-                            "name": "height",
-                            "type": "INT",
-                            "widget": {"name": "height"},
-                            "link": 540,
-                        },
-                    ],
-                    "outputs": [{"name": "IMAGE", "type": "IMAGE", "links": [446]}],
-                    "properties": {
-                        "Node name for S&R": "EmptyImage",
-                        "cnr_id": "comfy-core",
-                        "ver": "0.5.1",
-                        "enableTabs": False,
-                        "tabWidth": 65,
-                        "tabXOffset": 10,
-                        "hasSecondTab": False,
-                        "secondTabText": "Send Back",
-                        "secondTabOffset": 80,
-                        "secondTabWidth": 65,
-                        "ue_properties": {
-                            "widget_ue_connectable": {},
-                            "version": "7.1",
-                            "input_ue_unconnectable": {},
-                        },
-                    },
-                    "widgets_values": [1280, 720, 1, 0],
-                },
-                {
-                    "id": 184,
-                    "type": "ImageScaleBy",
-                    "pos": [-669.4147785462817, 2952.061923862259],
-                    "size": [270, 112],
-                    "flags": {},
-                    "order": 21,
-                    "mode": 0,
-                    "inputs": [{"name": "image", "type": "IMAGE", "link": 446}],
-                    "outputs": [{"name": "IMAGE", "type": "IMAGE", "links": [541]}],
-                    "properties": {
-                        "Node name for S&R": "ImageScaleBy",
-                        "cnr_id": "comfy-core",
-                        "ver": "0.5.1",
-                        "enableTabs": False,
-                        "tabWidth": 65,
-                        "tabXOffset": 10,
-                        "hasSecondTab": False,
-                        "secondTabText": "Send Back",
-                        "secondTabOffset": 80,
-                        "secondTabWidth": 65,
-                        "ue_properties": {
-                            "widget_ue_connectable": {},
-                            "version": "7.1",
-                            "input_ue_unconnectable": {},
-                        },
-                    },
-                    "widgets_values": ["lanczos", 0.5],
-                },
-                {
                     "id": 185,
                     "type": "PrimitiveInt",
                     "pos": [-1572.8784149099176, 3412.1982874986224],
                     "size": [270, 82],
                     "flags": {},
-                    "order": 7,
+                    "order": 6,
                     "mode": 0,
                     "inputs": [],
                     "outputs": [{"name": "INT", "type": "INT", "links": [426, 452]}],
@@ -1331,7 +1014,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                             "input_ue_unconnectable": {},
                         },
                     },
-                    "widgets_values": [1000, "fixed"],
+                    "widgets_values": [10, "fixed"],
                 },
                 {
                     "id": 174,
@@ -1339,7 +1022,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "pos": [-163.74205127355378, 3288.7528329531697],
                     "size": [270, 144],
                     "flags": {},
-                    "order": 18,
+                    "order": 16,
                     "mode": 0,
                     "inputs": [
                         {"name": "audio_vae", "type": "VAE", "link": 493},
@@ -1382,7 +1065,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "pos": [113.72576658760408, 2823.2982874986233],
                     "size": [270, 104],
                     "flags": {},
-                    "order": 22,
+                    "order": 21,
                     "mode": 0,
                     "inputs": [
                         {"name": "positive", "type": "CONDITIONING", "link": 470},
@@ -1418,34 +1101,12 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "widgets_values": [25],
                 },
                 {
-                    "id": 236,
-                    "type": "ComfyNumberConvert",
-                    "pos": [-880.1301301556236, 3451.558204159912],
-                    "size": [149.46666564941407, 46],
-                    "flags": {},
-                    "order": 13,
-                    "mode": 0,
-                    "inputs": [
-                        {
-                            "label": "value",
-                            "name": "value",
-                            "type": "INT,FLOAT,STRING,BOOLEAN",
-                            "link": 548,
-                        }
-                    ],
-                    "outputs": [
-                        {"name": "FLOAT", "type": "FLOAT", "links": [546]},
-                        {"name": "INT", "type": "INT", "links": [547]},
-                    ],
-                    "properties": {"Node name for S&R": "ComfyNumberConvert"},
-                },
-                {
                     "id": 237,
                     "type": "INTConstant",
                     "pos": [-1570.9773886156618, 3559.36920415991],
-                    "size": [270.6235912847483, 58],
+                    "size": [270.6166687011719, 104],
                     "flags": {},
-                    "order": 8,
+                    "order": 7,
                     "mode": 0,
                     "inputs": [],
                     "outputs": [{"name": "value", "type": "INT", "links": [548]}],
@@ -1456,37 +1117,206 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "bgcolor": "#29699c",
                 },
                 {
-                    "id": 234,
-                    "type": "GetImageSizeAndCount",
-                    "pos": [-670.2693617218282, 3127.190695693549],
-                    "size": [323.9333343505858, 86],
+                    "id": 214,
+                    "type": "VAEDecode",
+                    "pos": [1393.5708153295072, 2186.3926591946306],
+                    "size": [240, 72],
                     "flags": {},
-                    "order": 23,
+                    "order": 27,
                     "mode": 0,
-                    "inputs": [{"name": "image", "type": "IMAGE", "link": 541}],
-                    "outputs": [
-                        {"name": "image", "type": "IMAGE", "links": []},
-                        {
-                            "label": "width",
-                            "name": "width",
-                            "type": "INT",
-                            "links": [542],
+                    "inputs": [
+                        {"name": "samples", "type": "LATENT", "link": 483},
+                        {"name": "vae", "type": "VAE", "link": 491},
+                    ],
+                    "outputs": [{"name": "IMAGE", "type": "IMAGE", "links": [549]}],
+                    "properties": {
+                        "Node name for S&R": "VAEDecode",
+                        "cnr_id": "comfy-core",
+                        "ver": "0.3.75",
+                        "enableTabs": False,
+                        "tabWidth": 65,
+                        "tabXOffset": 10,
+                        "hasSecondTab": False,
+                        "secondTabText": "Send Back",
+                        "secondTabOffset": 80,
+                        "secondTabWidth": 65,
+                        "ue_properties": {
+                            "widget_ue_connectable": {},
+                            "version": "7.1",
+                            "input_ue_unconnectable": {},
                         },
+                    },
+                    "widgets_values": [],
+                },
+                {
+                    "id": 213,
+                    "type": "LTXVAudioVAEDecode",
+                    "pos": [1394.4799062385982, 2312.756295558267],
+                    "size": [240, 72],
+                    "flags": {},
+                    "order": 28,
+                    "mode": 0,
+                    "inputs": [
+                        {"name": "samples", "type": "LATENT", "link": 482},
                         {
-                            "label": "height",
-                            "name": "height",
-                            "type": "INT",
-                            "links": [543],
-                        },
-                        {
-                            "label": "count",
-                            "name": "count",
-                            "type": "INT",
-                            "links": None,
+                            "label": "Audio VAE",
+                            "name": "audio_vae",
+                            "type": "VAE",
+                            "link": 494,
                         },
                     ],
-                    "properties": {"Node name for S&R": "GetImageSizeAndCount"},
+                    "outputs": [{"name": "Audio", "type": "AUDIO", "links": [550]}],
+                    "properties": {
+                        "Node name for S&R": "LTXVAudioVAEDecode",
+                        "cnr_id": "comfy-core",
+                        "ver": "0.7.0",
+                        "enableTabs": False,
+                        "tabWidth": 65,
+                        "tabXOffset": 10,
+                        "hasSecondTab": False,
+                        "secondTabText": "Send Back",
+                        "secondTabOffset": 80,
+                        "secondTabWidth": 65,
+                        "ue_properties": {
+                            "widget_ue_connectable": {},
+                            "version": "7.1",
+                            "input_ue_unconnectable": {},
+                        },
+                    },
                     "widgets_values": [],
+                },
+                {
+                    "id": 236,
+                    "type": "ComfyNumberConvert",
+                    "pos": [-880.1301301556236, 3451.558204159912],
+                    "size": [225, 72],
+                    "flags": {},
+                    "order": 12,
+                    "mode": 0,
+                    "inputs": [
+                        {
+                            "label": "value",
+                            "name": "value",
+                            "type": "INT,FLOAT,STRING,BOOLEAN",
+                            "link": 548,
+                        }
+                    ],
+                    "outputs": [
+                        {"name": "FLOAT", "type": "FLOAT", "links": [546, 551]},
+                        {"name": "INT", "type": "INT", "links": [547]},
+                    ],
+                    "properties": {"Node name for S&R": "ComfyNumberConvert"},
+                    "widgets_values": [],
+                },
+                {
+                    "id": 238,
+                    "type": "VHS_VideoCombine",
+                    "pos": [1706.901432049964, 2318.0730170260604],
+                    "size": [416.3333435058594, 744.3333435058594],
+                    "flags": {},
+                    "order": 29,
+                    "mode": 0,
+                    "inputs": [
+                        {"name": "images", "type": "IMAGE", "link": 549},
+                        {"name": "audio", "shape": 7, "type": "AUDIO", "link": 550},
+                        {
+                            "name": "meta_batch",
+                            "shape": 7,
+                            "type": "VHS_BatchManager",
+                            "link": None,
+                        },
+                        {"name": "vae", "shape": 7, "type": "VAE", "link": None},
+                        {
+                            "name": "frame_rate",
+                            "type": "FLOAT",
+                            "widget": {"name": "frame_rate"},
+                            "link": 551,
+                        },
+                    ],
+                    "outputs": [
+                        {"name": "Filenames", "type": "VHS_FILENAMES", "links": None}
+                    ],
+                    "properties": {"Node name for S&R": "VHS_VideoCombine"},
+                    "widgets_values": {
+                        "frame_rate": 8,
+                        "loop_count": 0,
+                        "filename_prefix": "LTX23",
+                        "format": "video/h264-mp4",
+                        "pix_fmt": "yuv420p",
+                        "crf": 19,
+                        "save_metadata": False,
+                        "trim_to_audio": False,
+                        "pingpong": False,
+                        "save_output": True,
+                        "videopreview": {
+                            "hidden": False,
+                            "paused": False,
+                            "params": {
+                                "filename": "LTX23_00003-audio.mp4",
+                                "subfolder": "",
+                                "type": "output",
+                                "format": "video/h264-mp4",
+                                "frame_rate": 24,
+                                "workflow": "LTX23_00003.png",
+                                "fullpath": "/comfy/output/LTX23_00003-audio.mp4",
+                            },
+                        },
+                    },
+                },
+                {
+                    "id": 98,
+                    "type": "LoadImage",
+                    "pos": [-1821.2342391601883, 2838.0374704710057],
+                    "size": [488.6333312988281, 519.2333374023438],
+                    "flags": {},
+                    "order": 8,
+                    "mode": 0,
+                    "inputs": [],
+                    "outputs": [
+                        {"name": "IMAGE", "type": "IMAGE", "links": [538]},
+                        {"name": "MASK", "type": "MASK", "links": None},
+                    ],
+                    "properties": {
+                        "Node name for S&R": "LoadImage",
+                        "cnr_id": "comfy-core",
+                        "ver": "0.5.1",
+                        "enableTabs": False,
+                        "tabWidth": 65,
+                        "tabXOffset": 10,
+                        "hasSecondTab": False,
+                        "secondTabText": "Send Back",
+                        "secondTabOffset": 80,
+                        "secondTabWidth": 65,
+                        "ue_properties": {
+                            "widget_ue_connectable": {},
+                            "version": "7.1",
+                            "input_ue_unconnectable": {},
+                        },
+                    },
+                    "widgets_values": [
+                        "ab67616d00001e021ecdd83cdb58ea92d29ef230.png",
+                        "image",
+                    ],
+                },
+                {
+                    "id": 230,
+                    "type": "LoraTagLoader",
+                    "pos": [-987.6860601792171, 2039.2227236663075],
+                    "size": [400, 200],
+                    "flags": {},
+                    "order": 11,
+                    "mode": 0,
+                    "inputs": [
+                        {"name": "model", "type": "MODEL", "link": 525},
+                        {"name": "clip", "type": "CLIP", "link": 526},
+                    ],
+                    "outputs": [
+                        {"name": "MODEL", "type": "MODEL", "links": [527]},
+                        {"name": "CLIP", "type": "CLIP", "links": [528]},
+                        {"name": "STRING", "type": "STRING", "links": [529]},
+                    ],
+                    "properties": {"Node name for S&R": "LoraTagLoader"},
+                    "widgets_values": ["The objects flying surround"],
                 },
             ],
             "links": [
@@ -1499,8 +1329,6 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                 [431, 182, 0, 175, 4, "LATENT"],
                 [441, 190, 0, 182, 0, "LATENT"],
                 [442, 174, 0, 182, 1, "LATENT"],
-                [446, 196, 0, 184, 0, "IMAGE"],
-                [449, 197, 0, 188, 0, "IMAGE"],
                 [452, 185, 0, 189, 2, "INT"],
                 [454, 188, 0, 190, 1, "IMAGE"],
                 [455, 189, 0, 190, 2, "LATENT"],
@@ -1509,9 +1337,6 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                 [470, 203, 0, 201, 0, "CONDITIONING"],
                 [482, 217, 1, 213, 0, "LATENT"],
                 [483, 217, 0, 214, 0, "LATENT"],
-                [484, 214, 0, 215, 0, "IMAGE"],
-                [485, 213, 0, 215, 1, "AUDIO"],
-                [486, 215, 0, 216, 0, "VIDEO"],
                 [487, 175, 1, 217, 0, "LATENT"],
                 [489, 210, 0, 218, 0, "VAE"],
                 [490, 218, 0, 190, 0, "VAE"],
@@ -1527,23 +1352,23 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                 [528, 230, 1, 203, 0, "CLIP"],
                 [529, 230, 2, 203, 1, "STRING"],
                 [534, 225, 0, 193, 0, "MODEL"],
-                [536, 233, 0, 197, 0, "IMAGE"],
                 [538, 98, 0, 233, 0, "IMAGE"],
-                [539, 233, 1, 196, 0, "INT"],
-                [540, 233, 2, 196, 1, "INT"],
-                [541, 184, 0, 234, 0, "IMAGE"],
-                [542, 234, 1, 189, 0, "INT"],
-                [543, 234, 2, 189, 1, "INT"],
                 [546, 236, 0, 201, 2, "FLOAT"],
                 [547, 236, 1, 174, 2, "INT"],
                 [548, 237, 0, 236, 0, "INT"],
+                [549, 214, 0, 238, 0, "IMAGE"],
+                [550, 213, 0, 238, 1, "AUDIO"],
+                [551, 236, 0, 238, 4, "FLOAT"],
+                [554, 233, 1, 189, 0, "INT"],
+                [555, 233, 2, 189, 1, "INT"],
+                [556, 233, 0, 188, 0, "IMAGE"],
             ],
             "groups": [],
             "config": {},
             "extra": {
                 "ds": {
-                    "scale": 0.9090909090909094,
-                    "offset": [-79.00973974421667, -1944.1252674070909],
+                    "scale": 0.8264462809917362,
+                    "offset": [-549.086089690998, -2059.26360861553],
                 },
                 "frontendVersion": "1.46.6",
                 "workflowRendererVersion": "LG",
@@ -1562,12 +1387,12 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                             "max_length": 1024,
                         },
                         "class_type": "LTXVGemmaCLIPModelLoader",
-                        "_meta": {"title": "🅛🅣🅧 Gemma 3 Model Loader"},
+                        "_meta": {"title": "🅛🅣🅧 Gemma 3 Model " "Loader"},
                     },
                     "3": {
                         "inputs": {"text": "", "clip": ["2", 0]},
                         "class_type": "CLIPTextEncode",
-                        "_meta": {"title": "CLIP Text Encode (Prompt)"},
+                        "_meta": {"title": "CLIP Text Encode " "(Prompt)"},
                     },
                     "4": {
                         "inputs": {
@@ -1581,7 +1406,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                             "clip": ["2", 0],
                         },
                         "class_type": "CLIPTextEncode",
-                        "_meta": {"title": "CLIP Text Encode (Prompt)"},
+                        "_meta": {"title": "CLIP Text Encode " "(Prompt)"},
                     },
                     "8": {
                         "inputs": {"sampler_name": "euler"},
@@ -1615,12 +1440,12 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                             "ckpt_name": "ltx-av-step-1751000_vocoder_24K.safetensors"
                         },
                         "class_type": "LTXVAudioVAELoader",
-                        "_meta": {"title": "🅛🅣🅧 LTXV Audio VAE Loader"},
+                        "_meta": {"title": "🅛🅣🅧 LTXV Audio " "VAE Loader"},
                     },
                     "14": {
                         "inputs": {"samples": ["29", 1], "audio_vae": ["13", 0]},
                         "class_type": "LTXVAudioVAEDecode",
-                        "_meta": {"title": "🅛🅣🅧 LTXV Audio VAE Decode"},
+                        "_meta": {"title": "🅛🅣🅧 LTXV Audio " "VAE Decode"},
                     },
                     "15": {
                         "inputs": {
@@ -1638,7 +1463,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                             "audio": ["14", 0],
                         },
                         "class_type": "VHS_VideoCombine",
-                        "_meta": {"title": "Video Combine 🎥🅥🅗🅢"},
+                        "_meta": {"title": "Video Combine " "🎥🅥🅗🅢"},
                     },
                     "17": {
                         "inputs": {
@@ -1649,7 +1474,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                             "parameters": ["18", 0],
                         },
                         "class_type": "MultimodalGuider",
-                        "_meta": {"title": "🅛🅣🅧 Multimodal Guider"},
+                        "_meta": {"title": "🅛🅣🅧 Multimodal " "Guider"},
                     },
                     "18": {
                         "inputs": {
@@ -1661,7 +1486,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                             "parameters": ["19", 0],
                         },
                         "class_type": "GuiderParameters",
-                        "_meta": {"title": "🅛🅣🅧 Guider Parameters"},
+                        "_meta": {"title": "🅛🅣🅧 Guider " "Parameters"},
                     },
                     "19": {
                         "inputs": {
@@ -1672,7 +1497,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                             "modality_scale": 3,
                         },
                         "class_type": "GuiderParameters",
-                        "_meta": {"title": "🅛🅣🅧 Guider Parameters"},
+                        "_meta": {"title": "🅛🅣🅧 Guider " "Parameters"},
                     },
                     "21": {
                         "inputs": {"audioUI": "", "audio": ["14", 0]},
@@ -1700,7 +1525,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                             "batch_size": 1,
                         },
                         "class_type": "LTXVEmptyLatentAudio",
-                        "_meta": {"title": "🅛🅣🅧 LTXV Empty Latent Audio"},
+                        "_meta": {"title": "🅛🅣🅧 LTXV Empty " "Latent Audio"},
                     },
                     "27": {
                         "inputs": {"value": 105},
@@ -1714,12 +1539,12 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                             "model": ["44", 0],
                         },
                         "class_type": "LTXVConcatAVLatent",
-                        "_meta": {"title": "🅛🅣🅧 LTXV Concat AV Latent"},
+                        "_meta": {"title": "🅛🅣🅧 LTXV Concat " "AV Latent"},
                     },
                     "29": {
                         "inputs": {"av_latent": ["41", 0], "model": ["28", 1]},
                         "class_type": "LTXVSeparateAVLatent",
-                        "_meta": {"title": "🅛🅣🅧 LTXV Separate AV Latent"},
+                        "_meta": {"title": "🅛🅣🅧 LTXV " "Separate AV " "Latent"},
                     },
                     "41": {
                         "inputs": {
@@ -1779,23 +1604,18 @@ workflow = build_workflow()
 prompt = json.loads(json.dumps(workflow))
 extra_pnginfo = build_extra_pnginfo()
 
-def generate(
-    prompt_text: str,
-    input_img1_path: str | None,
-    video_length: int = 97,
-    fps: int = 24,
-    unload_models: bool | None = None,
-):
+
+# Workflow execution
+def main(unload_models: bool | None = None):
     bootstrap_comfyui_runtime()
     add_extra_model_paths()
     import_custom_nodes()
 
+    # Node imports
     from nodes import (
         CLIPTextEncode,
         ConditioningZeroOut,
         DualCLIPLoader,
-        EmptyImage,
-        ImageScaleBy,
         LoadImage,
         NODE_CLASS_MAPPINGS,
         UNETLoader,
@@ -1807,17 +1627,15 @@ def generate(
     try:
         with torch.inference_mode():
             loadimage = LoadImage()
-            image_name = input_img1_path if input_img1_path else "example.png"
-            loadimage_98 = loadimage.load_image(image=image_name)
-
+            loadimage_98 = loadimage.load_image(
+                image="ab67616d00001e021ecdd83cdb58ea92d29ef230.png"
+            )
             ksamplerselect = NODE_CLASS_MAPPINGS["KSamplerSelect"]()
             ksamplerselect_168 = ksamplerselect.EXECUTE_NORMALIZED(
                 sampler_name="euler_ancestral"
             )
-
             primitiveint = NODE_CLASS_MAPPINGS["PrimitiveInt"]()
-            primitiveint_185 = primitiveint.EXECUTE_NORMALIZED(value=video_length)
-
+            primitiveint_185 = primitiveint.EXECUTE_NORMALIZED(value=10)
             randomnoise = NODE_CLASS_MAPPINGS["RandomNoise"]()
             node_199_noise_seed = prompt["199"]["inputs"]["noise_seed"] = (
                 random.randint(1, 2**64)
@@ -1825,13 +1643,11 @@ def generate(
             randomnoise_199 = randomnoise.EXECUTE_NORMALIZED(
                 noise_seed=node_199_noise_seed
             )
-
             unetloader = UNETLoader()
             unetloader_212 = unetloader.load_unet(
                 unet_name="ltx-2.3-22b-distilled_transformer_only_fp8_scaled.safetensors",
                 weight_dtype="default",
             )
-
             dualcliploader = DualCLIPLoader()
             dualcliploader_209 = dualcliploader.load_clip(
                 clip_name1="gemma_3_12B_it_fp4_mixed.safetensors",
@@ -1839,50 +1655,38 @@ def generate(
                 type="ltxv",
                 device="default",
             )
-
             loratagloader = NODE_CLASS_MAPPINGS["LoraTagLoader"]()
-            node_230_text = prompt["230"]["inputs"]["text"] = prompt_text
             loratagloader_230 = loratagloader.load_lora(
-                text=node_230_text,
+                text="The objects flying surround",
                 model=get_value_at_index(unetloader_212, 0),
                 clip=get_value_at_index(dualcliploader_209, 0),
             )
-
             cliptextencode = CLIPTextEncode()
             cliptextencode_203 = cliptextencode.encode(
                 text=get_value_at_index(loratagloader_230, 2),
                 clip=get_value_at_index(loratagloader_230, 1),
             )
-
             vaeloaderkj = NODE_CLASS_MAPPINGS["VAELoaderKJ"]()
             vaeloaderkj_210 = vaeloaderkj.load_vae(
                 vae_name="LTX23_video_vae_bf16.safetensors",
                 device="main_device",
                 weight_dtype="bf16",
             )
-
             vaeloaderkj_211 = vaeloaderkj.load_vae(
                 vae_name="LTX23_audio_vae_bf16.safetensors",
                 device="main_device",
                 weight_dtype="bf16",
             )
-
             intconstant = NODE_CLASS_MAPPINGS["INTConstant"]()
-            node_237_value = prompt["237"]["inputs"]["value"] = fps
-            intconstant_237 = intconstant.get_value(value=node_237_value)
-
+            intconstant_237 = intconstant.get_value(value=24)
             getimagesizeandcount = NODE_CLASS_MAPPINGS["GetImageSizeAndCount"]()
-            resizeimagesbylongeredge = NODE_CLASS_MAPPINGS["ResizeImagesByLongerEdge"]()
             ltxvpreprocess = NODE_CLASS_MAPPINGS["LTXVPreprocess"]()
-            emptyimage = EmptyImage()
-            imagescaleby = ImageScaleBy()
             emptyltxvlatentvideo = NODE_CLASS_MAPPINGS["EmptyLTXVLatentVideo"]()
             ltxvimgtovideoinplace = NODE_CLASS_MAPPINGS["LTXVImgToVideoInplace"]()
             comfynumberconvert = NODE_CLASS_MAPPINGS["ComfyNumberConvert"]()
             ltxvemptylatentaudio = NODE_CLASS_MAPPINGS["LTXVEmptyLatentAudio"]()
             ltxvconcatavlatent = NODE_CLASS_MAPPINGS["LTXVConcatAVLatent"]()
             ltxvscheduler = NODE_CLASS_MAPPINGS["LTXVScheduler"]()
-            pathchsageattentionkj = NODE_CLASS_MAPPINGS["PathchSageAttentionKJ"]()
             conditioningzeroout = ConditioningZeroOut()
             ltxvconditioning = NODE_CLASS_MAPPINGS["LTXVConditioning"]()
             cfgguider = NODE_CLASS_MAPPINGS["CFGGuider"]()
@@ -1890,50 +1694,21 @@ def generate(
             ltxvseparateavlatent = NODE_CLASS_MAPPINGS["LTXVSeparateAVLatent"]()
             ltxvaudiovaedecode = NODE_CLASS_MAPPINGS["LTXVAudioVAEDecode"]()
             vaedecode = VAEDecode()
-            createvideo = NODE_CLASS_MAPPINGS["CreateVideo"]()
-            savevideo = NODE_CLASS_MAPPINGS["SaveVideo"]()
-
+            vhs_videocombine = NODE_CLASS_MAPPINGS["VHS_VideoCombine"]()
             for q in range(1):
                 getimagesizeandcount_233 = getimagesizeandcount.getsize(
                     image=get_value_at_index(loadimage_98, 0)
                 )
-
-                resizeimagesbylongeredge_197 = (
-                    resizeimagesbylongeredge.EXECUTE_NORMALIZED(
-                        longer_edge=1536,
-                        images=get_value_at_index(getimagesizeandcount_233, 0),
-                    )
-                )
-
                 ltxvpreprocess_188 = ltxvpreprocess.EXECUTE_NORMALIZED(
                     img_compression=33,
-                    image=get_value_at_index(resizeimagesbylongeredge_197, 0),
+                    image=get_value_at_index(getimagesizeandcount_233, 0),
                 )
-
-                emptyimage_196 = emptyimage.generate(
+                emptyltxvlatentvideo_189 = emptyltxvlatentvideo.EXECUTE_NORMALIZED(
                     width=get_value_at_index(getimagesizeandcount_233, 1),
                     height=get_value_at_index(getimagesizeandcount_233, 2),
-                    batch_size=1,
-                    color=0,
-                )
-
-                imagescaleby_184 = imagescaleby.upscale(
-                    upscale_method="lanczos",
-                    scale_by=0.5,
-                    image=get_value_at_index(emptyimage_196, 0),
-                )
-
-                getimagesizeandcount_234 = getimagesizeandcount.getsize(
-                    image=get_value_at_index(imagescaleby_184, 0)
-                )
-
-                emptyltxvlatentvideo_189 = emptyltxvlatentvideo.EXECUTE_NORMALIZED(
-                    width=get_value_at_index(getimagesizeandcount_234, 1),
-                    height=get_value_at_index(getimagesizeandcount_234, 2),
                     length=get_value_at_index(primitiveint_185, 0),
                     batch_size=1,
                 )
-
                 ltxvimgtovideoinplace_190 = ltxvimgtovideoinplace.EXECUTE_NORMALIZED(
                     strength=1,
                     bypass=False,
@@ -1941,23 +1716,19 @@ def generate(
                     image=get_value_at_index(ltxvpreprocess_188, 0),
                     latent=get_value_at_index(emptyltxvlatentvideo_189, 0),
                 )
-
                 comfynumberconvert_236 = comfynumberconvert.EXECUTE_NORMALIZED(
                     value=get_value_at_index(intconstant_237, 0)
                 )
-
                 ltxvemptylatentaudio_174 = ltxvemptylatentaudio.EXECUTE_NORMALIZED(
                     frames_number=get_value_at_index(primitiveint_185, 0),
                     frame_rate=get_value_at_index(comfynumberconvert_236, 1),
                     batch_size=1,
                     audio_vae=get_value_at_index(vaeloaderkj_211, 0),
                 )
-
                 ltxvconcatavlatent_182 = ltxvconcatavlatent.EXECUTE_NORMALIZED(
                     video_latent=get_value_at_index(ltxvimgtovideoinplace_190, 0),
                     audio_latent=get_value_at_index(ltxvemptylatentaudio_174, 0),
                 )
-
                 ltxvscheduler_169 = ltxvscheduler.EXECUTE_NORMALIZED(
                     steps=8,
                     max_shift=2.05,
@@ -1966,30 +1737,20 @@ def generate(
                     terminal=0.1,
                     latent=get_value_at_index(ltxvconcatavlatent_182, 0),
                 )
-
-                pathchsageattentionkj_225 = pathchsageattentionkj.patch(
-                    sage_attention="sageattn_qk_int8_pv_fp16_cuda",
-                    allow_compile=True,
-                    model=get_value_at_index(loratagloader_230, 0),
-                )
-
                 conditioningzeroout_226 = conditioningzeroout.zero_out(
                     conditioning=get_value_at_index(cliptextencode_203, 0)
                 )
-
                 ltxvconditioning_201 = ltxvconditioning.EXECUTE_NORMALIZED(
                     frame_rate=get_value_at_index(comfynumberconvert_236, 0),
                     positive=get_value_at_index(cliptextencode_203, 0),
                     negative=get_value_at_index(conditioningzeroout_226, 0),
                 )
-
                 cfgguider_193 = cfgguider.EXECUTE_NORMALIZED(
                     cfg=1,
-                    model=get_value_at_index(pathchsageattentionkj_225, 0),
+                    model=get_value_at_index(loratagloader_230, 0),
                     positive=get_value_at_index(ltxvconditioning_201, 0),
                     negative=get_value_at_index(ltxvconditioning_201, 1),
                 )
-
                 samplercustomadvanced_175 = samplercustomadvanced.EXECUTE_NORMALIZED(
                     noise=get_value_at_index(randomnoise_199, 0),
                     guider=get_value_at_index(cfgguider_193, 0),
@@ -1997,45 +1758,38 @@ def generate(
                     sigmas=get_value_at_index(ltxvscheduler_169, 0),
                     latent_image=get_value_at_index(ltxvconcatavlatent_182, 0),
                 )
-
                 ltxvseparateavlatent_217 = ltxvseparateavlatent.EXECUTE_NORMALIZED(
                     av_latent=get_value_at_index(samplercustomadvanced_175, 1)
                 )
-
                 ltxvaudiovaedecode_213 = ltxvaudiovaedecode.EXECUTE_NORMALIZED(
                     samples=get_value_at_index(ltxvseparateavlatent_217, 1),
                     audio_vae=get_value_at_index(vaeloaderkj_211, 0),
                 )
-
                 vaedecode_214 = vaedecode.decode(
                     samples=get_value_at_index(ltxvseparateavlatent_217, 0),
                     vae=get_value_at_index(vaeloaderkj_210, 0),
                 )
-
-                createvideo_215 = createvideo.EXECUTE_NORMALIZED(
-                    fps=node_237_value,
+                vhs_videocombine_238 = vhs_videocombine.combine_video(
+                    frame_rate=get_value_at_index(comfynumberconvert_236, 0),
+                    loop_count=0,
+                    filename_prefix="LTX23",
+                    format="video/h264-mp4",
+                    pix_fmt="yuv420p",
+                    crf=19,
+                    save_metadata=False,
+                    trim_to_audio=False,
+                    pingpong=False,
+                    save_output=True,
                     images=get_value_at_index(vaedecode_214, 0),
                     audio=get_value_at_index(ltxvaudiovaedecode_213, 0),
-                )
-
-                savevideo.EXECUTE_NORMALIZED(
-                    filename_prefix="video/LTX_2.3_i2v",
-                    format="auto",
-                    codec="auto",
-                    video=get_value_at_index(createvideo_215, 0),
+                    unique_id=13707171288602021803,
                     prompt=prompt,
                     extra_pnginfo=extra_pnginfo,
                 )
-
-                import folder_paths
-                import os
-                import glob as glob_module
-
-                output_dir = folder_paths.get_output_directory()
-                pattern = os.path.join(output_dir, "video", "LTX_2.3_i2v_*.mp4")
-                files = sorted(glob_module.glob(pattern), key=os.path.getmtime)
-                if files:
-                    return files[-1]
-                return None
     finally:
         cleanup_comfyui_runtime(unload_models=unload_models)
+
+
+# Entrypoint
+if __name__ == "__main__":
+    main()
