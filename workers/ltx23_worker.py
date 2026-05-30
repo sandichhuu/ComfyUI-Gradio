@@ -1606,7 +1606,12 @@ extra_pnginfo = build_extra_pnginfo()
 
 
 # Workflow execution
-def main(unload_models: bool | None = None):
+def generate(
+    prompt_text: str,
+    seed: int,
+    image_path: str,
+    unload_models: bool | None = None,
+):
     bootstrap_comfyui_runtime()
     add_extra_model_paths()
     import_custom_nodes()
@@ -1627,9 +1632,7 @@ def main(unload_models: bool | None = None):
     try:
         with torch.inference_mode():
             loadimage = LoadImage()
-            loadimage_98 = loadimage.load_image(
-                image="ab67616d00001e021ecdd83cdb58ea92d29ef230.png"
-            )
+            loadimage_98 = loadimage.load_image(image=image_path)
             ksamplerselect = NODE_CLASS_MAPPINGS["KSamplerSelect"]()
             ksamplerselect_168 = ksamplerselect.EXECUTE_NORMALIZED(
                 sampler_name="euler_ancestral"
@@ -1657,7 +1660,7 @@ def main(unload_models: bool | None = None):
             )
             loratagloader = NODE_CLASS_MAPPINGS["LoraTagLoader"]()
             loratagloader_230 = loratagloader.load_lora(
-                text="The objects flying surround",
+                text=prompt_text,
                 model=get_value_at_index(unetloader_212, 0),
                 clip=get_value_at_index(dualcliploader_209, 0),
             )
