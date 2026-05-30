@@ -1608,8 +1608,9 @@ extra_pnginfo = build_extra_pnginfo()
 # Workflow execution
 def generate(
     prompt_text: str,
-    seed: int,
     image_path: str,
+    video_length: int,
+    fps: int,
     unload_models: bool | None = None,
 ):
     bootstrap_comfyui_runtime()
@@ -1638,7 +1639,7 @@ def generate(
                 sampler_name="euler_ancestral"
             )
             primitiveint = NODE_CLASS_MAPPINGS["PrimitiveInt"]()
-            primitiveint_185 = primitiveint.EXECUTE_NORMALIZED(value=10)
+            primitiveint_185 = primitiveint.EXECUTE_NORMALIZED(value=video_length)
             randomnoise = NODE_CLASS_MAPPINGS["RandomNoise"]()
             node_199_noise_seed = prompt["199"]["inputs"]["noise_seed"] = (
                 random.randint(1, 2**64)
@@ -1681,7 +1682,7 @@ def generate(
                 weight_dtype="bf16",
             )
             intconstant = NODE_CLASS_MAPPINGS["INTConstant"]()
-            intconstant_237 = intconstant.get_value(value=24)
+            intconstant_237 = intconstant.get_value(value=fps)
             getimagesizeandcount = NODE_CLASS_MAPPINGS["GetImageSizeAndCount"]()
             ltxvpreprocess = NODE_CLASS_MAPPINGS["LTXVPreprocess"]()
             emptyltxvlatentvideo = NODE_CLASS_MAPPINGS["EmptyLTXVLatentVideo"]()

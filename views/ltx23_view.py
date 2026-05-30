@@ -14,7 +14,7 @@ def generate_image(prompt_text, img1, video_length, fps):
 
     result = ltx23_generate(
         prompt_text=prompt_text,
-        input_img1_path=img1_path,
+        image_path=img1_path,
         video_length=int(video_length),
         fps=int(fps),
     )
