@@ -1,30 +1,22 @@
 import gradio as gr
-from workers.flux2_klein_9b_worker import generate as flux2_generate
+from workers.ltx23_worker import generate as ltx23_generate
 import tempfile
 from PIL import Image as PILImage
 
 
-def generate_image(prompt_text, img1, img2):
+def generate_image(prompt_text, img1, video_length, fps):
     img1_path = None
-    img2_path = None
 
     if img1 is not None:
         tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
         PILImage.fromarray(img1).save(tmp.name)
         img1_path = tmp.name
 
-    if img2 is not None:
-        tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
-        PILImage.fromarray(img2).save(tmp.name)
-        img2_path = tmp.name
-
-    ref_enabled = img2 is not None
-
-    result = flux2_generate(
+    result = ltx23_generate(
         prompt_text=prompt_text,
-        toggle_ref=ref_enabled,
         input_img1_path=img1_path,
-        input_img2_path=img2_path,
+        video_length=int(video_length),
+        fps=int(fps),
     )
 
     return result
@@ -38,29 +30,31 @@ def stop_generation():
     return gr.update(visible=True), gr.update(visible=False)
 
 
-def create_flux2_klein_9b_tab():
-    with gr.Tab("Flux2-Klein-9B"):
+def create_ltx23_tab():
+    with gr.Tab("LTX23"):
         with gr.Row():
             prompt = gr.Textbox(label="Prompt", value="helloworld", scale=4, lines=1)
+            video_length = gr.Number(
+                label="Video Length (frames)", value=97, precision=0
+            )
+            fps = gr.Number(label="FPS", value=24, precision=0)
             generate_btn = gr.Button("Generate", variant="primary", scale=1)
             stop_btn = gr.Button("Stop", variant="stop", scale=1, visible=False)
 
         with gr.Row():
             with gr.Column(scale=1):
-                with gr.Row(elem_classes="image-flex-row"):
-                    input_image1 = gr.Image(label="Input Image", height=444)
-                    input_image2 = gr.Image(label="Ref Image", height=444)
+                input_image = gr.Image(label="Input Image", height=444)
 
             with gr.Column(scale=1):
-                output_image = gr.Image(label="Output", height=444)
+                output_video = gr.Video(label="Output Video", height=444)
 
         generate_btn.click(
             fn=toggle_generation,
             outputs=[generate_btn, stop_btn],
         ).then(
             fn=generate_image,
-            inputs=[prompt, input_image1, input_image2],
-            outputs=[output_image],
+            inputs=[prompt, input_image, video_length, fps],
+            outputs=[output_video],
         ).then(
             fn=stop_generation,
             outputs=[generate_btn, stop_btn],

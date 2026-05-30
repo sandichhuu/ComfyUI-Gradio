@@ -177,12 +177,12 @@ def build_workflow() -> dict[str, Any]:
             "_meta": {"title": "Save Image"},
         },
         "159": {
-            "inputs": {"image": "full.png"},
+            "inputs": {"image": "example.png"},
             "class_type": "LoadImage",
             "_meta": {"title": "Load Image"},
         },
         "163": {
-            "inputs": {"image": "upper__gfpgan_restore.png"},
+            "inputs": {"image": "example.png"},
             "class_type": "LoadImage",
             "_meta": {"title": "Load Image"},
         },
@@ -202,7 +202,7 @@ def build_workflow() -> dict[str, Any]:
             "_meta": {"title": "RandomNoise"},
         },
         "182": {
-            "inputs": {"width": ["185", 0], "height": ["185", 1], "batch_size": 1},
+            "inputs": {"width": ["223", 1], "height": ["223", 2], "batch_size": 1},
             "class_type": "EmptyFlux2LatentImage",
             "_meta": {"title": "Empty Flux 2 Latent"},
         },
@@ -217,14 +217,9 @@ def build_workflow() -> dict[str, Any]:
             "_meta": {"title": "CFG Guider"},
         },
         "184": {
-            "inputs": {"steps": 4, "width": ["185", 0], "height": ["185", 1]},
+            "inputs": {"steps": 4, "width": ["223", 1], "height": ["223", 2]},
             "class_type": "Flux2Scheduler",
             "_meta": {"title": "Flux2Scheduler"},
-        },
-        "185": {
-            "inputs": {"image": ["196", 0]},
-            "class_type": "GetImageSize",
-            "_meta": {"title": "Get Image Size"},
         },
         "186": {
             "inputs": {"vae_name": "full_encoder_small_decoder.safetensors"},
@@ -357,6 +352,11 @@ def build_workflow() -> dict[str, Any]:
             "class_type": "ComfySwitchNode",
             "_meta": {"title": "Switch"},
         },
+        "223": {
+            "inputs": {"image": ["196", 0]},
+            "class_type": "GetImageSizeAndCount",
+            "_meta": {"title": "Get Image Size & Count"},
+        },
     }
 
 
@@ -365,8 +365,8 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
         "workflow": {
             "id": "92112d97-bb64-4b44-86f2-ea5691ef8f6e",
             "revision": 0,
-            "last_node_id": 221,
-            "last_link_id": 370,
+            "last_node_id": 223,
+            "last_link_id": 376,
             "nodes": [
                 {
                     "id": 179,
@@ -478,13 +478,13 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                             "name": "width",
                             "type": "INT",
                             "widget": {"name": "width"},
-                            "link": 305,
+                            "link": 375,
                         },
                         {
                             "name": "height",
                             "type": "INT",
                             "widget": {"name": "height"},
-                            "link": 307,
+                            "link": 376,
                         },
                     ],
                     "outputs": [{"name": "LATENT", "type": "LATENT", "links": [300]}],
@@ -520,13 +520,13 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                             "name": "width",
                             "type": "INT",
                             "widget": {"name": "width"},
-                            "link": 304,
+                            "link": 373,
                         },
                         {
                             "name": "height",
                             "type": "INT",
                             "widget": {"name": "height"},
-                            "link": 306,
+                            "link": 374,
                         },
                     ],
                     "outputs": [{"name": "SIGMAS", "type": "SIGMAS", "links": [299]}],
@@ -667,37 +667,6 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "widgets_values": [],
                 },
                 {
-                    "id": 196,
-                    "type": "ImageScaleToTotalPixels",
-                    "pos": [-746.8545028900982, 1314.0629294088326],
-                    "size": [270, 140],
-                    "flags": {},
-                    "order": 9,
-                    "mode": 0,
-                    "inputs": [{"name": "image", "type": "IMAGE", "link": 320}],
-                    "outputs": [
-                        {"name": "IMAGE", "type": "IMAGE", "links": [319, 323]}
-                    ],
-                    "properties": {
-                        "Node name for S&R": "ImageScaleToTotalPixels",
-                        "enableTabs": False,
-                        "tabWidth": 65,
-                        "tabXOffset": 10,
-                        "hasSecondTab": False,
-                        "secondTabText": "Send Back",
-                        "secondTabOffset": 80,
-                        "secondTabWidth": 65,
-                        "cnr_id": "comfy-core",
-                        "ver": "0.8.2",
-                        "ue_properties": {
-                            "widget_ue_connectable": {},
-                            "version": "7.7",
-                            "input_ue_unconnectable": {},
-                        },
-                    },
-                    "widgets_values": ["lanczos", 1, 1],
-                },
-                {
                     "id": 199,
                     "type": "VAEEncode",
                     "pos": [-262.42519181120747, 1759.1256407867652],
@@ -757,22 +726,6 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                         },
                     },
                     "widgets_values": ["Flux2-Klein"],
-                },
-                {
-                    "id": 159,
-                    "type": "LoadImage",
-                    "pos": [-1641.4014134062184, 595.9626804093201],
-                    "size": [345.5666809082031, 446.1499938964844],
-                    "flags": {},
-                    "order": 4,
-                    "mode": 0,
-                    "inputs": [],
-                    "outputs": [
-                        {"name": "IMAGE", "type": "IMAGE", "links": [320]},
-                        {"name": "MASK", "type": "MASK", "links": None},
-                    ],
-                    "properties": {"Node name for S&R": "LoadImage"},
-                    "widgets_values": ["full.png", "image"],
                 },
                 {
                     "id": 195,
@@ -898,7 +851,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "pos": [-863.1744346951235, 1058.4861402285028],
                     "size": [370, 110],
                     "flags": {},
-                    "order": 5,
+                    "order": 4,
                     "mode": 0,
                     "inputs": [],
                     "outputs": [
@@ -929,55 +882,6 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                         },
                     },
                     "widgets_values": ["full_encoder_small_decoder.safetensors"],
-                },
-                {
-                    "id": 163,
-                    "type": "LoadImage",
-                    "pos": [-1646.102658744966, 1145.3039933595937],
-                    "size": [342.5, 371.5],
-                    "flags": {},
-                    "order": 6,
-                    "mode": 0,
-                    "inputs": [],
-                    "outputs": [
-                        {"name": "IMAGE", "type": "IMAGE", "links": [330]},
-                        {"name": "MASK", "type": "MASK", "links": None},
-                    ],
-                    "properties": {"Node name for S&R": "LoadImage"},
-                    "widgets_values": ["upper__gfpgan_restore.png", "image"],
-                },
-                {
-                    "id": 185,
-                    "type": "GetImageSize",
-                    "pos": [-244.1127783294769, 1557.30306175527],
-                    "size": [230, 124],
-                    "flags": {},
-                    "order": 13,
-                    "mode": 0,
-                    "inputs": [{"name": "image", "type": "IMAGE", "link": 323}],
-                    "outputs": [
-                        {"name": "width", "type": "INT", "links": [304, 305]},
-                        {"name": "height", "type": "INT", "links": [306, 307]},
-                        {"name": "batch_size", "type": "INT", "links": []},
-                    ],
-                    "properties": {
-                        "Node name for S&R": "GetImageSize",
-                        "enableTabs": False,
-                        "tabWidth": 65,
-                        "tabXOffset": 10,
-                        "hasSecondTab": False,
-                        "secondTabText": "Send Back",
-                        "secondTabOffset": 80,
-                        "secondTabWidth": 65,
-                        "cnr_id": "comfy-core",
-                        "ver": "0.8.2",
-                        "ue_properties": {
-                            "widget_ue_connectable": {},
-                            "version": "7.7",
-                            "input_ue_unconnectable": {},
-                        },
-                    },
-                    "widgets_values": [],
                 },
                 {
                     "id": 189,
@@ -1085,41 +989,12 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     ],
                 },
                 {
-                    "id": 198,
-                    "type": "ImageScaleToTotalPixels",
-                    "pos": [-738.8584922872648, 1727.5420924331786],
-                    "size": [270, 140],
-                    "flags": {},
-                    "order": 10,
-                    "mode": 0,
-                    "inputs": [{"name": "image", "type": "IMAGE", "link": 330}],
-                    "outputs": [{"name": "IMAGE", "type": "IMAGE", "links": [331]}],
-                    "properties": {
-                        "Node name for S&R": "ImageScaleToTotalPixels",
-                        "enableTabs": False,
-                        "tabWidth": 65,
-                        "tabXOffset": 10,
-                        "hasSecondTab": False,
-                        "secondTabText": "Send Back",
-                        "secondTabOffset": 80,
-                        "secondTabWidth": 65,
-                        "cnr_id": "comfy-core",
-                        "ver": "0.8.2",
-                        "ue_properties": {
-                            "widget_ue_connectable": {},
-                            "version": "7.7",
-                            "input_ue_unconnectable": {},
-                        },
-                    },
-                    "widgets_values": ["lanczos", 1, 1],
-                },
-                {
                     "id": 220,
                     "type": "PrimitiveBoolean",
                     "pos": [-1652.2780198342068, 1756.7481584975178],
                     "size": [270, 58],
                     "flags": {},
-                    "order": 7,
+                    "order": 5,
                     "mode": 0,
                     "inputs": [],
                     "outputs": [{"name": "BOOLEAN", "type": "BOOLEAN", "links": [367]}],
@@ -1223,6 +1098,131 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "properties": {"Node name for S&R": "ComfySwitchNode"},
                     "widgets_values": [False],
                 },
+                {
+                    "id": 159,
+                    "type": "LoadImage",
+                    "pos": [-1641.4014134062184, 595.9626804093201],
+                    "size": [345.5666809082031, 446.1499938964844],
+                    "flags": {},
+                    "order": 6,
+                    "mode": 0,
+                    "inputs": [],
+                    "outputs": [
+                        {"name": "IMAGE", "type": "IMAGE", "links": [320]},
+                        {"name": "MASK", "type": "MASK", "links": None},
+                    ],
+                    "properties": {"Node name for S&R": "LoadImage"},
+                    "widgets_values": ["example.png", "image"],
+                },
+                {
+                    "id": 163,
+                    "type": "LoadImage",
+                    "pos": [-1646.102658744966, 1145.3039933595937],
+                    "size": [342.5, 371.5],
+                    "flags": {},
+                    "order": 7,
+                    "mode": 0,
+                    "inputs": [],
+                    "outputs": [
+                        {"name": "IMAGE", "type": "IMAGE", "links": [330]},
+                        {"name": "MASK", "type": "MASK", "links": None},
+                    ],
+                    "properties": {"Node name for S&R": "LoadImage"},
+                    "widgets_values": ["example.png", "image"],
+                },
+                {
+                    "id": 198,
+                    "type": "ImageScaleToTotalPixels",
+                    "pos": [-751.5489666646375, 1519.735574503712],
+                    "size": [270, 140],
+                    "flags": {},
+                    "order": 10,
+                    "mode": 0,
+                    "inputs": [{"name": "image", "type": "IMAGE", "link": 330}],
+                    "outputs": [{"name": "IMAGE", "type": "IMAGE", "links": [331]}],
+                    "properties": {
+                        "Node name for S&R": "ImageScaleToTotalPixels",
+                        "enableTabs": False,
+                        "tabWidth": 65,
+                        "tabXOffset": 10,
+                        "hasSecondTab": False,
+                        "secondTabText": "Send Back",
+                        "secondTabOffset": 80,
+                        "secondTabWidth": 65,
+                        "cnr_id": "comfy-core",
+                        "ver": "0.8.2",
+                        "ue_properties": {
+                            "widget_ue_connectable": {},
+                            "version": "7.7",
+                            "input_ue_unconnectable": {},
+                        },
+                    },
+                    "widgets_values": ["lanczos", 1, 1],
+                },
+                {
+                    "id": 196,
+                    "type": "ImageScaleToTotalPixels",
+                    "pos": [-746.8545028900982, 1314.0629294088326],
+                    "size": [270, 140],
+                    "flags": {},
+                    "order": 9,
+                    "mode": 0,
+                    "inputs": [{"name": "image", "type": "IMAGE", "link": 320}],
+                    "outputs": [
+                        {"name": "IMAGE", "type": "IMAGE", "links": [319, 372]}
+                    ],
+                    "properties": {
+                        "Node name for S&R": "ImageScaleToTotalPixels",
+                        "enableTabs": False,
+                        "tabWidth": 65,
+                        "tabXOffset": 10,
+                        "hasSecondTab": False,
+                        "secondTabText": "Send Back",
+                        "secondTabOffset": 80,
+                        "secondTabWidth": 65,
+                        "cnr_id": "comfy-core",
+                        "ver": "0.8.2",
+                        "ue_properties": {
+                            "widget_ue_connectable": {},
+                            "version": "7.7",
+                            "input_ue_unconnectable": {},
+                        },
+                    },
+                    "widgets_values": ["lanczos", 1, 1],
+                },
+                {
+                    "id": 223,
+                    "type": "GetImageSizeAndCount",
+                    "pos": [-279.6064154727612, 1562.6693783498815],
+                    "size": [252.34876407790352, 86],
+                    "flags": {},
+                    "order": 13,
+                    "mode": 0,
+                    "inputs": [{"name": "image", "type": "IMAGE", "link": 372}],
+                    "outputs": [
+                        {"name": "image", "type": "IMAGE", "links": None},
+                        {
+                            "label": "width",
+                            "name": "width",
+                            "type": "INT",
+                            "links": [373, 375],
+                        },
+                        {
+                            "label": "height",
+                            "name": "height",
+                            "type": "INT",
+                            "links": [374, 376],
+                        },
+                        {
+                            "label": "count",
+                            "name": "count",
+                            "type": "INT",
+                            "links": None,
+                        },
+                    ],
+                    "properties": {"Node name for S&R": "GetImageSizeAndCount"},
+                    "widgets_values": [],
+                },
             ],
             "links": [
                 [296, 181, 0, 192, 0, "NOISE"],
@@ -1233,10 +1233,6 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                 [301, 192, 0, 180, 0, "LATENT"],
                 [302, 186, 0, 180, 1, "VAE"],
                 [303, 180, 0, 9, 0, "IMAGE"],
-                [304, 185, 0, 184, 0, "INT"],
-                [305, 185, 0, 182, 0, "INT"],
-                [306, 185, 1, 184, 1, "INT"],
-                [307, 185, 1, 182, 1, "INT"],
                 [308, 187, 0, 190, 1, "CLIP"],
                 [311, 191, 0, 190, 0, "MODEL"],
                 [316, 189, 0, 183, 0, "MODEL"],
@@ -1246,7 +1242,6 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                 [320, 159, 0, 196, 0, "IMAGE"],
                 [321, 186, 0, 195, 1, "VAE"],
                 [322, 201, 0, 194, 0, "CONDITIONING"],
-                [323, 196, 0, 185, 0, "IMAGE"],
                 [324, 193, 0, 183, 2, "CONDITIONING"],
                 [327, 199, 0, 200, 1, "LATENT"],
                 [328, 194, 0, 200, 0, "CONDITIONING"],
@@ -1264,26 +1259,16 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                 [368, 200, 0, 221, 1, "CONDITIONING"],
                 [369, 194, 0, 221, 0, "CONDITIONING"],
                 [370, 221, 0, 183, 1, "CONDITIONING"],
+                [372, 196, 0, 223, 0, "IMAGE"],
+                [373, 223, 1, 184, 0, "INT"],
+                [374, 223, 2, 184, 1, "INT"],
+                [375, 223, 1, 182, 0, "INT"],
+                [376, 223, 2, 182, 1, "INT"],
             ],
-            "groups": [
-                {
-                    "id": 1,
-                    "title": "Models",
-                    "bounding": [-863.1744346951235, 468.48614022850336, 380, 780],
-                    "color": "#3f789e",
-                    "flags": {},
-                },
-                {
-                    "id": 3,
-                    "title": "Sampler",
-                    "bounding": [318.10647798790785, 473.38880732518453, 600, 790],
-                    "color": "#3f789e",
-                    "flags": {},
-                },
-            ],
+            "groups": [],
             "config": {},
             "extra": {
-                "frontendVersion": "1.46.3",
+                "frontendVersion": "1.46.6",
                 "workflowRendererVersion": "LG",
                 "VHS_latentpreview": False,
                 "VHS_latentpreviewrate": 0,
@@ -1291,8 +1276,8 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                 "VHS_KeepIntermediate": True,
                 "ue_links": [],
                 "ds": {
-                    "scale": 0.6934334949441353,
-                    "offset": [1122.9849421412223, -635.6406184656495],
+                    "scale": 0.6303940863128502,
+                    "offset": [1465.7619011302713, -387.14064672449206],
                 },
             },
             "version": 0.4,
@@ -1307,9 +1292,6 @@ extra_pnginfo = build_extra_pnginfo()
 
 def generate(
     prompt_text: str,
-    seed: int,
-    width: int,
-    height: int,
     toggle_ref: bool,
     input_img1_path: str,
     input_img2_path: str | None = None,
@@ -1333,53 +1315,21 @@ def generate(
         VAELoader,
     )
     import folder_paths
-    import shutil
-    import os
     import torch
-    from PIL import Image as PILImage
-
-    input_dir = folder_paths.get_input_directory()
-
-    img1_basename = os.path.basename(input_img1_path)
-    img1_dest = os.path.join(input_dir, img1_basename)
-    shutil.copy2(input_img1_path, img1_dest)
-
-    img2_basename = None
-    if input_img2_path:
-        img2_basename = os.path.basename(input_img2_path)
-        img2_dest = os.path.join(input_dir, img2_basename)
-        shutil.copy2(input_img2_path, img2_dest)
-
-    img1 = PILImage.open(img1_dest)
-    orig_w, orig_h = img1.size
-
-    if width == 0 and height == 0:
-        width = orig_w
-        height = orig_h
-
-    img1_resized = img1.resize((width, height), PILImage.LANCZOS)
-    img1_resized.save(img1_dest)
-
-    if img2_basename:
-        img2 = PILImage.open(img2_dest)
-        img2_resized = img2.resize((width, height), PILImage.LANCZOS)
-        img2_resized.save(img2_dest)
-
-    megapixels = (width * height) / 1000000.0
 
     try:
         with torch.inference_mode():
             loadimage = LoadImage()
-            loadimage_159 = loadimage.load_image(image=img1_basename)
-            if img2_basename:
-                loadimage_163 = loadimage.load_image(image=img2_basename)
-            else:
-                loadimage_163 = loadimage.load_image(image=img1_basename)
-
+            loadimage_159 = loadimage.load_image(image=input_img1_path)
+            loadimage_163 = loadimage.load_image(
+                image=input_img2_path if input_img2_path else input_img1_path
+            )
             ksamplerselect = NODE_CLASS_MAPPINGS["KSamplerSelect"]()
             ksamplerselect_179 = ksamplerselect.EXECUTE_NORMALIZED(sampler_name="euler")
             randomnoise = NODE_CLASS_MAPPINGS["RandomNoise"]()
-            node_181_noise_seed = prompt["181"]["inputs"]["noise_seed"] = seed
+            node_181_noise_seed = prompt["181"]["inputs"]["noise_seed"] = (
+                random.randint(1, 2**64)
+            )
             randomnoise_181 = randomnoise.EXECUTE_NORMALIZED(
                 noise_seed=node_181_noise_seed
             )
@@ -1398,18 +1348,10 @@ def generate(
                 unet_name="Flux.2 Klein 9B/flux-2-klein-9b-fp8.safetensors",
                 weight_dtype="default",
             )
-            loraloader = LoraLoader()
-            loraloader_190 = loraloader.load_lora(
-                lora_name="Flux.2 Klein 9B-base/KLEIN-Unchained-V2.safetensors",
-                strength_model=0.6,
-                strength_clip=1,
-                model=get_value_at_index(unetloader_191, 0),
-                clip=get_value_at_index(cliploader_187, 0),
-            )
             imagescaletototalpixels = NODE_CLASS_MAPPINGS["ImageScaleToTotalPixels"]()
             imagescaletototalpixels_196 = imagescaletototalpixels.EXECUTE_NORMALIZED(
                 upscale_method="lanczos",
-                megapixels=megapixels,
+                megapixels=1,
                 resolution_steps=1,
                 image=get_value_at_index(loadimage_159, 0),
             )
@@ -1420,13 +1362,21 @@ def generate(
             )
             imagescaletototalpixels_198 = imagescaletototalpixels.EXECUTE_NORMALIZED(
                 upscale_method="lanczos",
-                megapixels=megapixels,
+                megapixels=1,
                 resolution_steps=1,
                 image=get_value_at_index(loadimage_163, 0),
             )
             vaeencode_199 = vaeencode.encode(
                 pixels=get_value_at_index(imagescaletototalpixels_198, 0),
                 vae=get_value_at_index(vaeloader_186, 0),
+            )
+            loraloader = LoraLoader()
+            loraloader_190 = loraloader.load_lora(
+                lora_name="Flux.2 Klein 9B-base/KLEIN-Unchained-V2.safetensors",
+                strength_model=0.6,
+                strength_clip=1,
+                model=get_value_at_index(unetloader_191, 0),
+                clip=get_value_at_index(cliploader_187, 0),
             )
             loratagloader = NODE_CLASS_MAPPINGS["LoraTagLoader"]()
             loratagloader_219 = loratagloader.load_lora(
@@ -1446,7 +1396,7 @@ def generate(
             comfyswitchnode = NODE_CLASS_MAPPINGS["ComfySwitchNode"]()
             conditioningzeroout = ConditioningZeroOut()
             cfgguider = NODE_CLASS_MAPPINGS["CFGGuider"]()
-            getimagesize = NODE_CLASS_MAPPINGS["GetImageSize"]()
+            getimagesizeandcount = NODE_CLASS_MAPPINGS["GetImageSizeAndCount"]()
             flux2scheduler = NODE_CLASS_MAPPINGS["Flux2Scheduler"]()
             emptyflux2latentimage = NODE_CLASS_MAPPINGS["EmptyFlux2LatentImage"]()
             samplercustomadvanced = NODE_CLASS_MAPPINGS["SamplerCustomAdvanced"]()
@@ -1484,18 +1434,17 @@ def generate(
                     positive=get_value_at_index(comfyswitchnode_221, 0),
                     negative=get_value_at_index(referencelatent_193, 0),
                 )
-                getimagesize_185 = getimagesize.EXECUTE_NORMALIZED(
-                    image=get_value_at_index(imagescaletototalpixels_196, 0),
-                    unique_id=8849741446100169581,
+                getimagesizeandcount_223 = getimagesizeandcount.getsize(
+                    image=get_value_at_index(imagescaletototalpixels_196, 0)
                 )
                 flux2scheduler_184 = flux2scheduler.EXECUTE_NORMALIZED(
                     steps=4,
-                    width=get_value_at_index(getimagesize_185, 0),
-                    height=get_value_at_index(getimagesize_185, 1),
+                    width=get_value_at_index(getimagesizeandcount_223, 1),
+                    height=get_value_at_index(getimagesizeandcount_223, 2),
                 )
                 emptyflux2latentimage_182 = emptyflux2latentimage.EXECUTE_NORMALIZED(
-                    width=get_value_at_index(getimagesize_185, 0),
-                    height=get_value_at_index(getimagesize_185, 1),
+                    width=get_value_at_index(getimagesizeandcount_223, 1),
+                    height=get_value_at_index(getimagesizeandcount_223, 2),
                     batch_size=1,
                 )
                 samplercustomadvanced_192 = samplercustomadvanced.EXECUTE_NORMALIZED(

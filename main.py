@@ -1,6 +1,7 @@
 import gradio as gr
 from views.zit_view import create_zit_tab
 from views.flux2_klein_9b_view import create_flux2_klein_9b_tab
+from views.ltx23_view import create_ltx23_tab
 
 css = """
 .gradio-container {
@@ -75,42 +76,6 @@ button.stop:hover {
     flex: 1;
     min-width: 0;
 }
-.lora-table {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radi.lora-row {
-    align-items: center;
-    padding: 4px 0;
-    gap: 6px;
-}
-.lora-row * {
-    outline: none !important;
-    box-shadow: none !important;
-    border-color: transparent !important;
-}
-.lora-row input,
-.lora-row textarea,
-.lora-row button {
-    outline: none !important;
-    box-shadow: none !important;
-}
-.lora-row > div {
-    padding-top: 0 !important;
-    min-height: 0 !important;
-    align-items: center;
-}
-.lora-remove-btn {
-    background: #e53935 !important;
-    min-width: 30px;
-    max-width: 30px;
-    min-height: 30px;
-    max-height: 30px;
-    font-size: 14px;
-    font-weight: bold;
-    justify-content: center;
-    align-self: center;
-    min-width: 20px;
-    max-width: 20px;
-}
 """
 
 if __name__ == "__main__":
@@ -120,5 +85,6 @@ if __name__ == "__main__":
         with gr.Tabs() as tabs:
             create_zit_tab()
             create_flux2_klein_9b_tab()
+            create_ltx23_tab()
 
     demo.launch(css=css, pwa=True)
