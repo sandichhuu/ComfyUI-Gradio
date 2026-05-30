@@ -1438,7 +1438,6 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                         {"name": "INT", "type": "INT", "links": [547]},
                     ],
                     "properties": {"Node name for S&R": "ComfyNumberConvert"},
-                    "widgets_values": [],
                 },
                 {
                     "id": 237,
@@ -1543,8 +1542,8 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
             "config": {},
             "extra": {
                 "ds": {
-                    "scale": 0.8264462809917354,
-                    "offset": [1711.7128972557837, -2522.5943454070907],
+                    "scale": 0.9090909090909094,
+                    "offset": [-79.00973974421667, -1944.1252674070909],
                 },
                 "frontendVersion": "1.46.6",
                 "workflowRendererVersion": "LG",
@@ -1563,12 +1562,12 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                             "max_length": 1024,
                         },
                         "class_type": "LTXVGemmaCLIPModelLoader",
-                        "_meta": {"title": "🅛🅣🅧 Gemma 3 Model " "Loader"},
+                        "_meta": {"title": "🅛🅣🅧 Gemma 3 Model Loader"},
                     },
                     "3": {
                         "inputs": {"text": "", "clip": ["2", 0]},
                         "class_type": "CLIPTextEncode",
-                        "_meta": {"title": "CLIP Text Encode " "(Prompt)"},
+                        "_meta": {"title": "CLIP Text Encode (Prompt)"},
                     },
                     "4": {
                         "inputs": {
@@ -1582,7 +1581,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                             "clip": ["2", 0],
                         },
                         "class_type": "CLIPTextEncode",
-                        "_meta": {"title": "CLIP Text Encode " "(Prompt)"},
+                        "_meta": {"title": "CLIP Text Encode (Prompt)"},
                     },
                     "8": {
                         "inputs": {"sampler_name": "euler"},
@@ -1616,12 +1615,12 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                             "ckpt_name": "ltx-av-step-1751000_vocoder_24K.safetensors"
                         },
                         "class_type": "LTXVAudioVAELoader",
-                        "_meta": {"title": "🅛🅣🅧 LTXV Audio " "VAE Loader"},
+                        "_meta": {"title": "🅛🅣🅧 LTXV Audio VAE Loader"},
                     },
                     "14": {
                         "inputs": {"samples": ["29", 1], "audio_vae": ["13", 0]},
                         "class_type": "LTXVAudioVAEDecode",
-                        "_meta": {"title": "🅛🅣🅧 LTXV Audio " "VAE Decode"},
+                        "_meta": {"title": "🅛🅣🅧 LTXV Audio VAE Decode"},
                     },
                     "15": {
                         "inputs": {
@@ -1639,7 +1638,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                             "audio": ["14", 0],
                         },
                         "class_type": "VHS_VideoCombine",
-                        "_meta": {"title": "Video Combine " "🎥🅥🅗🅢"},
+                        "_meta": {"title": "Video Combine 🎥🅥🅗🅢"},
                     },
                     "17": {
                         "inputs": {
@@ -1650,7 +1649,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                             "parameters": ["18", 0],
                         },
                         "class_type": "MultimodalGuider",
-                        "_meta": {"title": "🅛🅣🅧 Multimodal " "Guider"},
+                        "_meta": {"title": "🅛🅣🅧 Multimodal Guider"},
                     },
                     "18": {
                         "inputs": {
@@ -1662,7 +1661,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                             "parameters": ["19", 0],
                         },
                         "class_type": "GuiderParameters",
-                        "_meta": {"title": "🅛🅣🅧 Guider " "Parameters"},
+                        "_meta": {"title": "🅛🅣🅧 Guider Parameters"},
                     },
                     "19": {
                         "inputs": {
@@ -1673,7 +1672,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                             "modality_scale": 3,
                         },
                         "class_type": "GuiderParameters",
-                        "_meta": {"title": "🅛🅣🅧 Guider " "Parameters"},
+                        "_meta": {"title": "🅛🅣🅧 Guider Parameters"},
                     },
                     "21": {
                         "inputs": {"audioUI": "", "audio": ["14", 0]},
@@ -1701,7 +1700,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                             "batch_size": 1,
                         },
                         "class_type": "LTXVEmptyLatentAudio",
-                        "_meta": {"title": "🅛🅣🅧 LTXV Empty " "Latent Audio"},
+                        "_meta": {"title": "🅛🅣🅧 LTXV Empty Latent Audio"},
                     },
                     "27": {
                         "inputs": {"value": 105},
@@ -1715,12 +1714,12 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                             "model": ["44", 0],
                         },
                         "class_type": "LTXVConcatAVLatent",
-                        "_meta": {"title": "🅛🅣🅧 LTXV Concat " "AV Latent"},
+                        "_meta": {"title": "🅛🅣🅧 LTXV Concat AV Latent"},
                     },
                     "29": {
                         "inputs": {"av_latent": ["41", 0], "model": ["28", 1]},
                         "class_type": "LTXVSeparateAVLatent",
-                        "_meta": {"title": "🅛🅣🅧 LTXV " "Separate AV " "Latent"},
+                        "_meta": {"title": "🅛🅣🅧 LTXV Separate AV Latent"},
                     },
                     "41": {
                         "inputs": {
@@ -1780,14 +1779,17 @@ workflow = build_workflow()
 prompt = json.loads(json.dumps(workflow))
 extra_pnginfo = build_extra_pnginfo()
 
-
-# Workflow execution
-def main(unload_models: bool | None = None):
+def generate(
+    prompt_text: str,
+    input_img1_path: str | None,
+    video_length: int = 97,
+    fps: int = 24,
+    unload_models: bool | None = None,
+):
     bootstrap_comfyui_runtime()
     add_extra_model_paths()
     import_custom_nodes()
 
-    # Node imports
     from nodes import (
         CLIPTextEncode,
         ConditioningZeroOut,
@@ -1805,13 +1807,17 @@ def main(unload_models: bool | None = None):
     try:
         with torch.inference_mode():
             loadimage = LoadImage()
-            loadimage_98 = loadimage.load_image(image="example.png")
+            image_name = input_img1_path if input_img1_path else "example.png"
+            loadimage_98 = loadimage.load_image(image=image_name)
+
             ksamplerselect = NODE_CLASS_MAPPINGS["KSamplerSelect"]()
             ksamplerselect_168 = ksamplerselect.EXECUTE_NORMALIZED(
                 sampler_name="euler_ancestral"
             )
+
             primitiveint = NODE_CLASS_MAPPINGS["PrimitiveInt"]()
-            primitiveint_185 = primitiveint.EXECUTE_NORMALIZED(value=1000)
+            primitiveint_185 = primitiveint.EXECUTE_NORMALIZED(value=video_length)
+
             randomnoise = NODE_CLASS_MAPPINGS["RandomNoise"]()
             node_199_noise_seed = prompt["199"]["inputs"]["noise_seed"] = (
                 random.randint(1, 2**64)
@@ -1819,11 +1825,13 @@ def main(unload_models: bool | None = None):
             randomnoise_199 = randomnoise.EXECUTE_NORMALIZED(
                 noise_seed=node_199_noise_seed
             )
+
             unetloader = UNETLoader()
             unetloader_212 = unetloader.load_unet(
                 unet_name="ltx-2.3-22b-distilled_transformer_only_fp8_scaled.safetensors",
                 weight_dtype="default",
             )
+
             dualcliploader = DualCLIPLoader()
             dualcliploader_209 = dualcliploader.load_clip(
                 clip_name1="gemma_3_12B_it_fp4_mixed.safetensors",
@@ -1831,30 +1839,38 @@ def main(unload_models: bool | None = None):
                 type="ltxv",
                 device="default",
             )
+
             loratagloader = NODE_CLASS_MAPPINGS["LoraTagLoader"]()
+            node_230_text = prompt["230"]["inputs"]["text"] = prompt_text
             loratagloader_230 = loratagloader.load_lora(
-                text="Hatsune Miku dancing",
+                text=node_230_text,
                 model=get_value_at_index(unetloader_212, 0),
                 clip=get_value_at_index(dualcliploader_209, 0),
             )
+
             cliptextencode = CLIPTextEncode()
             cliptextencode_203 = cliptextencode.encode(
                 text=get_value_at_index(loratagloader_230, 2),
                 clip=get_value_at_index(loratagloader_230, 1),
             )
+
             vaeloaderkj = NODE_CLASS_MAPPINGS["VAELoaderKJ"]()
             vaeloaderkj_210 = vaeloaderkj.load_vae(
                 vae_name="LTX23_video_vae_bf16.safetensors",
                 device="main_device",
                 weight_dtype="bf16",
             )
+
             vaeloaderkj_211 = vaeloaderkj.load_vae(
                 vae_name="LTX23_audio_vae_bf16.safetensors",
                 device="main_device",
                 weight_dtype="bf16",
             )
+
             intconstant = NODE_CLASS_MAPPINGS["INTConstant"]()
-            intconstant_237 = intconstant.get_value(value=24)
+            node_237_value = prompt["237"]["inputs"]["value"] = fps
+            intconstant_237 = intconstant.get_value(value=node_237_value)
+
             getimagesizeandcount = NODE_CLASS_MAPPINGS["GetImageSizeAndCount"]()
             resizeimagesbylongeredge = NODE_CLASS_MAPPINGS["ResizeImagesByLongerEdge"]()
             ltxvpreprocess = NODE_CLASS_MAPPINGS["LTXVPreprocess"]()
@@ -1876,40 +1892,48 @@ def main(unload_models: bool | None = None):
             vaedecode = VAEDecode()
             createvideo = NODE_CLASS_MAPPINGS["CreateVideo"]()
             savevideo = NODE_CLASS_MAPPINGS["SaveVideo"]()
+
             for q in range(1):
                 getimagesizeandcount_233 = getimagesizeandcount.getsize(
                     image=get_value_at_index(loadimage_98, 0)
                 )
+
                 resizeimagesbylongeredge_197 = (
                     resizeimagesbylongeredge.EXECUTE_NORMALIZED(
                         longer_edge=1536,
                         images=get_value_at_index(getimagesizeandcount_233, 0),
                     )
                 )
+
                 ltxvpreprocess_188 = ltxvpreprocess.EXECUTE_NORMALIZED(
                     img_compression=33,
                     image=get_value_at_index(resizeimagesbylongeredge_197, 0),
                 )
+
                 emptyimage_196 = emptyimage.generate(
                     width=get_value_at_index(getimagesizeandcount_233, 1),
                     height=get_value_at_index(getimagesizeandcount_233, 2),
                     batch_size=1,
                     color=0,
                 )
+
                 imagescaleby_184 = imagescaleby.upscale(
                     upscale_method="lanczos",
                     scale_by=0.5,
                     image=get_value_at_index(emptyimage_196, 0),
                 )
+
                 getimagesizeandcount_234 = getimagesizeandcount.getsize(
                     image=get_value_at_index(imagescaleby_184, 0)
                 )
+
                 emptyltxvlatentvideo_189 = emptyltxvlatentvideo.EXECUTE_NORMALIZED(
                     width=get_value_at_index(getimagesizeandcount_234, 1),
                     height=get_value_at_index(getimagesizeandcount_234, 2),
                     length=get_value_at_index(primitiveint_185, 0),
                     batch_size=1,
                 )
+
                 ltxvimgtovideoinplace_190 = ltxvimgtovideoinplace.EXECUTE_NORMALIZED(
                     strength=1,
                     bypass=False,
@@ -1917,19 +1941,23 @@ def main(unload_models: bool | None = None):
                     image=get_value_at_index(ltxvpreprocess_188, 0),
                     latent=get_value_at_index(emptyltxvlatentvideo_189, 0),
                 )
+
                 comfynumberconvert_236 = comfynumberconvert.EXECUTE_NORMALIZED(
                     value=get_value_at_index(intconstant_237, 0)
                 )
+
                 ltxvemptylatentaudio_174 = ltxvemptylatentaudio.EXECUTE_NORMALIZED(
                     frames_number=get_value_at_index(primitiveint_185, 0),
                     frame_rate=get_value_at_index(comfynumberconvert_236, 1),
                     batch_size=1,
                     audio_vae=get_value_at_index(vaeloaderkj_211, 0),
                 )
+
                 ltxvconcatavlatent_182 = ltxvconcatavlatent.EXECUTE_NORMALIZED(
                     video_latent=get_value_at_index(ltxvimgtovideoinplace_190, 0),
                     audio_latent=get_value_at_index(ltxvemptylatentaudio_174, 0),
                 )
+
                 ltxvscheduler_169 = ltxvscheduler.EXECUTE_NORMALIZED(
                     steps=8,
                     max_shift=2.05,
@@ -1938,25 +1966,30 @@ def main(unload_models: bool | None = None):
                     terminal=0.1,
                     latent=get_value_at_index(ltxvconcatavlatent_182, 0),
                 )
+
                 pathchsageattentionkj_225 = pathchsageattentionkj.patch(
                     sage_attention="sageattn_qk_int8_pv_fp16_cuda",
                     allow_compile=True,
                     model=get_value_at_index(loratagloader_230, 0),
                 )
+
                 conditioningzeroout_226 = conditioningzeroout.zero_out(
                     conditioning=get_value_at_index(cliptextencode_203, 0)
                 )
+
                 ltxvconditioning_201 = ltxvconditioning.EXECUTE_NORMALIZED(
                     frame_rate=get_value_at_index(comfynumberconvert_236, 0),
                     positive=get_value_at_index(cliptextencode_203, 0),
                     negative=get_value_at_index(conditioningzeroout_226, 0),
                 )
+
                 cfgguider_193 = cfgguider.EXECUTE_NORMALIZED(
                     cfg=1,
                     model=get_value_at_index(pathchsageattentionkj_225, 0),
                     positive=get_value_at_index(ltxvconditioning_201, 0),
                     negative=get_value_at_index(ltxvconditioning_201, 1),
                 )
+
                 samplercustomadvanced_175 = samplercustomadvanced.EXECUTE_NORMALIZED(
                     noise=get_value_at_index(randomnoise_199, 0),
                     guider=get_value_at_index(cfgguider_193, 0),
@@ -1964,23 +1997,28 @@ def main(unload_models: bool | None = None):
                     sigmas=get_value_at_index(ltxvscheduler_169, 0),
                     latent_image=get_value_at_index(ltxvconcatavlatent_182, 0),
                 )
+
                 ltxvseparateavlatent_217 = ltxvseparateavlatent.EXECUTE_NORMALIZED(
                     av_latent=get_value_at_index(samplercustomadvanced_175, 1)
                 )
+
                 ltxvaudiovaedecode_213 = ltxvaudiovaedecode.EXECUTE_NORMALIZED(
                     samples=get_value_at_index(ltxvseparateavlatent_217, 1),
                     audio_vae=get_value_at_index(vaeloaderkj_211, 0),
                 )
+
                 vaedecode_214 = vaedecode.decode(
                     samples=get_value_at_index(ltxvseparateavlatent_217, 0),
                     vae=get_value_at_index(vaeloaderkj_210, 0),
                 )
+
                 createvideo_215 = createvideo.EXECUTE_NORMALIZED(
-                    fps=24,
+                    fps=node_237_value,
                     images=get_value_at_index(vaedecode_214, 0),
                     audio=get_value_at_index(ltxvaudiovaedecode_213, 0),
                 )
-                savevideo_216 = savevideo.EXECUTE_NORMALIZED(
+
+                savevideo.EXECUTE_NORMALIZED(
                     filename_prefix="video/LTX_2.3_i2v",
                     format="auto",
                     codec="auto",
@@ -1988,10 +2026,16 @@ def main(unload_models: bool | None = None):
                     prompt=prompt,
                     extra_pnginfo=extra_pnginfo,
                 )
+
+                import folder_paths
+                import os
+                import glob as glob_module
+
+                output_dir = folder_paths.get_output_directory()
+                pattern = os.path.join(output_dir, "video", "LTX_2.3_i2v_*.mp4")
+                files = sorted(glob_module.glob(pattern), key=os.path.getmtime)
+                if files:
+                    return files[-1]
+                return None
     finally:
         cleanup_comfyui_runtime(unload_models=unload_models)
-
-
-# Entrypoint
-if __name__ == "__main__":
-    main()
