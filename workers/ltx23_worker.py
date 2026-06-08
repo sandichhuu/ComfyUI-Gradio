@@ -1797,7 +1797,7 @@ def generate(
 
                 output_dir = folder_paths.get_output_directory()
 
-                pattern = os.path.join(output_dir, "LTX23_*.png")
+                pattern = os.path.join(output_dir, "LTX23_*.mp4")
                 files = sorted(glob_module.glob(pattern), key=os.path.getmtime)
                 if files:
                     return files[-1]
