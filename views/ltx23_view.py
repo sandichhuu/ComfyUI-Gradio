@@ -4,7 +4,7 @@ import tempfile
 from PIL import Image as PILImage
 
 
-def generate_image(prompt_text, img1, video_length, fps):
+def generate_image(prompt_text, img1, duration, fps):
     img1_path = None
 
     if img1 is not None:
@@ -15,7 +15,7 @@ def generate_image(prompt_text, img1, video_length, fps):
     result = ltx23_generate(
         prompt_text=prompt_text,
         image_path=img1_path,
-        video_length=int(video_length),
+        duration=float(duration),
         fps=int(fps),
     )
 
@@ -34,10 +34,8 @@ def create_ltx23_tab():
     with gr.Tab("LTX23"):
         with gr.Row():
             prompt = gr.Textbox(label="Prompt", value="helloworld", scale=4, lines=1)
-            video_length = gr.Number(
-                label="Video Length (frames)", value=97, precision=0
-            )
-            fps = gr.Number(label="FPS", value=24, precision=0)
+            duration = gr.Number(label="Duration (seconds)", value=5)
+            fps = gr.Number(label="FPS", value=25, precision=0)
             generate_btn = gr.Button("Generate", variant="primary", scale=1)
             stop_btn = gr.Button("Stop", variant="stop", scale=1, visible=False)
 
@@ -53,7 +51,7 @@ def create_ltx23_tab():
             outputs=[generate_btn, stop_btn],
         ).then(
             fn=generate_image,
-            inputs=[prompt, input_image, video_length, fps],
+            inputs=[prompt, input_image, duration, fps],
             outputs=[output_video],
         ).then(
             fn=stop_generation,

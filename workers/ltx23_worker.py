@@ -4411,7 +4411,7 @@ extra_pnginfo = build_extra_pnginfo()
 def generate(
     prompt_text: str,
     image_path: str,
-    video_length: int,
+    duration: float,
     fps: int,
     unload_models: bool | None = None,
 ):
@@ -4457,7 +4457,6 @@ def generate(
             intconstant = NODE_CLASS_MAPPINGS["INTConstant"]()
             intconstant_252_91 = intconstant.get_value(value=fps)
             primitivefloat = NODE_CLASS_MAPPINGS["PrimitiveFloat"]()
-            duration = video_length / fps
             primitivefloat_252_95 = primitivefloat.EXECUTE_NORMALIZED(value=duration)
             primitiveint = NODE_CLASS_MAPPINGS["PrimitiveInt"]()
             primitiveint_252_184_196 = primitiveint.EXECUTE_NORMALIZED(value=9)
