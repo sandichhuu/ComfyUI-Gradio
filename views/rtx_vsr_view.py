@@ -1,6 +1,6 @@
 import gradio as gr
 from workers.rtx_vsr_worker import generate as rtx_vsr_generate
-from utils.video_info import get_video_info
+from views.utilities.video_info import get_video_info
 import tempfile
 import shutil
 import os
@@ -46,9 +46,7 @@ def stop_generation():
 def create_rtx_vsr_tab():
     with gr.Tab("RTX-Video Super Resolution"):
         with gr.Row():
-            generate_btn = gr.Button(
-                "Start", variant="primary", scale=0, min_width=80
-            )
+            generate_btn = gr.Button("Start", variant="primary", scale=0, min_width=80)
             stop_btn = gr.Button(
                 "Stop", variant="stop", scale=0, min_width=80, visible=False
             )
