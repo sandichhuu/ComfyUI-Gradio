@@ -47,7 +47,7 @@ def create_rtx_vsr_tab():
     with gr.Tab("RTX-Video Super Resolution"):
         with gr.Row():
             generate_btn = gr.Button(
-                "Generate", variant="primary", scale=0, min_width=80
+                "Start", variant="primary", scale=0, min_width=80
             )
             stop_btn = gr.Button(
                 "Stop", variant="stop", scale=0, min_width=80, visible=False

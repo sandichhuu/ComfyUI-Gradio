@@ -88,7 +88,7 @@ if __name__ == "__main__":
             create_zit_tab()
             create_flux2_klein_9b_tab()
             create_ltx23_tab()
-            create_rife_tab()
             create_rtx_vsr_tab()
+            create_rife_tab()
 
     demo.launch(css=css, pwa=True)

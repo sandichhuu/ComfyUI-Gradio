@@ -49,7 +49,7 @@ def create_rife_tab():
         with gr.Row():
             target_fps = gr.Number(label="Target FPS", value=60, precision=0, scale=0)
             generate_btn = gr.Button(
-                "Generate", variant="primary", scale=0, min_width=80
+                "Start", variant="primary", scale=0, min_width=80
             )
             stop_btn = gr.Button(
                 "Stop", variant="stop", scale=0, min_width=80, visible=False
