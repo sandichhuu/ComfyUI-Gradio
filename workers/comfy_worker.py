@@ -73,6 +73,10 @@ def bootstrap_comfyui_runtime() -> None:
     if enables_dynamic_vram():
         comfy_aimdo.control.init()
 
+    args.use_sage_attention = True
+    args.disable_pinned_memory = True
+    args.fast = ["fp16_accumulation", "autotune"]
+
     if os.name == "nt":
         os.environ["MIMALLOC_PURGE_DELAY"] = "0"
 
@@ -100,10 +104,6 @@ def bootstrap_comfyui_runtime() -> None:
 
     if "rocm" in cuda_malloc.get_torch_version_noimport():
         os.environ["OCL_SET_SVM_SIZE"] = "262144"
-
-    args.fast = ["fp16_accumulation", "autotune"]
-    args.use_sage_attention = True
-
 
 def cleanup_comfyui_runtime(unload_models: bool | None = None) -> None:
     import gc
