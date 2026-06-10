@@ -70,6 +70,25 @@ def build_workflow() -> dict[str, Any]:
             "class_type": "UnetLoaderGGUF",
             "_meta": {"title": "Unet Loader (GGUF)"},
         },
+        "247:86": {
+            "inputs": {"text": "Dancing", "clip": ["254:239", 0]},
+            "class_type": "CLIPTextEncode",
+            "_meta": {"title": "CLIP Text Encode (Prompt)"},
+        },
+        "247:84": {
+            "inputs": {"conditioning": ["247:86", 0]},
+            "class_type": "ConditioningZeroOut",
+            "_meta": {"title": "ConditioningZeroOut"},
+        },
+        "247:90": {
+            "inputs": {
+                "frame_rate": ["252:93", 0],
+                "positive": ["247:86", 0],
+                "negative": ["247:84", 0],
+            },
+            "class_type": "LTXVConditioning",
+            "_meta": {"title": "LTXVConditioning"},
+        },
         "252:91": {
             "inputs": {"value": 25},
             "class_type": "INTConstant",
@@ -215,25 +234,6 @@ def build_workflow() -> dict[str, Any]:
             "class_type": "PreviewAny",
             "_meta": {"title": "[preview] width"},
         },
-        "247:86": {
-            "inputs": {"text": "Dancing", "clip": ["254:239", 0]},
-            "class_type": "CLIPTextEncode",
-            "_meta": {"title": "CLIP Text Encode (Prompt)"},
-        },
-        "247:84": {
-            "inputs": {"conditioning": ["247:86", 0]},
-            "class_type": "ConditioningZeroOut",
-            "_meta": {"title": "ConditioningZeroOut"},
-        },
-        "247:90": {
-            "inputs": {
-                "frame_rate": ["252:93", 0],
-                "positive": ["247:86", 0],
-                "negative": ["247:84", 0],
-            },
-            "class_type": "LTXVConditioning",
-            "_meta": {"title": "LTXVConditioning"},
-        },
         "248:78": {
             "inputs": {"av_latent": ["248:79", 0]},
             "class_type": "LTXVSeparateAVLatent",
@@ -322,6 +322,7 @@ def build_workflow() -> dict[str, Any]:
 
 
 def build_extra_pnginfo() -> dict[str, Any] | None:
+def build_extra_pnginfo() -> dict[str, Any] | None:
     return {
         "workflow": {
             "id": "481b8718-95c3-4e07-bc93-8e48caea1e72",
@@ -335,7 +336,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "pos": [2149.937066132752, 639.8562534850689],
                     "size": [225, 34],
                     "flags": {"collapsed": True},
-                    "order": 9,
+                    "order": 6,
                     "mode": 0,
                     "inputs": [
                         {"name": "CONDITIONING", "type": "CONDITIONING", "link": 560}
@@ -359,7 +360,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "pos": [1644.6913187755354, 955.5378269586176],
                     "size": [225, 34],
                     "flags": {"collapsed": True},
-                    "order": 4,
+                    "order": 3,
                     "mode": 0,
                     "inputs": [{"name": "VAE", "type": "VAE", "link": 561}],
                     "outputs": [{"name": "VAE", "type": "VAE", "links": None}],
@@ -379,7 +380,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "pos": [1644.6913187755358, 1006.814729693363],
                     "size": [225, 34],
                     "flags": {"collapsed": True},
-                    "order": 5,
+                    "order": 4,
                     "mode": 0,
                     "inputs": [{"name": "VAE", "type": "VAE", "link": 562}],
                     "outputs": [{"name": "VAE", "type": "VAE", "links": None}],
@@ -399,7 +400,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "pos": [1968.8619908568148, 1342.203280177082],
                     "size": [225, 34],
                     "flags": {"collapsed": True},
-                    "order": 8,
+                    "order": 10,
                     "mode": 0,
                     "inputs": [{"name": "IMAGE", "type": "IMAGE", "link": 563}],
                     "outputs": [{"name": "IMAGE", "type": "IMAGE", "links": None}],
@@ -419,7 +420,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "pos": [2149.9854570685884, 718.4193416328444],
                     "size": [225, 34],
                     "flags": {"collapsed": True},
-                    "order": 10,
+                    "order": 7,
                     "mode": 0,
                     "inputs": [
                         {"name": "CONDITIONING", "type": "CONDITIONING", "link": 564}
@@ -438,30 +439,12 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "bgcolor": "#593930",
                 },
                 {
-                    "id": 246,
-                    "type": "LoadImage",
-                    "pos": [1064.4322461138763, 1060.5300262366554],
-                    "size": [550.6333618164062, 368.01666259765625],
-                    "flags": {},
-                    "order": 0,
-                    "mode": 0,
-                    "inputs": [],
-                    "outputs": [
-                        {"name": "IMAGE", "type": "IMAGE", "links": [575]},
-                        {"name": "MASK", "type": "MASK", "links": None},
-                    ],
-                    "properties": {"Node name for S&R": "LoadImage"},
-                    "widgets_values": ["hanfu.jpg", "image"],
-                    "color": "#432",
-                    "bgcolor": "#653",
-                },
-                {
                     "id": 247,
                     "type": "6fa7b9b7-78da-46d0-ab9a-fb1a59174854",
                     "pos": [1641.7432259204288, 619.7276237403507],
                     "size": [453.2833251953125, 279.75],
                     "flags": {},
-                    "order": 3,
+                    "order": 2,
                     "mode": 0,
                     "inputs": [{"name": "clip", "type": "CLIP", "link": 565}],
                     "outputs": [
@@ -479,7 +462,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "pos": [1970.906523477132, 997.5291549794515],
                     "size": [285.6166687011719, 224],
                     "flags": {},
-                    "order": 6,
+                    "order": 8,
                     "mode": 0,
                     "inputs": [
                         {
@@ -557,7 +540,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "pos": [1968.925765058893, 1297.3665123390983],
                     "size": [225, 34],
                     "flags": {"collapsed": True},
-                    "order": 7,
+                    "order": 9,
                     "mode": 0,
                     "inputs": [{"name": "FLOAT", "type": "FLOAT", "link": 574}],
                     "outputs": [{"name": "FLOAT", "type": "FLOAT", "links": []}],
@@ -577,7 +560,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "pos": [1636.3966951434431, 1061.5020898592747],
                     "size": [299, 212],
                     "flags": {},
-                    "order": 2,
+                    "order": 5,
                     "mode": 0,
                     "inputs": [
                         {
@@ -638,7 +621,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "pos": [1062.6818382171791, 614.1723549397643],
                     "size": [552.2166748046875, 388],
                     "flags": {},
-                    "order": 1,
+                    "order": 0,
                     "mode": 0,
                     "inputs": [
                         {
@@ -718,7 +701,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "id": 250,
                     "type": "VHS_VideoCombine",
                     "pos": [2590.392731722424, 629.1446065482279],
-                    "size": [459.4666748046875, 1139.0400146484376],
+                    "size": [459.4666748046875, 334],
                     "flags": {},
                     "order": 12,
                     "mode": 0,
@@ -768,6 +751,24 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                             },
                         },
                     },
+                },
+                {
+                    "id": 246,
+                    "type": "LoadImage",
+                    "pos": [1064.4322461138763, 1060.5300262366554],
+                    "size": [550.6333618164062, 368.01666259765625],
+                    "flags": {},
+                    "order": 1,
+                    "mode": 0,
+                    "inputs": [],
+                    "outputs": [
+                        {"name": "IMAGE", "type": "IMAGE", "links": [575]},
+                        {"name": "MASK", "type": "MASK", "links": None},
+                    ],
+                    "properties": {"Node name for S&R": "LoadImage"},
+                    "widgets_values": ["hanfu.jpg", "image"],
+                    "color": "#432",
+                    "bgcolor": "#653",
                 },
             ],
             "links": [
@@ -892,7 +893,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                     "tabWidth": 65,
                                     "tabXOffset": 10,
                                     "hasSecondTab": False,
-                                    "secondTabText": "Send Back",
+                                    "secondTabText": "Send " "Back",
                                     "secondTabOffset": 80,
                                     "secondTabWidth": 65,
                                     "ue_properties": {
@@ -985,7 +986,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                     "tabWidth": 65,
                                     "tabXOffset": 10,
                                     "hasSecondTab": False,
-                                    "secondTabText": "Send Back",
+                                    "secondTabText": "Send " "Back",
                                     "secondTabOffset": 80,
                                     "secondTabWidth": 65,
                                     "ue_properties": {
@@ -1221,7 +1222,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                     "tabWidth": 65,
                                     "tabXOffset": 10,
                                     "hasSecondTab": False,
-                                    "secondTabText": "Send Back",
+                                    "secondTabText": "Send " "Back",
                                     "secondTabOffset": 80,
                                     "secondTabWidth": 65,
                                     "ue_properties": {
@@ -1257,7 +1258,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                     "tabWidth": 65,
                                     "tabXOffset": 10,
                                     "hasSecondTab": False,
-                                    "secondTabText": "Send Back",
+                                    "secondTabText": "Send " "Back",
                                     "secondTabOffset": 80,
                                     "secondTabWidth": 65,
                                     "ue_properties": {
@@ -1330,7 +1331,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                     "tabWidth": 65,
                                     "tabXOffset": 10,
                                     "hasSecondTab": False,
-                                    "secondTabText": "Send Back",
+                                    "secondTabText": "Send " "Back",
                                     "secondTabOffset": 80,
                                     "secondTabWidth": 65,
                                     "ue_properties": {
@@ -1385,7 +1386,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                     "tabWidth": 65,
                                     "tabXOffset": 10,
                                     "hasSecondTab": False,
-                                    "secondTabText": "Send Back",
+                                    "secondTabText": "Send " "Back",
                                     "secondTabOffset": 80,
                                     "secondTabWidth": 65,
                                     "ue_properties": {
@@ -1434,7 +1435,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                     "tabWidth": 65,
                                     "tabXOffset": 10,
                                     "hasSecondTab": False,
-                                    "secondTabText": "Send Back",
+                                    "secondTabText": "Send " "Back",
                                     "secondTabOffset": 80,
                                     "secondTabWidth": 65,
                                     "ue_properties": {
@@ -1588,7 +1589,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                     "tabWidth": 65,
                                     "tabXOffset": 10,
                                     "hasSecondTab": False,
-                                    "secondTabText": "Send Back",
+                                    "secondTabText": "Send " "Back",
                                     "secondTabOffset": 80,
                                     "secondTabWidth": 65,
                                     "ue_properties": {
@@ -1632,7 +1633,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                     "tabWidth": 65,
                                     "tabXOffset": 10,
                                     "hasSecondTab": False,
-                                    "secondTabText": "Send Back",
+                                    "secondTabText": "Send " "Back",
                                     "secondTabOffset": 80,
                                     "secondTabWidth": 65,
                                     "ue_properties": {
@@ -2013,7 +2014,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                         "link": 263,
                                     },
                                     {
-                                        "label": "Audio VAE",
+                                        "label": "Audio " "VAE",
                                         "localized_name": "audio_vae",
                                         "name": "audio_vae",
                                         "type": "VAE",
@@ -2036,7 +2037,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                     "tabWidth": 65,
                                     "tabXOffset": 10,
                                     "hasSecondTab": False,
-                                    "secondTabText": "Send Back",
+                                    "secondTabText": "Send " "Back",
                                     "secondTabOffset": 80,
                                     "secondTabWidth": 65,
                                     "ue_properties": {
@@ -2166,7 +2167,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                 "name": "value",
                                 "type": "FLOAT",
                                 "linkIds": [208],
-                                "label": "duration (seconds)",
+                                "label": "duration " "(seconds)",
                                 "pos": [-755.1034169127711, 3533.235191619284],
                             },
                             {
@@ -2278,7 +2279,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                         "links": [431],
                                     }
                                 ],
-                                "title": "Duration (seconds)",
+                                "title": "Duration " "(seconds)",
                                 "properties": {"Node name for S&R": "PrimitiveFloat"},
                                 "widgets_values": [5],
                             },
@@ -2322,7 +2323,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                     "tabWidth": 65,
                                     "tabXOffset": 10,
                                     "hasSecondTab": False,
-                                    "secondTabText": "Send Back",
+                                    "secondTabText": "Send " "Back",
                                     "secondTabOffset": 80,
                                     "secondTabWidth": 65,
                                     "ue_properties": {
@@ -2379,7 +2380,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                     "tabWidth": 65,
                                     "tabXOffset": 10,
                                     "hasSecondTab": False,
-                                    "secondTabText": "Send Back",
+                                    "secondTabText": "Send " "Back",
                                     "secondTabOffset": 80,
                                     "secondTabWidth": 65,
                                     "ue_properties": {
@@ -2450,21 +2451,21 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                         "links": [120],
                                     },
                                     {
-                                        "label": "350 width",
+                                        "label": "350 " "width",
                                         "localized_name": "width",
                                         "name": "width",
                                         "type": "INT",
                                         "links": [440],
                                     },
                                     {
-                                        "label": "622 height",
+                                        "label": "622 " "height",
                                         "localized_name": "height",
                                         "name": "height",
                                         "type": "INT",
                                         "links": [441],
                                     },
                                     {
-                                        "label": "1 count",
+                                        "label": "1 " "count",
                                         "localized_name": "count",
                                         "name": "count",
                                         "type": "INT",
@@ -2529,7 +2530,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                     "tabWidth": 65,
                                     "tabXOffset": 10,
                                     "hasSecondTab": False,
-                                    "secondTabText": "Send Back",
+                                    "secondTabText": "Send " "Back",
                                     "secondTabOffset": 80,
                                     "secondTabWidth": 65,
                                     "ue_properties": {
@@ -2590,7 +2591,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                 "mode": 0,
                                 "inputs": [
                                     {
-                                        "label": "duration (seconds)",
+                                        "label": "duration " "(seconds)",
                                         "localized_name": "values.a",
                                         "name": "values.a",
                                         "type": "FLOAT,INT,BOOLEAN",
@@ -2607,7 +2608,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                 ],
                                 "outputs": [
                                     {
-                                        "label": "frame_count (int)",
+                                        "label": "frame_count " "(int)",
                                         "name": "INT_1",
                                         "type": "INT",
                                         "links": [483, 488],
@@ -2695,7 +2696,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                         "links": None,
                                     }
                                 ],
-                                "title": "[preview] height",
+                                "title": "[preview] " "height",
                                 "properties": {"Node name for S&R": "PreviewAny"},
                                 "widgets_values": [None, None, None],
                             },
@@ -2723,7 +2724,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                         "links": None,
                                     }
                                 ],
-                                "title": "[preview] frame_count",
+                                "title": "[preview] " "frame_count",
                                 "properties": {"Node name for S&R": "PreviewAny"},
                                 "widgets_values": [None, None, None],
                             },
@@ -2751,7 +2752,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                         "links": None,
                                     }
                                 ],
-                                "title": "[preview] width",
+                                "title": "[preview] " "width",
                                 "properties": {"Node name for S&R": "PreviewAny"},
                                 "widgets_values": [None, None, None],
                             },
@@ -3309,7 +3310,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                 "type": "FLOAT,INT,BOOLEAN",
                                 "linkIds": [149],
                                 "localized_name": "values.a",
-                                "label": "duration (seconds)",
+                                "label": "duration " "(seconds)",
                                 "pos": [-793.4297630479886, 4404.421533947579],
                             },
                             {
@@ -3329,7 +3330,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                 "name": "INT_1",
                                 "type": "INT",
                                 "linkIds": [487],
-                                "label": "frame_count (int)",
+                                "label": "frame_count " "(int)",
                                 "pos": [-38.88650744207882, 4414.421533947579],
                             }
                         ],
@@ -3392,7 +3393,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                 "properties": {
                                     "Node name for S&R": "ComfyMathExpression"
                                 },
-                                "widgets_values": ["a * b"],
+                                "widgets_values": ["a " "* " "b"],
                             },
                             {
                                 "id": 183,
@@ -3443,7 +3444,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                 "properties": {
                                     "Node name for S&R": "ComfyMathExpression"
                                 },
-                                "widgets_values": ["a * 8 + 1"],
+                                "widgets_values": ["a " "* " "8 " "+ " "1"],
                             },
                             {
                                 "id": 193,
@@ -3501,7 +3502,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                 "properties": {
                                     "Node name for S&R": "ComfyMathExpression"
                                 },
-                                "widgets_values": ["a < b"],
+                                "widgets_values": ["a " "< " "b"],
                             },
                             {
                                 "id": 194,
@@ -3612,7 +3613,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                 "properties": {
                                     "Node name for S&R": "ComfyMathExpression"
                                 },
-                                "widgets_values": ["a / 8 + 1"],
+                                "widgets_values": ["a " "/ " "8 " "+ " "1"],
                             },
                         ],
                         "groups": [],
@@ -3802,7 +3803,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                 "properties": {
                                     "Node name for S&R": "ComfyMathExpression"
                                 },
-                                "widgets_values": ["a * 0.015625"],
+                                "widgets_values": ["a " "* " "0.015625"],
                             },
                             {
                                 "id": 186,
@@ -3852,7 +3853,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                 "properties": {
                                     "Node name for S&R": "ComfyMathExpression"
                                 },
-                                "widgets_values": ["a * 64"],
+                                "widgets_values": ["a " "* " "64"],
                             },
                         ],
                         "groups": [],
@@ -3986,7 +3987,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                 "properties": {
                                     "Node name for S&R": "ComfyMathExpression"
                                 },
-                                "widgets_values": ["a * 0.015625"],
+                                "widgets_values": ["a " "* " "0.015625"],
                             },
                             {
                                 "id": 189,
@@ -4036,7 +4037,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                 "properties": {
                                     "Node name for S&R": "ComfyMathExpression"
                                 },
-                                "widgets_values": ["a * 64"],
+                                "widgets_values": ["a " "* " "64"],
                             },
                             {
                                 "id": 197,
@@ -4095,7 +4096,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                 "properties": {
                                     "Node name for S&R": "SimpleCalculatorKJ"
                                 },
-                                "widgets_values": ["a < b"],
+                                "widgets_values": ["a " "< " "b"],
                             },
                             {
                                 "id": 198,
@@ -4233,9 +4234,9 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
             "extra": {
                 "ds": {
                     "scale": 0.8672275245390825,
-                    "offset": [-928.1734645477719, -441.6637915441105],
+                    "offset": [-912.0300654929036, -425.5203924892422],
                 },
-                "frontendVersion": "1.46.10",
+                "frontendVersion": "1.46.11",
                 "VHS_latentpreview": False,
                 "VHS_latentpreviewrate": 0,
                 "VHS_MetadataImage": True,
@@ -4298,6 +4299,10 @@ def generate(
             unetloadergguf_254_240 = unetloadergguf.load_unet(
                 unet_name="Unknown/ltx-2.3-22b-distilled-1.1-UD-Q2_K.gguf"
             )
+            cliptextencode = CLIPTextEncode()
+            cliptextencode_247_86 = cliptextencode.encode(
+                text=prompt_text, clip=get_value_at_index(dualcliploadergguf_254_239, 0)
+            )
             intconstant = NODE_CLASS_MAPPINGS["INTConstant"]()
             intconstant_252_91 = intconstant.get_value(value=fps)
             primitivefloat = NODE_CLASS_MAPPINGS["PrimitiveFloat"]()
@@ -4305,10 +4310,6 @@ def generate(
             primitiveint = NODE_CLASS_MAPPINGS["PrimitiveInt"]()
             primitiveint_252_184_196 = primitiveint.EXECUTE_NORMALIZED(value=9)
             primitiveint_252_190_198 = primitiveint.EXECUTE_NORMALIZED(value=64)
-            cliptextencode = CLIPTextEncode()
-            cliptextencode_247_86 = cliptextencode.encode(
-                text=prompt_text, clip=get_value_at_index(dualcliploadergguf_254_239, 0)
-            )
             randomnoise = NODE_CLASS_MAPPINGS["RandomNoise"]()
             node_248_85_noise_seed = prompt["248:85"]["inputs"]["noise_seed"] = (
                 random.randint(1, 2**64)
@@ -4450,7 +4451,7 @@ def generate(
                         ltxvspatiotemporaltiledvaedecode_249_117, 0
                     ),
                     audio=get_value_at_index(ltxvaudiovaedecode_249_92, 0),
-                    unique_id=15204198120938839924,
+                    unique_id=1879861562965187038,
                     prompt=prompt,
                     extra_pnginfo=extra_pnginfo,
                 )
