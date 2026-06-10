@@ -2619,14 +2619,14 @@ workflow = build_workflow()
 prompt = json.loads(json.dumps(workflow))
 extra_pnginfo = build_extra_pnginfo()
 
-def validate_frame_size(frame_size: int):
-    t = frame_size / 64.0
-    return max(64, (math.floor(t) * 64))
+def validate_frame_size(frame_size: int) -> int:
+    return max(32, (frame_size // 32) * 32)
 
-def validate_frame_count(duration: float, fps: int):
+def validate_frame_count(duration: float, fps: int) -> int:
     frame_count = duration * fps
-    t = (frame_count - 1.0) / 8.0
-    return max(9, (math.ceil(t) * 8.0) + 1.0)
+    count_int = max(1, int(frame_count))
+    ceil_steps = (count_int + 6) // 8
+    return max(9, (ceil_steps * 8) + 1)
 
 # Workflow execution
 def generate(
