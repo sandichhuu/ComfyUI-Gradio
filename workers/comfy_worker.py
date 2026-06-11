@@ -73,9 +73,13 @@ def bootstrap_comfyui_runtime() -> None:
     if enables_dynamic_vram():
         comfy_aimdo.control.init()
 
+    args.fast = ["fp16_accumulation"]
     args.use_sage_attention = True
+    args.enable_triton_backend = True
     args.disable_pinned_memory = True
-    args.fast = ["fp16_accumulation", "autotune"]
+    args.cuda_malloc = True
+    args.disable_metadata = True
+    args.lowvram = True
 
     if os.name == "nt":
         os.environ["MIMALLOC_PURGE_DELAY"] = "0"
