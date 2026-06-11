@@ -16,119 +16,30 @@ def build_workflow() -> dict[str, Any]:
     return {
         "287": {
             "inputs": {
-                "frame_rate": ["295", 0],
+                "frame_rate": ["365:93", 0],
                 "loop_count": 0,
                 "filename_prefix": "ltx23",
                 "format": "video/h264-mp4",
                 "pix_fmt": "yuv420p",
                 "crf": 19,
-                "save_metadata": True,
+                "save_metadata": False,
                 "trim_to_audio": False,
                 "pingpong": False,
                 "save_output": True,
-                "images": ["361", 0],
+                "images": ["289:275", 0],
                 "audio": ["289:92", 0],
             },
             "class_type": "VHS_VideoCombine",
             "_meta": {"title": "Video Combine 🎥🅥🅗🅢"},
         },
-        "288": {
+        "364": {
             "inputs": {"image": "hanfu.jpg"},
             "class_type": "LoadImage",
             "_meta": {"title": "Load Image"},
         },
-        "291": {
-            "inputs": {"value": 8},
-            "class_type": "INTConstant",
-            "_meta": {"title": "FPS"},
-        },
-        "293": {
-            "inputs": {
-                "width": ["352", 1],
-                "height": ["352", 2],
-                "length": ["302", 0],
-                "batch_size": 1,
-            },
-            "class_type": "EmptyLTXVLatentVideo",
-            "_meta": {"title": "EmptyLTXVLatentVideo"},
-        },
-        "294": {
-            "inputs": {
-                "frames_number": ["302", 0],
-                "frame_rate": ["295", 1],
-                "batch_size": 1,
-                "audio_vae": ["286:219", 0],
-            },
-            "class_type": "LTXVEmptyLatentAudio",
-            "_meta": {"title": "LTXV Empty Latent Audio"},
-        },
-        "295": {
-            "inputs": {"value": ["291", 0]},
-            "class_type": "ComfyNumberConvert",
-            "_meta": {"title": "Convert Number"},
-        },
-        "297": {
-            "inputs": {"img_compression": 18, "image": ["352", 0]},
-            "class_type": "LTXVPreprocess",
-            "_meta": {"title": "LTXV Preprocess"},
-        },
-        "302": {
-            "inputs": {"value": 88},
-            "class_type": "INTConstant",
-            "_meta": {"title": "FrameCount"},
-        },
-        "348": {
-            "inputs": {"image": ["357", 0]},
-            "class_type": "GetImageSize",
-            "_meta": {"title": "Get Image Size"},
-        },
-        "352": {
-            "inputs": {
-                "width": ["346:340", 0],
-                "height": ["347:345", 0],
-                "upscale_method": "bicubic",
-                "keep_proportion": "crop",
-                "pad_color": "0, 0, 0",
-                "crop_position": "center",
-                "divisible_by": 2,
-                "device": "cpu",
-                "image": ["357", 0],
-            },
-            "class_type": "ImageResizeKJv2",
-            "_meta": {"title": "Resize Image v2"},
-        },
-        "357": {
-            "inputs": {
-                "upscale_method": "nearest-exact",
-                "scale_by": ["359", 0],
-                "image": ["288", 0],
-            },
-            "class_type": "ImageScaleBy",
-            "_meta": {"title": "Upscale Image By"},
-        },
-        "359": {
-            "inputs": {"value": 0.25},
-            "class_type": "FloatConstant",
-            "_meta": {"title": "Input Scale By"},
-        },
-        "360": {
-            "inputs": {"expression": "1.0 / a", "values.a": ["359", 0]},
-            "class_type": "ComfyMathExpression",
-            "_meta": {"title": "1 / a"},
-        },
-        "361": {
-            "inputs": {
-                "resize_type": "scale by multiplier",
-                "resize_type.scale": ["360", 0],
-                "quality": "ULTRA",
-                "images": ["289:275", 0],
-            },
-            "class_type": "RTXVideoSuperResolution",
-            "_meta": {"title": "RTX Video Super Resolution"},
-        },
         "286:218": {
             "inputs": {
-                "vae_name": "LTX23_video_vae_bf16.safetensors",
+                "vae_name": "ltx-2.3-22b-distilled_video_vae.safetensors",
                 "device": "main_device",
                 "weight_dtype": "bf16",
             },
@@ -137,7 +48,7 @@ def build_workflow() -> dict[str, Any]:
         },
         "286:219": {
             "inputs": {
-                "vae_name": "LTX23_audio_vae_bf16.safetensors",
+                "vae_name": "ltx-2.3-22b-distilled_audio_vae.safetensors",
                 "device": "main_device",
                 "weight_dtype": "bf16",
             },
@@ -147,7 +58,7 @@ def build_workflow() -> dict[str, Any]:
         "286:239": {
             "inputs": {
                 "clip_name1": "gemma-3-12b-it-qat-UD-Q2_K_XL.gguf",
-                "clip_name2": "ltx-2.3_text_projection_bf16.safetensors",
+                "clip_name2": "ltx-2.3-22b-distilled_embeddings_connectors.safetensors",
                 "type": "ltxv",
             },
             "class_type": "DualCLIPLoaderGGUF",
@@ -159,7 +70,10 @@ def build_workflow() -> dict[str, Any]:
             "_meta": {"title": "Unet Loader (GGUF)"},
         },
         "283:86": {
-            "inputs": {"text": "Dancing", "clip": ["286:239", 0]},
+            "inputs": {
+                "text": "Character start flying to the sky",
+                "clip": ["286:239", 0],
+            },
             "class_type": "CLIPTextEncode",
             "_meta": {"title": "CLIP Text Encode (Prompt)"},
         },
@@ -170,83 +84,170 @@ def build_workflow() -> dict[str, Any]:
         },
         "283:90": {
             "inputs": {
-                "frame_rate": ["295", 0],
+                "frame_rate": ["365:93", 0],
                 "positive": ["283:86", 0],
                 "negative": ["283:84", 0],
             },
             "class_type": "LTXVConditioning",
             "_meta": {"title": "LTXVConditioning"},
         },
-        "346:336": {
-            "inputs": {"expression": "a * 0.015625", "values.a": ["348", 0]},
-            "class_type": "ComfyMathExpression",
-            "_meta": {"title": "Math Expression"},
+        "365:91": {
+            "inputs": {"value": 25},
+            "class_type": "INTConstant",
+            "_meta": {"title": "FPS"},
         },
-        "346:337": {
+        "365:95": {
+            "inputs": {"value": 8},
+            "class_type": "PrimitiveFloat",
+            "_meta": {"title": "Duration (seconds)"},
+        },
+        "365:76": {
+            "inputs": {
+                "width": ["365:274:271", 0],
+                "height": ["365:273:266", 0],
+                "length": ["365:272:260", 0],
+                "batch_size": 1,
+            },
+            "class_type": "EmptyLTXVLatentVideo",
+            "_meta": {"title": "EmptyLTXVLatentVideo"},
+        },
+        "365:89": {
+            "inputs": {
+                "frames_number": ["365:272:260", 0],
+                "frame_rate": ["365:93", 1],
+                "batch_size": 1,
+                "audio_vae": ["286:219", 0],
+            },
+            "class_type": "LTXVEmptyLatentAudio",
+            "_meta": {"title": "LTXV Empty Latent Audio"},
+        },
+        "365:93": {
+            "inputs": {"value": ["365:91", 0]},
+            "class_type": "ComfyNumberConvert",
+            "_meta": {"title": "Convert Number"},
+        },
+        "365:75": {
+            "inputs": {"img_compression": 18, "image": ["365:87", 0]},
+            "class_type": "LTXVPreprocess",
+            "_meta": {"title": "LTXV Preprocess"},
+        },
+        "365:87": {
+            "inputs": {"image": ["364", 0]},
+            "class_type": "GetImageSizeAndCount",
+            "_meta": {"title": "Get Image Size & Count"},
+        },
+        "365:272:258": {
             "inputs": {
                 "expression": "a * b",
-                "values.a": ["346:336", 1],
-                "values.b": ["346:339", 0],
+                "values.a": ["365:95", 0],
+                "values.b": ["365:91", 0],
+            },
+            "class_type": "ComfyMathExpression",
+            "_meta": {"title": "frames"},
+        },
+        "365:272:259": {
+            "inputs": {"expression": "(a * 8.0) + 1", "values.a": ["365:272:262", 0]},
+            "class_type": "ComfyMathExpression",
+            "_meta": {"title": "correction"},
+        },
+        "365:272:253": {
+            "inputs": {
+                "expression": "a < b",
+                "values.a": ["365:272:259", 1],
+                "values.b": ["365:272:261", 0],
             },
             "class_type": "ComfyMathExpression",
             "_meta": {"title": "Math Expression"},
         },
-        "346:338": {
+        "365:272:260": {
             "inputs": {
-                "expression": "a < b",
-                "variables.a": ["346:337", 1],
-                "variables.b": ["346:339", 0],
-            },
-            "class_type": "SimpleCalculatorKJ",
-            "_meta": {"title": "SimpleCalculatorKJ"},
-        },
-        "346:339": {
-            "inputs": {"value": 64},
-            "class_type": "PrimitiveInt",
-            "_meta": {"title": "Int"},
-        },
-        "346:340": {
-            "inputs": {
-                "switch": ["346:338", 2],
-                "on_false": ["346:337", 1],
-                "on_true": ["346:339", 0],
+                "switch": ["365:272:253", 2],
+                "on_false": ["365:272:259", 1],
+                "on_true": ["365:272:261", 0],
             },
             "class_type": "ComfySwitchNode",
             "_meta": {"title": "Switch"},
         },
-        "347:341": {
-            "inputs": {"expression": "a * 0.015625", "values.a": ["348", 1]},
+        "365:272:261": {
+            "inputs": {"value": 9},
+            "class_type": "PrimitiveInt",
+            "_meta": {"title": "Int"},
+        },
+        "365:272:262": {
+            "inputs": {"expression": "(a * 0.125) + 1", "values.a": ["365:272:258", 0]},
+            "class_type": "ComfyMathExpression",
+            "_meta": {"title": "correction"},
+        },
+        "365:273:246": {
+            "inputs": {"expression": "a * 0.015625", "values.a": ["365:87", 2]},
             "class_type": "ComfyMathExpression",
             "_meta": {"title": "Math Expression"},
         },
-        "347:342": {
+        "365:273:263": {
             "inputs": {
                 "expression": "a * b",
-                "values.a": ["347:341", 1],
-                "values.b": ["347:344", 0],
+                "values.a": ["365:273:246", 0],
+                "values.b": ["365:273:265", 0],
             },
             "class_type": "ComfyMathExpression",
             "_meta": {"title": "Math Expression"},
         },
-        "347:343": {
+        "365:273:264": {
             "inputs": {
                 "expression": "a < b",
-                "variables.a": ["347:342", 1],
-                "variables.b": ["347:344", 0],
+                "variables.a": ["365:273:263", 1],
+                "variables.b": ["365:273:265", 0],
             },
             "class_type": "SimpleCalculatorKJ",
             "_meta": {"title": "SimpleCalculatorKJ"},
         },
-        "347:344": {
+        "365:273:265": {
             "inputs": {"value": 64},
             "class_type": "PrimitiveInt",
             "_meta": {"title": "Int"},
         },
-        "347:345": {
+        "365:273:266": {
             "inputs": {
-                "switch": ["347:343", 2],
-                "on_false": ["347:342", 1],
-                "on_true": ["347:344", 0],
+                "switch": ["365:273:264", 2],
+                "on_false": ["365:273:263", 1],
+                "on_true": ["365:273:265", 0],
+            },
+            "class_type": "ComfySwitchNode",
+            "_meta": {"title": "Switch"},
+        },
+        "365:274:267": {
+            "inputs": {"expression": "a * 0.015625", "values.a": ["365:87", 1]},
+            "class_type": "ComfyMathExpression",
+            "_meta": {"title": "Math Expression"},
+        },
+        "365:274:268": {
+            "inputs": {
+                "expression": "a * b",
+                "values.a": ["365:274:267", 0],
+                "values.b": ["365:274:270", 0],
+            },
+            "class_type": "ComfyMathExpression",
+            "_meta": {"title": "Math Expression"},
+        },
+        "365:274:269": {
+            "inputs": {
+                "expression": "a < b",
+                "variables.a": ["365:274:268", 1],
+                "variables.b": ["365:274:270", 0],
+            },
+            "class_type": "SimpleCalculatorKJ",
+            "_meta": {"title": "SimpleCalculatorKJ"},
+        },
+        "365:274:270": {
+            "inputs": {"value": 64},
+            "class_type": "PrimitiveInt",
+            "_meta": {"title": "Int"},
+        },
+        "365:274:271": {
+            "inputs": {
+                "switch": ["365:274:269", 2],
+                "on_false": ["365:274:268", 1],
+                "on_true": ["365:274:270", 0],
             },
             "class_type": "ComfySwitchNode",
             "_meta": {"title": "Switch"},
@@ -277,14 +278,14 @@ def build_workflow() -> dict[str, Any]:
                 "strength": 1,
                 "bypass": False,
                 "vae": ["286:218", 0],
-                "image": ["297", 0],
-                "latent": ["293", 0],
+                "image": ["365:75", 0],
+                "latent": ["365:76", 0],
             },
             "class_type": "LTXVImgToVideoInplace",
             "_meta": {"title": "LTXVImgToVideoInplace"},
         },
         "284:144": {
-            "inputs": {"video_latent": ["284:145", 0], "audio_latent": ["294", 0]},
+            "inputs": {"video_latent": ["284:145", 0], "audio_latent": ["365:89", 0]},
             "class_type": "LTXVConcatAVLatent",
             "_meta": {"title": "LTXVConcatAVLatent"},
         },
@@ -332,8 +333,8 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
         "workflow": {
             "id": "4ecb70e4-8de9-44cc-8d0c-15171188fa13",
             "revision": 0,
-            "last_node_id": 361,
-            "last_link_id": 728,
+            "last_node_id": 377,
+            "last_link_id": 788,
             "nodes": [
                 {
                     "id": 278,
@@ -341,7 +342,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "pos": [2860.5080081627852, 1002.5406481522916],
                     "size": [225, 8],
                     "flags": {"collapsed": True},
-                    "order": 12,
+                    "order": 6,
                     "mode": 0,
                     "inputs": [
                         {"name": "CONDITIONING", "type": "CONDITIONING", "link": 607}
@@ -365,7 +366,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "pos": [2355.2622608055685, 1318.2222216258403],
                     "size": [225, 8],
                     "flags": {"collapsed": True},
-                    "order": 7,
+                    "order": 3,
                     "mode": 0,
                     "inputs": [{"name": "VAE", "type": "VAE", "link": 608}],
                     "outputs": [{"name": "VAE", "type": "VAE", "links": None}],
@@ -385,7 +386,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "pos": [2355.262260805569, 1369.4991243605857],
                     "size": [225, 8],
                     "flags": {"collapsed": True},
-                    "order": 8,
+                    "order": 4,
                     "mode": 0,
                     "inputs": [{"name": "VAE", "type": "VAE", "link": 609}],
                     "outputs": [{"name": "VAE", "type": "VAE", "links": None}],
@@ -405,7 +406,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "pos": [2860.5563990986216, 1081.103736300067],
                     "size": [225, 8],
                     "flags": {"collapsed": True},
-                    "order": 13,
+                    "order": 7,
                     "mode": 0,
                     "inputs": [
                         {"name": "CONDITIONING", "type": "CONDITIONING", "link": 611}
@@ -429,7 +430,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "pos": [2352.314167950462, 982.4120184075734],
                     "size": [453.2833251953125, 279.75],
                     "flags": {},
-                    "order": 6,
+                    "order": 2,
                     "mode": 0,
                     "inputs": [{"name": "clip", "type": "CLIP", "link": 612}],
                     "outputs": [
@@ -437,7 +438,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                         {"name": "negative", "type": "CONDITIONING", "links": [611]},
                     ],
                     "properties": {"previewExposures": []},
-                    "widgets_values": ["Dancing"],
+                    "widgets_values": ["Character start flying to the " "sky"],
                     "color": "#232",
                     "bgcolor": "#353",
                 },
@@ -447,7 +448,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "pos": [2681.477465507165, 1360.2135496466742],
                     "size": [285.6166687011719, 224],
                     "flags": {},
-                    "order": 23,
+                    "order": 8,
                     "mode": 0,
                     "inputs": [
                         {
@@ -460,9 +461,9 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                             "label": "video_latent",
                             "name": "latent",
                             "type": "LATENT",
-                            "link": 625,
+                            "link": 748,
                         },
-                        {"name": "audio_latent", "type": "LATENT", "link": 626},
+                        {"name": "audio_latent", "type": "LATENT", "link": 749},
                     ],
                     "outputs": [
                         {"name": "video_latent", "type": "LATENT", "links": [620]},
@@ -472,6 +473,208 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "widgets_values": [1, "euler_ancestral", 8],
                     "color": "#223",
                     "bgcolor": "#335",
+                },
+                {
+                    "id": 287,
+                    "type": "VHS_VideoCombine",
+                    "pos": [3295.728930693509, 1002.2410044587746],
+                    "size": [459.4666748046875, 1276.0833740234375],
+                    "flags": {},
+                    "order": 12,
+                    "mode": 0,
+                    "inputs": [
+                        {"name": "images", "type": "IMAGE", "link": 736},
+                        {"name": "audio", "shape": 7, "type": "AUDIO", "link": 618},
+                        {
+                            "name": "meta_batch",
+                            "shape": 7,
+                            "type": "VHS_BatchManager",
+                            "link": None,
+                        },
+                        {"name": "vae", "shape": 7, "type": "VAE", "link": None},
+                        {
+                            "name": "frame_rate",
+                            "type": "FLOAT",
+                            "widget": {"name": "frame_rate"},
+                            "link": 619,
+                        },
+                    ],
+                    "outputs": [
+                        {"name": "Filenames", "type": "VHS_FILENAMES", "links": None}
+                    ],
+                    "properties": {"Node name for S&R": "VHS_VideoCombine"},
+                    "widgets_values": {
+                        "frame_rate": 24,
+                        "loop_count": 0,
+                        "filename_prefix": "ltx23",
+                        "format": "video/h264-mp4",
+                        "pix_fmt": "yuv420p",
+                        "crf": 19,
+                        "save_metadata": False,
+                        "trim_to_audio": False,
+                        "pingpong": False,
+                        "save_output": True,
+                        "videopreview": {
+                            "hidden": False,
+                            "paused": False,
+                            "params": {
+                                "filename": "ltx23_00019-audio.mp4",
+                                "subfolder": "",
+                                "type": "output",
+                                "format": "video/h264-mp4",
+                                "frame_rate": 25,
+                                "workflow": "ltx23_00019.png",
+                                "fullpath": "/comfy/output/ltx23_00019-audio.mp4",
+                            },
+                        },
+                    },
+                },
+                {
+                    "id": 366,
+                    "type": "SetNode",
+                    "pos": [2662.924297113269, 1659.5428028072156],
+                    "size": [225, 8],
+                    "flags": {"collapsed": True},
+                    "order": 9,
+                    "mode": 0,
+                    "inputs": [{"name": "FLOAT", "type": "FLOAT", "link": 746}],
+                    "outputs": [{"name": "FLOAT", "type": "FLOAT", "links": []}],
+                    "title": "Set_FPS",
+                    "properties": {
+                        "Node name for S&R": "SetNode",
+                        "aux_id": "kijai/ComfyUI-KJNodes",
+                        "previousName": "FPS",
+                    },
+                    "widgets_values": ["FPS"],
+                    "color": "#232",
+                    "bgcolor": "#353",
+                },
+                {
+                    "id": 367,
+                    "type": "SetNode",
+                    "pos": [2662.860522911191, 1704.3795706451992],
+                    "size": [225, 8],
+                    "flags": {"collapsed": True},
+                    "order": 10,
+                    "mode": 0,
+                    "inputs": [{"name": "IMAGE", "type": "IMAGE", "link": 747}],
+                    "outputs": [{"name": "IMAGE", "type": "IMAGE", "links": None}],
+                    "title": "Set_IMG",
+                    "properties": {
+                        "Node name for S&R": "SetNode",
+                        "aux_id": "kijai/ComfyUI-KJNodes",
+                        "previousName": "IMG",
+                    },
+                    "widgets_values": ["IMG"],
+                    "color": "#2a363b",
+                    "bgcolor": "#3f5159",
+                },
+                {
+                    "id": 365,
+                    "type": "13d97aba-f16d-4e72-a518-96efbf07bde9",
+                    "pos": [2330.3952271978187, 1423.678380327392],
+                    "size": [299, 244],
+                    "flags": {},
+                    "order": 5,
+                    "mode": 0,
+                    "inputs": [
+                        {
+                            "label": "duration (seconds)",
+                            "name": "value",
+                            "type": "FLOAT",
+                            "widget": {"name": "value"},
+                            "link": None,
+                        },
+                        {
+                            "label": "fps",
+                            "name": "value_1",
+                            "type": "INT",
+                            "widget": {"name": "value_1"},
+                            "link": None,
+                        },
+                        {
+                            "label": "input_image",
+                            "name": "image",
+                            "type": "IMAGE",
+                            "link": 745,
+                        },
+                    ],
+                    "outputs": [
+                        {
+                            "label": "video_latent",
+                            "name": "LATENT",
+                            "type": "LATENT",
+                            "links": [748],
+                        },
+                        {
+                            "label": "audio_latent",
+                            "name": "Latent",
+                            "type": "LATENT",
+                            "links": [749],
+                        },
+                        {
+                            "label": "fps",
+                            "name": "FLOAT",
+                            "type": "FLOAT",
+                            "links": [746],
+                        },
+                        {
+                            "label": "compressed_image",
+                            "name": "output_image",
+                            "type": "IMAGE",
+                            "links": [747],
+                        },
+                    ],
+                    "properties": {"previewExposures": []},
+                    "widgets_values": [8, 25, 18],
+                    "color": "#432",
+                    "bgcolor": "#653",
+                },
+                {
+                    "id": 289,
+                    "type": "4eb8d8e1-d7b4-4ffc-9410-1a1990b6d58d",
+                    "pos": [3019.0156429108642, 1360.787927530866],
+                    "size": [225, 148],
+                    "flags": {},
+                    "order": 11,
+                    "mode": 0,
+                    "inputs": [
+                        {
+                            "label": "video_latent",
+                            "name": "latents",
+                            "type": "LATENT",
+                            "link": 620,
+                        },
+                        {
+                            "label": "audio_latent",
+                            "name": "samples",
+                            "type": "LATENT",
+                            "link": 621,
+                        },
+                    ],
+                    "outputs": [
+                        {
+                            "label": "frames",
+                            "name": "image",
+                            "type": "IMAGE",
+                            "links": [736],
+                        },
+                        {
+                            "label": "audio",
+                            "name": "Audio",
+                            "type": "AUDIO",
+                            "links": [618],
+                        },
+                        {
+                            "label": "fps",
+                            "name": "FLOAT",
+                            "type": "FLOAT",
+                            "links": [619],
+                        },
+                    ],
+                    "properties": {"previewExposures": []},
+                    "color": "#322",
+                    "bgcolor": "#533",
                 },
                 {
                     "id": 286,
@@ -548,576 +751,28 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                     "widgets_values": [
                         "Unknown/ltx-2.3-22b-distilled-1.1-UD-Q2_K.gguf",
                         "gemma-3-12b-it-qat-UD-Q2_K_XL.gguf",
-                        "ltx-2.3_text_projection_bf16.safetensors",
-                        "LTX23_video_vae_bf16.safetensors",
-                        "LTX23_audio_vae_bf16.safetensors",
+                        "ltx-2.3-22b-distilled_embeddings_connectors.safetensors",
+                        "ltx-2.3-22b-distilled_video_vae.safetensors",
+                        "ltx-2.3-22b-distilled_audio_vae.safetensors",
                     ],
                     "color": "#432",
                     "bgcolor": "#653",
                 },
                 {
-                    "id": 293,
-                    "type": "EmptyLTXVLatentVideo",
-                    "pos": [2266.069853101111, 1453.5091204074338],
-                    "size": [270, 176],
-                    "flags": {},
-                    "order": 21,
-                    "mode": 0,
-                    "inputs": [
-                        {
-                            "name": "width",
-                            "type": "INT",
-                            "widget": {"name": "width"},
-                            "link": 723,
-                        },
-                        {
-                            "name": "height",
-                            "type": "INT",
-                            "widget": {"name": "height"},
-                            "link": 724,
-                        },
-                        {
-                            "name": "length",
-                            "type": "INT",
-                            "widget": {"name": "length"},
-                            "link": 645,
-                        },
-                    ],
-                    "outputs": [{"name": "LATENT", "type": "LATENT", "links": [625]}],
-                    "properties": {
-                        "Node name for S&R": "EmptyLTXVLatentVideo",
-                        "cnr_id": "comfy-core",
-                        "ver": "0.3.60",
-                        "enableTabs": False,
-                        "tabWidth": 65,
-                        "tabXOffset": 10,
-                        "hasSecondTab": False,
-                        "secondTabText": "Send Back",
-                        "secondTabOffset": 80,
-                        "secondTabWidth": 65,
-                        "ue_properties": {
-                            "widget_ue_connectable": {},
-                            "version": "7.1",
-                            "input_ue_unconnectable": {},
-                        },
-                    },
-                    "widgets_values": [768, 512, 97, 1],
-                },
-                {
-                    "id": 294,
-                    "type": "LTXVEmptyLatentAudio",
-                    "pos": [2269.7062167374747, 1678.9636658619802],
-                    "size": [270, 144],
-                    "flags": {},
-                    "order": 16,
-                    "mode": 0,
-                    "inputs": [
-                        {"name": "audio_vae", "type": "VAE", "link": 627},
-                        {
-                            "name": "frames_number",
-                            "type": "INT",
-                            "widget": {"name": "frames_number"},
-                            "link": 644,
-                        },
-                        {
-                            "name": "frame_rate",
-                            "type": "INT",
-                            "widget": {"name": "frame_rate"},
-                            "link": 624,
-                        },
-                    ],
-                    "outputs": [{"name": "Latent", "type": "LATENT", "links": [626]}],
-                    "properties": {
-                        "Node name for S&R": "LTXVEmptyLatentAudio",
-                        "cnr_id": "comfy-core",
-                        "ver": "0.3.68",
-                        "enableTabs": False,
-                        "tabWidth": 65,
-                        "tabXOffset": 10,
-                        "hasSecondTab": False,
-                        "secondTabText": "Send Back",
-                        "secondTabOffset": 80,
-                        "secondTabWidth": 65,
-                        "ue_properties": {
-                            "widget_ue_connectable": {},
-                            "version": "7.1",
-                            "input_ue_unconnectable": {},
-                        },
-                    },
-                    "widgets_values": [97, 10, 1],
-                },
-                {
-                    "id": 297,
-                    "type": "LTXVPreprocess",
-                    "pos": [2268.3262904644725, 1890.1091204074337],
-                    "size": [271.5333251953125, 80.71666717529297],
-                    "flags": {},
-                    "order": 20,
-                    "mode": 0,
-                    "inputs": [{"name": "image", "type": "IMAGE", "link": 722}],
-                    "outputs": [
-                        {"name": "output_image", "type": "IMAGE", "links": [629]}
-                    ],
-                    "properties": {
-                        "Node name for S&R": "LTXVPreprocess",
-                        "cnr_id": "comfy-core",
-                        "ver": "0.7.0",
-                        "enableTabs": False,
-                        "tabWidth": 65,
-                        "tabXOffset": 10,
-                        "hasSecondTab": False,
-                        "secondTabText": "Send Back",
-                        "secondTabOffset": 80,
-                        "secondTabWidth": 65,
-                        "ue_properties": {
-                            "widget_ue_connectable": {},
-                            "version": "7.1",
-                            "input_ue_unconnectable": {},
-                        },
-                    },
-                    "widgets_values": [18],
-                },
-                {
-                    "id": 302,
-                    "type": "INTConstant",
-                    "pos": [1586.6172418481488, 2091.217663340572],
-                    "size": [270.6166687011719, 104],
+                    "id": 364,
+                    "type": "LoadImage",
+                    "pos": [1769.701864961382, 1422.2837721033607],
+                    "size": [540.7000122070312, 340],
                     "flags": {},
                     "order": 1,
                     "mode": 0,
                     "inputs": [],
-                    "outputs": [{"name": "value", "type": "INT", "links": [644, 645]}],
-                    "title": "FrameCount",
-                    "properties": {"Node name for S&R": "INTConstant"},
-                    "widgets_values": [88],
-                    "color": "#1b4669",
-                    "bgcolor": "#29699c",
-                },
-                {
-                    "id": 295,
-                    "type": "ComfyNumberConvert",
-                    "pos": [1962.6603741440777, 2246.2118001367503],
-                    "size": [339.6499938964844, 72],
-                    "flags": {"collapsed": False},
-                    "order": 11,
-                    "mode": 0,
-                    "inputs": [
-                        {
-                            "label": "value",
-                            "name": "value",
-                            "type": "INT,FLOAT,STRING,BOOLEAN",
-                            "link": 630,
-                        }
-                    ],
                     "outputs": [
-                        {"name": "FLOAT", "type": "FLOAT", "links": [631]},
-                        {"name": "INT", "type": "INT", "links": [624]},
-                    ],
-                    "properties": {"Node name for S&R": "ComfyNumberConvert"},
-                    "widgets_values": [],
-                },
-                {
-                    "id": 296,
-                    "type": "GetNode",
-                    "pos": [1588.4349809785467, 1457.1881831228698],
-                    "size": [225, 104],
-                    "flags": {"collapsed": False},
-                    "order": 2,
-                    "mode": 0,
-                    "inputs": [],
-                    "outputs": [{"name": "VAE", "type": "VAE", "links": [627]}],
-                    "title": "Get_AUDIO_VAE",
-                    "properties": {
-                        "Node name for S&R": "GetNode",
-                        "aux_id": "kijai/ComfyUI-KJNodes",
-                    },
-                    "widgets_values": ["AUDIO_VAE"],
-                    "color": "#322",
-                    "bgcolor": "#533",
-                },
-                {
-                    "id": 281,
-                    "type": "SetNode",
-                    "pos": [2590.225040961961, 1919.5441647885593],
-                    "size": [225, 8],
-                    "flags": {"collapsed": True},
-                    "order": 22,
-                    "mode": 0,
-                    "inputs": [{"name": "IMAGE", "type": "IMAGE", "link": 629}],
-                    "outputs": [{"name": "IMAGE", "type": "IMAGE", "links": None}],
-                    "title": "Set_IMG",
-                    "properties": {
-                        "Node name for S&R": "SetNode",
-                        "aux_id": "kijai/ComfyUI-KJNodes",
-                        "previousName": "IMG",
-                    },
-                    "widgets_values": ["IMG"],
-                    "color": "#2a363b",
-                    "bgcolor": "#3f5159",
-                },
-                {
-                    "id": 285,
-                    "type": "SetNode",
-                    "pos": [2385.3894383990655, 2273.3551639899097],
-                    "size": [225, 8],
-                    "flags": {"collapsed": True},
-                    "order": 15,
-                    "mode": 0,
-                    "inputs": [{"name": "FLOAT", "type": "FLOAT", "link": 631}],
-                    "outputs": [{"name": "FLOAT", "type": "FLOAT", "links": []}],
-                    "title": "Set_FPS",
-                    "properties": {
-                        "Node name for S&R": "SetNode",
-                        "aux_id": "kijai/ComfyUI-KJNodes",
-                        "previousName": "FPS",
-                    },
-                    "widgets_values": ["FPS"],
-                    "color": "#232",
-                    "bgcolor": "#353",
-                },
-                {
-                    "id": 347,
-                    "type": "8dffd50e-776a-4551-9834-55bfd6053728",
-                    "pos": [1590.990796528796, 1693.8319841237746],
-                    "size": [225, 76],
-                    "flags": {"collapsed": False},
-                    "order": 18,
-                    "mode": 0,
-                    "inputs": [
-                        {
-                            "label": "dimensity",
-                            "name": "values.a",
-                            "type": "FLOAT,INT,BOOLEAN",
-                            "link": 696,
-                        }
-                    ],
-                    "outputs": [
-                        {
-                            "label": "validated_value",
-                            "name": "INT",
-                            "type": "INT",
-                            "links": [710],
-                        }
-                    ],
-                    "properties": {"previewExposures": []},
-                    "color": "#233",
-                    "bgcolor": "#355",
-                },
-                {
-                    "id": 288,
-                    "type": "LoadImage",
-                    "pos": [770.9912179458564, 1782.9272748124965],
-                    "size": [282.8333435058594, 344],
-                    "flags": {},
-                    "order": 3,
-                    "mode": 0,
-                    "inputs": [],
-                    "outputs": [
-                        {"name": "IMAGE", "type": "IMAGE", "links": [716]},
+                        {"name": "IMAGE", "type": "IMAGE", "links": [745]},
                         {"name": "MASK", "type": "MASK", "links": None},
                     ],
                     "properties": {"Node name for S&R": "LoadImage"},
                     "widgets_values": ["hanfu.jpg", "image"],
-                },
-                {
-                    "id": 346,
-                    "type": "9631d6a1-0486-4f65-b2b6-0cb3c2ffe43f",
-                    "pos": [1591.600468165375, 1616.2265743226003],
-                    "size": [225, 76],
-                    "flags": {"collapsed": False},
-                    "order": 17,
-                    "mode": 0,
-                    "inputs": [
-                        {
-                            "label": "dimensity",
-                            "name": "values.a",
-                            "type": "FLOAT,INT,BOOLEAN",
-                            "link": 695,
-                        }
-                    ],
-                    "outputs": [
-                        {
-                            "label": "validated_value",
-                            "name": "INT",
-                            "type": "INT",
-                            "links": [709],
-                        }
-                    ],
-                    "properties": {"previewExposures": []},
-                    "color": "#233",
-                    "bgcolor": "#355",
-                },
-                {
-                    "id": 348,
-                    "type": "GetImageSize",
-                    "pos": [1413.5727747290891, 1630.2336942508757],
-                    "size": [225, 96],
-                    "flags": {"collapsed": False},
-                    "order": 14,
-                    "mode": 0,
-                    "inputs": [{"name": "image", "type": "IMAGE", "link": 718}],
-                    "outputs": [
-                        {"name": "width", "type": "INT", "links": [695]},
-                        {"name": "height", "type": "INT", "links": [696]},
-                        {"name": "batch_size", "type": "INT", "links": None},
-                    ],
-                    "properties": {"Node name for S&R": "GetImageSize"},
-                    "widgets_values": [],
-                },
-                {
-                    "id": 357,
-                    "type": "ImageScaleBy",
-                    "pos": [1096.8239920168655, 1630.631947052217],
-                    "size": [270, 112],
-                    "flags": {},
-                    "order": 9,
-                    "mode": 0,
-                    "inputs": [
-                        {"name": "image", "type": "IMAGE", "link": 716},
-                        {
-                            "name": "scale_by",
-                            "type": "FLOAT",
-                            "widget": {"name": "scale_by"},
-                            "link": 720,
-                        },
-                    ],
-                    "outputs": [
-                        {"name": "IMAGE", "type": "IMAGE", "links": [718, 719]}
-                    ],
-                    "properties": {"Node name for S&R": "ImageScaleBy"},
-                    "widgets_values": ["nearest-exact", 1],
-                },
-                {
-                    "id": 352,
-                    "type": "ImageResizeKJv2",
-                    "pos": [1100.4273570006812, 1782.9274357316178],
-                    "size": [408, 404],
-                    "flags": {"collapsed": False},
-                    "order": 19,
-                    "mode": 0,
-                    "inputs": [
-                        {"name": "image", "type": "IMAGE", "link": 719},
-                        {"name": "mask", "shape": 7, "type": "MASK", "link": None},
-                        {
-                            "name": "width",
-                            "type": "INT",
-                            "widget": {"name": "width"},
-                            "link": 709,
-                        },
-                        {
-                            "name": "height",
-                            "type": "INT",
-                            "widget": {"name": "height"},
-                            "link": 710,
-                        },
-                    ],
-                    "outputs": [
-                        {"name": "IMAGE", "type": "IMAGE", "links": [722]},
-                        {"name": "width", "type": "INT", "links": [723]},
-                        {"name": "height", "type": "INT", "links": [724]},
-                        {"name": "mask", "type": "MASK", "links": None},
-                    ],
-                    "properties": {"Node name for S&R": "ImageResizeKJv2"},
-                    "widgets_values": [
-                        512,
-                        512,
-                        "bicubic",
-                        "crop",
-                        "0, 0, 0",
-                        "center",
-                        2,
-                        "cpu",
-                    ],
-                },
-                {
-                    "id": 359,
-                    "type": "FloatConstant",
-                    "pos": [767.4446592932032, 1657.224048979781],
-                    "size": [280.6333312988281, 104],
-                    "flags": {},
-                    "order": 4,
-                    "mode": 0,
-                    "inputs": [],
-                    "outputs": [
-                        {"name": "value", "type": "FLOAT", "links": [720, 725]}
-                    ],
-                    "title": "Input Scale By",
-                    "properties": {"Node name for S&R": "FloatConstant"},
-                    "widgets_values": [0.25],
-                    "color": "#232",
-                    "bgcolor": "#353",
-                },
-                {
-                    "id": 360,
-                    "type": "ComfyMathExpression",
-                    "pos": [1103.6570633198917, 1574.5838501175551],
-                    "size": [225, 8],
-                    "flags": {"collapsed": True},
-                    "order": 10,
-                    "mode": 0,
-                    "inputs": [
-                        {
-                            "label": "a",
-                            "name": "values.a",
-                            "type": "FLOAT,INT,BOOLEAN",
-                            "link": 725,
-                        },
-                        {
-                            "label": "b",
-                            "name": "values.b",
-                            "shape": 7,
-                            "type": "FLOAT,INT,BOOLEAN",
-                            "link": None,
-                        },
-                    ],
-                    "outputs": [
-                        {"name": "FLOAT", "type": "FLOAT", "links": [726]},
-                        {"name": "INT", "type": "INT", "links": None},
-                        {"name": "BOOL", "type": "BOOLEAN", "links": None},
-                    ],
-                    "title": "1 / a",
-                    "properties": {"Node name for S&R": "ComfyMathExpression"},
-                    "widgets_values": ["1.0 / a"],
-                },
-                {
-                    "id": 287,
-                    "type": "VHS_VideoCombine",
-                    "pos": [3702.371309948213, 966.5302006148771],
-                    "size": [459.4666748046875, 1139.0400146484376],
-                    "flags": {},
-                    "order": 26,
-                    "mode": 0,
-                    "inputs": [
-                        {"name": "images", "type": "IMAGE", "link": 728},
-                        {"name": "audio", "shape": 7, "type": "AUDIO", "link": 618},
-                        {
-                            "name": "meta_batch",
-                            "shape": 7,
-                            "type": "VHS_BatchManager",
-                            "link": None,
-                        },
-                        {"name": "vae", "shape": 7, "type": "VAE", "link": None},
-                        {
-                            "name": "frame_rate",
-                            "type": "FLOAT",
-                            "widget": {"name": "frame_rate"},
-                            "link": 619,
-                        },
-                    ],
-                    "outputs": [
-                        {"name": "Filenames", "type": "VHS_FILENAMES", "links": None}
-                    ],
-                    "properties": {"Node name for S&R": "VHS_VideoCombine"},
-                    "widgets_values": {
-                        "frame_rate": 24,
-                        "loop_count": 0,
-                        "filename_prefix": "ltx23",
-                        "format": "video/h264-mp4",
-                        "pix_fmt": "yuv420p",
-                        "crf": 19,
-                        "save_metadata": True,
-                        "trim_to_audio": False,
-                        "pingpong": False,
-                        "save_output": True,
-                        "videopreview": {
-                            "hidden": False,
-                            "paused": False,
-                            "params": {
-                                "filename": "ltx23_00006-audio.mp4",
-                                "subfolder": "",
-                                "type": "output",
-                                "format": "video/h264-mp4",
-                                "frame_rate": 15,
-                                "workflow": "ltx23_00006.png",
-                                "fullpath": "/comfy/output/ltx23_00006-audio.mp4",
-                            },
-                        },
-                    },
-                },
-                {
-                    "id": 289,
-                    "type": "4eb8d8e1-d7b4-4ffc-9410-1a1990b6d58d",
-                    "pos": [3019.0156429108642, 1360.787927530866],
-                    "size": [225, 148],
-                    "flags": {},
-                    "order": 24,
-                    "mode": 0,
-                    "inputs": [
-                        {
-                            "label": "video_latent",
-                            "name": "latents",
-                            "type": "LATENT",
-                            "link": 620,
-                        },
-                        {
-                            "label": "audio_latent",
-                            "name": "samples",
-                            "type": "LATENT",
-                            "link": 621,
-                        },
-                    ],
-                    "outputs": [
-                        {
-                            "label": "frames",
-                            "name": "image",
-                            "type": "IMAGE",
-                            "links": [727],
-                        },
-                        {
-                            "label": "audio",
-                            "name": "Audio",
-                            "type": "AUDIO",
-                            "links": [618],
-                        },
-                        {
-                            "label": "fps",
-                            "name": "FLOAT",
-                            "type": "FLOAT",
-                            "links": [619],
-                        },
-                    ],
-                    "properties": {"previewExposures": []},
-                    "color": "#322",
-                    "bgcolor": "#533",
-                },
-                {
-                    "id": 361,
-                    "type": "RTXVideoSuperResolution",
-                    "pos": [3366.991975307836, 960.8362673310864],
-                    "size": [285.79998779296875, 168],
-                    "flags": {},
-                    "order": 25,
-                    "mode": 0,
-                    "inputs": [
-                        {"name": "images", "type": "IMAGE", "link": 727},
-                        {
-                            "name": "resize_type.scale",
-                            "type": "FLOAT",
-                            "widget": {"name": "resize_type.scale"},
-                            "link": 726,
-                        },
-                    ],
-                    "outputs": [
-                        {"name": "upscaled_images", "type": "IMAGE", "links": [728]}
-                    ],
-                    "properties": {"Node name for S&R": "RTXVideoSuperResolution"},
-                    "widgets_values": ["scale by multiplier", 2, "ULTRA"],
-                },
-                {
-                    "id": 291,
-                    "type": "INTConstant",
-                    "pos": [1587.8254841179237, 2245.3556809977413],
-                    "size": [270.6166687011719, 104],
-                    "flags": {},
-                    "order": 5,
-                    "mode": 0,
-                    "inputs": [],
-                    "outputs": [{"name": "value", "type": "INT", "links": [630]}],
-                    "title": "FPS",
-                    "properties": {"Node name for S&R": "INTConstant"},
-                    "widgets_values": [8],
-                    "color": "#1b4669",
-                    "bgcolor": "#29699c",
                 },
             ],
             "links": [
@@ -1131,30 +786,12 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                 [619, 289, 2, 287, 4, "FLOAT"],
                 [620, 284, 0, 289, 0, "LATENT"],
                 [621, 284, 1, 289, 1, "LATENT"],
-                [624, 295, 1, 294, 2, "INT"],
-                [625, 293, 0, 284, 1, "LATENT"],
-                [626, 294, 0, 284, 2, "LATENT"],
-                [627, 296, 0, 294, 0, "VAE"],
-                [629, 297, 0, 281, 0, "IMAGE"],
-                [630, 291, 0, 295, 0, "INT"],
-                [631, 295, 0, 285, 0, "FLOAT"],
-                [644, 302, 0, 294, 1, "INT"],
-                [645, 302, 0, 293, 2, "INT"],
-                [695, 348, 0, 346, 0, "INT"],
-                [696, 348, 1, 347, 0, "INT"],
-                [709, 346, 0, 352, 2, "INT"],
-                [710, 347, 0, 352, 3, "INT"],
-                [716, 288, 0, 357, 0, "IMAGE"],
-                [718, 357, 0, 348, 0, "IMAGE"],
-                [719, 357, 0, 352, 0, "IMAGE"],
-                [720, 359, 0, 357, 1, "FLOAT"],
-                [722, 352, 0, 297, 0, "IMAGE"],
-                [723, 352, 1, 293, 0, "INT"],
-                [724, 352, 2, 293, 1, "INT"],
-                [725, 359, 0, 360, 0, "FLOAT"],
-                [726, 360, 0, 361, 1, "FLOAT"],
-                [727, 289, 0, 361, 0, "IMAGE"],
-                [728, 361, 0, 287, 0, "IMAGE"],
+                [736, 289, 0, 287, 0, "IMAGE"],
+                [745, 364, 0, 365, 2, "IMAGE"],
+                [746, 365, 2, 366, 0, "FLOAT"],
+                [747, 365, 3, 367, 0, "IMAGE"],
+                [748, 365, 0, 284, 1, "LATENT"],
+                [749, 365, 1, 284, 2, "LATENT"],
             ],
             "groups": [],
             "definitions": {
@@ -1164,8 +801,8 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                         "version": 1,
                         "state": {
                             "lastGroupId": 0,
-                            "lastNodeId": 361,
-                            "lastLinkId": 728,
+                            "lastNodeId": 377,
+                            "lastLinkId": 788,
                             "lastRerouteId": 0,
                         },
                         "revision": 0,
@@ -1460,8 +1097,8 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                         "version": 1,
                         "state": {
                             "lastGroupId": 0,
-                            "lastNodeId": 361,
-                            "lastLinkId": 728,
+                            "lastNodeId": 377,
+                            "lastLinkId": 788,
                             "lastRerouteId": 0,
                         },
                         "revision": 0,
@@ -2217,8 +1854,8 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                         "version": 1,
                         "state": {
                             "lastGroupId": 0,
-                            "lastNodeId": 361,
-                            "lastLinkId": 728,
+                            "lastNodeId": 377,
+                            "lastLinkId": 788,
                             "lastRerouteId": 0,
                         },
                         "revision": 0,
@@ -2443,7 +2080,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                 },
                                 "widgets_values": [
                                     "gemma-3-12b-it-qat-UD-Q2_K_XL.gguf",
-                                    "ltx-2.3-22b-dev_embeddings_connectors.safetensors",
+                                    "ltx-2.3-22b-distilled_embeddings_connectors.safetensors",
                                     "ltxv",
                                 ],
                             },
@@ -2560,8 +2197,8 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                         "version": 1,
                         "state": {
                             "lastGroupId": 0,
-                            "lastNodeId": 361,
-                            "lastLinkId": 728,
+                            "lastNodeId": 377,
+                            "lastLinkId": 788,
                             "lastRerouteId": 0,
                         },
                         "revision": 0,
@@ -2840,371 +2477,1174 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                         "extra": {},
                     },
                     {
-                        "id": "9631d6a1-0486-4f65-b2b6-0cb3c2ffe43f",
+                        "id": "13d97aba-f16d-4e72-a518-96efbf07bde9",
                         "version": 1,
                         "state": {
                             "lastGroupId": 0,
-                            "lastNodeId": 361,
-                            "lastLinkId": 728,
+                            "lastNodeId": 377,
+                            "lastLinkId": 788,
                             "lastRerouteId": 0,
                         },
                         "revision": 0,
                         "config": {},
-                        "name": "LTX Dimension Validation",
+                        "name": "Image Input",
                         "inputNode": {
                             "id": -10,
                             "bounding": [
-                                34.533314806798046,
-                                3185.691001983322,
+                                -886.220085613943,
+                                3509.235191619284,
+                                155.11666870117188,
                                 128,
-                                68,
                             ],
                         },
                         "outputNode": {
                             "id": -20,
                             "bounding": [
-                                933.438531359792,
-                                3185.691001983322,
-                                134.4000015258789,
-                                68,
+                                843.1677305538424,
+                                3509.235191619284,
+                                158.6500015258789,
+                                128,
                             ],
                         },
                         "inputs": [
                             {
-                                "id": "2de8ba3e-fb3f-4eb1-8ff1-c1c12ac56da2",
-                                "name": "values.a",
-                                "type": "FLOAT,INT,BOOLEAN",
-                                "linkIds": [435],
-                                "localized_name": "values.a",
-                                "label": "dimensity",
-                                "pos": [138.53331480679805, 3209.691001983322],
-                            }
+                                "id": "3372b170-c2f5-48b1-9bae-f06ea059c8f7",
+                                "name": "value",
+                                "type": "FLOAT",
+                                "linkIds": [208],
+                                "label": "duration " "(seconds)",
+                                "pos": [-755.1034169127711, 3533.235191619284],
+                            },
+                            {
+                                "id": "a28c234a-a05a-4554-9151-6ca7953227eb",
+                                "name": "value_1",
+                                "type": "INT",
+                                "linkIds": [209],
+                                "label": "fps",
+                                "pos": [-755.1034169127711, 3553.235191619284],
+                            },
+                            {
+                                "id": "fc3e05f0-78fc-49b1-b6c0-34fee739914a",
+                                "name": "image",
+                                "type": "IMAGE",
+                                "linkIds": [784],
+                                "label": "input_image",
+                                "pos": [-755.1034169127711, 3573.235191619284],
+                            },
+                            {
+                                "id": "e49f4b28-2553-4dcc-a464-ac7941aa06f5",
+                                "name": "img_compression",
+                                "type": "INT",
+                                "linkIds": [589],
+                                "pos": [-755.1034169127711, 3593.235191619284],
+                            },
                         ],
                         "outputs": [
                             {
-                                "id": "c52f005c-2824-4a94-8319-fd4d8fba3f9d",
-                                "name": "INT",
-                                "type": "INT",
-                                "linkIds": [458],
-                                "localized_name": "INT",
-                                "label": "validated_value",
-                                "pos": [957.438531359792, 3209.691001983322],
-                            }
+                                "id": "42189281-4c40-43b5-a609-16ad6b0aa6cc",
+                                "name": "LATENT",
+                                "type": "LATENT",
+                                "linkIds": [327],
+                                "label": "video_latent",
+                                "pos": [867.1677305538424, 3533.235191619284],
+                            },
+                            {
+                                "id": "6ee8d8dd-4be2-465c-9d7f-4c1853afc750",
+                                "name": "Latent",
+                                "type": "LATENT",
+                                "linkIds": [328],
+                                "label": "audio_latent",
+                                "pos": [867.1677305538424, 3553.235191619284],
+                            },
+                            {
+                                "id": "0693e711-2ff4-4996-9481-bc739f835722",
+                                "name": "FLOAT",
+                                "type": "FLOAT",
+                                "linkIds": [486],
+                                "label": "fps",
+                                "pos": [867.1677305538424, 3573.235191619284],
+                            },
+                            {
+                                "id": "2e224f7a-b792-4957-a8d0-6e3b9d66928b",
+                                "name": "output_image",
+                                "type": "IMAGE",
+                                "linkIds": [387],
+                                "label": "compressed_image",
+                                "pos": [867.1677305538424, 3593.235191619284],
+                            },
                         ],
                         "widgets": [],
                         "nodes": [
                             {
-                                "id": 336,
-                                "type": "ComfyMathExpression",
-                                "pos": [222.53331480679805, 3134.0672485306923],
-                                "size": [225, 200],
+                                "id": 91,
+                                "type": "INTConstant",
+                                "pos": [-698.220085613943, 3808.123063970049],
+                                "size": [270.6166687011719, 104],
                                 "flags": {},
-                                "order": 1,
+                                "order": 6,
                                 "mode": 0,
                                 "inputs": [
                                     {
-                                        "label": "a",
-                                        "localized_name": "values.a",
-                                        "name": "values.a",
-                                        "type": "FLOAT,INT,BOOLEAN",
-                                        "link": 435,
-                                    },
+                                        "localized_name": "value",
+                                        "name": "value",
+                                        "type": "INT",
+                                        "widget": {"name": "value"},
+                                        "link": 209,
+                                    }
+                                ],
+                                "outputs": [
                                     {
-                                        "label": "b",
-                                        "localized_name": "values.b",
-                                        "name": "values.b",
-                                        "shape": 7,
-                                        "type": "FLOAT,INT,BOOLEAN",
-                                        "link": None,
-                                    },
+                                        "localized_name": "value",
+                                        "name": "value",
+                                        "type": "INT",
+                                        "links": [485, 600],
+                                    }
+                                ],
+                                "title": "FPS",
+                                "properties": {"Node name for S&R": "INTConstant"},
+                                "widgets_values": [25],
+                                "color": "#1b4669",
+                                "bgcolor": "#29699c",
+                            },
+                            {
+                                "id": 95,
+                                "type": "PrimitiveFloat",
+                                "pos": [-697.2996493980697, 3657.581998585889],
+                                "size": [270, 80],
+                                "flags": {},
+                                "order": 8,
+                                "mode": 0,
+                                "inputs": [
+                                    {
+                                        "localized_name": "value",
+                                        "name": "value",
+                                        "type": "FLOAT",
+                                        "widget": {"name": "value"},
+                                        "link": 208,
+                                    }
                                 ],
                                 "outputs": [
                                     {
                                         "localized_name": "FLOAT",
                                         "name": "FLOAT",
                                         "type": "FLOAT",
-                                        "links": None,
-                                    },
-                                    {
-                                        "localized_name": "INT",
-                                        "name": "INT",
-                                        "type": "INT",
-                                        "links": [436],
-                                    },
-                                    {
-                                        "localized_name": "BOOL",
-                                        "name": "BOOL",
-                                        "type": "BOOLEAN",
-                                        "links": None,
-                                    },
+                                        "links": [601],
+                                    }
                                 ],
-                                "properties": {
-                                    "Node name for S&R": "ComfyMathExpression"
-                                },
-                                "widgets_values": ["a " "* " "0.015625"],
+                                "title": "Duration " "(seconds)",
+                                "properties": {"Node name for S&R": "PrimitiveFloat"},
+                                "widgets_values": [8],
                             },
                             {
-                                "id": 337,
-                                "type": "ComfyMathExpression",
-                                "pos": [222.82266112104568, 3388.9320133422284],
-                                "size": [400, 200],
-                                "flags": {},
-                                "order": 2,
-                                "mode": 0,
-                                "inputs": [
-                                    {
-                                        "label": "a",
-                                        "localized_name": "values.a",
-                                        "name": "values.a",
-                                        "type": "FLOAT,INT,BOOLEAN",
-                                        "link": 436,
-                                    },
-                                    {
-                                        "label": "b",
-                                        "localized_name": "values.b",
-                                        "name": "values.b",
-                                        "shape": 7,
-                                        "type": "FLOAT,INT,BOOLEAN",
-                                        "link": 558,
-                                    },
-                                    {
-                                        "label": "c",
-                                        "localized_name": "values.c",
-                                        "name": "values.c",
-                                        "shape": 7,
-                                        "type": "FLOAT,INT,BOOLEAN",
-                                        "link": None,
-                                    },
-                                ],
-                                "outputs": [
-                                    {
-                                        "localized_name": "FLOAT",
-                                        "name": "FLOAT",
-                                        "type": "FLOAT",
-                                        "links": None,
-                                    },
-                                    {
-                                        "localized_name": "INT",
-                                        "name": "INT",
-                                        "type": "INT",
-                                        "links": [452, 457],
-                                    },
-                                    {
-                                        "localized_name": "BOOL",
-                                        "name": "BOOL",
-                                        "type": "BOOLEAN",
-                                        "links": None,
-                                    },
-                                ],
-                                "properties": {
-                                    "Node name for S&R": "ComfyMathExpression"
-                                },
-                                "widgets_values": ["a " "* " "b"],
-                            },
-                            {
-                                "id": 338,
-                                "type": "SimpleCalculatorKJ",
-                                "pos": [221.59499630404588, 3737.346195483185],
-                                "size": [400, 200],
+                                "id": 76,
+                                "type": "EmptyLTXVLatentVideo",
+                                "pos": [454.93350763053036, 3395.231349501993],
+                                "size": [270, 176],
                                 "flags": {},
                                 "order": 3,
                                 "mode": 0,
                                 "inputs": [
                                     {
-                                        "label": "a",
-                                        "localized_name": "variables.a",
-                                        "name": "variables.a",
-                                        "shape": 7,
-                                        "type": "INT,FLOAT,BOOLEAN",
-                                        "link": 452,
+                                        "localized_name": "width",
+                                        "name": "width",
+                                        "type": "INT",
+                                        "widget": {"name": "width"},
+                                        "link": 596,
                                     },
                                     {
-                                        "label": "b",
-                                        "localized_name": "variables.b",
-                                        "name": "variables.b",
-                                        "shape": 7,
-                                        "type": "INT,FLOAT,BOOLEAN",
-                                        "link": 453,
+                                        "localized_name": "height",
+                                        "name": "height",
+                                        "type": "INT",
+                                        "widget": {"name": "height"},
+                                        "link": 597,
                                     },
                                     {
-                                        "label": "c",
-                                        "localized_name": "variables.c",
-                                        "name": "variables.c",
-                                        "shape": 7,
-                                        "type": "INT,FLOAT,BOOLEAN",
-                                        "link": None,
+                                        "localized_name": "length",
+                                        "name": "length",
+                                        "type": "INT",
+                                        "widget": {"name": "length"},
+                                        "link": 598,
                                     },
+                                ],
+                                "outputs": [
+                                    {
+                                        "localized_name": "LATENT",
+                                        "name": "LATENT",
+                                        "type": "LATENT",
+                                        "links": [327],
+                                    }
+                                ],
+                                "properties": {
+                                    "Node name for S&R": "EmptyLTXVLatentVideo",
+                                    "cnr_id": "comfy-core",
+                                    "ver": "0.3.60",
+                                    "enableTabs": False,
+                                    "tabWidth": 65,
+                                    "tabXOffset": 10,
+                                    "hasSecondTab": False,
+                                    "secondTabText": "Send " "Back",
+                                    "secondTabOffset": 80,
+                                    "secondTabWidth": 65,
+                                    "ue_properties": {
+                                        "widget_ue_connectable": {},
+                                        "version": "7.1",
+                                        "input_ue_unconnectable": {},
+                                    },
+                                },
+                                "widgets_values": [768, 512, 97, 1],
+                            },
+                            {
+                                "id": 89,
+                                "type": "LTXVEmptyLatentAudio",
+                                "pos": [458.569871266894, 3620.6858949565394],
+                                "size": [270, 144],
+                                "flags": {},
+                                "order": 5,
+                                "mode": 0,
+                                "inputs": [
+                                    {
+                                        "localized_name": "audio_vae",
+                                        "name": "audio_vae",
+                                        "type": "VAE",
+                                        "link": 367,
+                                    },
+                                    {
+                                        "localized_name": "frames_number",
+                                        "name": "frames_number",
+                                        "type": "INT",
+                                        "widget": {"name": "frames_number"},
+                                        "link": 599,
+                                    },
+                                    {
+                                        "localized_name": "frame_rate",
+                                        "name": "frame_rate",
+                                        "type": "INT",
+                                        "widget": {"name": "frame_rate"},
+                                        "link": 142,
+                                    },
+                                ],
+                                "outputs": [
+                                    {
+                                        "localized_name": "Latent",
+                                        "name": "Latent",
+                                        "type": "LATENT",
+                                        "links": [328],
+                                    }
+                                ],
+                                "properties": {
+                                    "Node name for S&R": "LTXVEmptyLatentAudio",
+                                    "cnr_id": "comfy-core",
+                                    "ver": "0.3.68",
+                                    "enableTabs": False,
+                                    "tabWidth": 65,
+                                    "tabXOffset": 10,
+                                    "hasSecondTab": False,
+                                    "secondTabText": "Send " "Back",
+                                    "secondTabOffset": 80,
+                                    "secondTabWidth": 65,
+                                    "ue_properties": {
+                                        "widget_ue_connectable": {},
+                                        "version": "7.1",
+                                        "input_ue_unconnectable": {},
+                                    },
+                                },
+                                "widgets_values": [97, 10, 1],
+                            },
+                            {
+                                "id": 93,
+                                "type": "ComfyNumberConvert",
+                                "pos": [-231.10267501301408, 3794.885761670695],
+                                "size": [339.6499938964844, 72],
+                                "flags": {"collapsed": False},
+                                "order": 7,
+                                "mode": 0,
+                                "inputs": [
+                                    {
+                                        "label": "value",
+                                        "localized_name": "value",
+                                        "name": "value",
+                                        "type": "INT,FLOAT,STRING,BOOLEAN",
+                                        "link": 485,
+                                    }
                                 ],
                                 "outputs": [
                                     {
                                         "localized_name": "FLOAT",
                                         "name": "FLOAT",
                                         "type": "FLOAT",
-                                        "links": None,
+                                        "links": [486],
                                     },
                                     {
                                         "localized_name": "INT",
                                         "name": "INT",
                                         "type": "INT",
-                                        "links": [],
-                                    },
-                                    {
-                                        "localized_name": "BOOLEAN",
-                                        "name": "BOOLEAN",
-                                        "type": "BOOLEAN",
-                                        "links": [455],
+                                        "links": [142],
                                     },
                                 ],
                                 "properties": {
-                                    "Node name for S&R": "SimpleCalculatorKJ"
+                                    "Node name for S&R": "ComfyNumberConvert"
                                 },
-                                "widgets_values": ["a " "< " "b"],
+                                "widgets_values": [],
                             },
                             {
-                                "id": 339,
-                                "type": "PrimitiveInt",
-                                "pos": [-141.80467535468387, 3594.3422427162477],
-                                "size": [270, 82],
-                                "flags": {},
+                                "id": 157,
+                                "type": "GetNode",
+                                "pos": [-981.9480726883353, 3364.977225375118],
+                                "size": [225, 104],
+                                "flags": {"collapsed": False},
                                 "order": 0,
                                 "mode": 0,
                                 "inputs": [],
                                 "outputs": [
-                                    {
-                                        "localized_name": "INT",
-                                        "name": "INT",
-                                        "type": "INT",
-                                        "links": [453, 456, 558],
-                                    }
+                                    {"name": "VAE", "type": "VAE", "links": [367]}
                                 ],
-                                "properties": {"Node name for S&R": "PrimitiveInt"},
-                                "widgets_values": [64, "fixed"],
+                                "title": "Get_AUDIO_VAE",
+                                "properties": {
+                                    "Node name for S&R": "GetNode",
+                                    "aux_id": "kijai/ComfyUI-KJNodes",
+                                },
+                                "widgets_values": ["AUDIO_VAE"],
+                                "color": "#322",
+                                "bgcolor": "#533",
                             },
                             {
-                                "id": 340,
-                                "type": "ComfySwitchNode",
-                                "pos": [705.6813538182663, 3566.6388942685676],
-                                "size": [270, 124],
+                                "id": 75,
+                                "type": "LTXVPreprocess",
+                                "pos": [457.1899449938919, 3831.831349501993],
+                                "size": [271.5333251953125, 80.71666717529297],
+                                "flags": {},
+                                "order": 2,
+                                "mode": 0,
+                                "inputs": [
+                                    {
+                                        "localized_name": "image",
+                                        "name": "image",
+                                        "type": "IMAGE",
+                                        "link": 781,
+                                    },
+                                    {
+                                        "localized_name": "img_compression",
+                                        "name": "img_compression",
+                                        "type": "INT",
+                                        "widget": {"name": "img_compression"},
+                                        "link": 589,
+                                    },
+                                ],
+                                "outputs": [
+                                    {
+                                        "localized_name": "output_image",
+                                        "name": "output_image",
+                                        "type": "IMAGE",
+                                        "links": [387],
+                                    }
+                                ],
+                                "properties": {
+                                    "Node name for S&R": "LTXVPreprocess",
+                                    "cnr_id": "comfy-core",
+                                    "ver": "0.7.0",
+                                    "enableTabs": False,
+                                    "tabWidth": 65,
+                                    "tabXOffset": 10,
+                                    "hasSecondTab": False,
+                                    "secondTabText": "Send " "Back",
+                                    "secondTabOffset": 80,
+                                    "secondTabWidth": 65,
+                                    "ue_properties": {
+                                        "widget_ue_connectable": {},
+                                        "version": "7.1",
+                                        "input_ue_unconnectable": {},
+                                    },
+                                },
+                                "widgets_values": [18],
+                            },
+                            {
+                                "id": 182,
+                                "type": "MarkdownNote",
+                                "pos": [-1154.044607687379, 3664.429977136585],
+                                "size": [393.4166564941406, 198.8000030517578],
+                                "flags": {"collapsed": False},
+                                "order": 1,
+                                "mode": 0,
+                                "inputs": [],
+                                "outputs": [],
+                                "title": "About Size",
+                                "properties": {},
+                                "widgets_values": [
+                                    "Important: "
+                                    "Do "
+                                    "not "
+                                    "change "
+                                    "the "
+                                    "math "
+                                    "inside "
+                                    "`Frame "
+                                    "Correction` "
+                                    "or "
+                                    "`Dimensity "
+                                    "Validation`.\n"
+                                    "If "
+                                    "does "
+                                    "you "
+                                    "may "
+                                    "receive "
+                                    "the "
+                                    "black "
+                                    "result "
+                                    "or "
+                                    "blurry "
+                                    "result."
+                                ],
+                                "color": "#222",
+                                "bgcolor": "#000",
+                            },
+                            {
+                                "id": 87,
+                                "type": "GetImageSizeAndCount",
+                                "pos": [-698.2565607424958, 3316.600505076189],
+                                "size": [323.9333190917969, 172],
                                 "flags": {},
                                 "order": 4,
                                 "mode": 0,
                                 "inputs": [
                                     {
-                                        "localized_name": "on_false",
-                                        "name": "on_false",
-                                        "type": "INT",
-                                        "link": 457,
+                                        "localized_name": "image",
+                                        "name": "image",
+                                        "type": "IMAGE",
+                                        "link": 784,
+                                    }
+                                ],
+                                "outputs": [
+                                    {
+                                        "localized_name": "image",
+                                        "name": "image",
+                                        "type": "IMAGE",
+                                        "links": [781],
                                     },
                                     {
-                                        "localized_name": "on_true",
-                                        "name": "on_true",
+                                        "label": "350 " "width",
+                                        "localized_name": "width",
+                                        "name": "width",
                                         "type": "INT",
-                                        "link": 456,
+                                        "links": [782],
                                     },
                                     {
-                                        "localized_name": "switch",
-                                        "name": "switch",
-                                        "type": "BOOLEAN",
-                                        "widget": {"name": "switch"},
-                                        "link": 455,
+                                        "label": "622 " "height",
+                                        "localized_name": "height",
+                                        "name": "height",
+                                        "type": "INT",
+                                        "links": [783],
+                                    },
+                                    {
+                                        "label": "1 " "count",
+                                        "localized_name": "count",
+                                        "name": "count",
+                                        "type": "INT",
+                                        "links": None,
+                                    },
+                                ],
+                                "properties": {
+                                    "Node name for S&R": "GetImageSizeAndCount"
+                                },
+                                "widgets_values": [],
+                            },
+                            {
+                                "id": 272,
+                                "type": "3757f676-cc28-4132-8dbe-c366a5dbeddc",
+                                "pos": [-234.60883099161902, 3646.144821852333],
+                                "size": [340.6166687011719, 100],
+                                "flags": {"collapsed": False},
+                                "order": 9,
+                                "mode": 0,
+                                "inputs": [
+                                    {
+                                        "label": "duration " "(seconds)",
+                                        "localized_name": "values.a",
+                                        "name": "values.a",
+                                        "type": "FLOAT,INT,BOOLEAN",
+                                        "link": 601,
+                                    },
+                                    {
+                                        "label": "fps",
+                                        "localized_name": "values.b",
+                                        "name": "values.b",
+                                        "shape": 7,
+                                        "type": "FLOAT,INT,BOOLEAN",
+                                        "link": 600,
                                     },
                                 ],
                                 "outputs": [
                                     {
-                                        "localized_name": "output",
-                                        "name": "output",
+                                        "label": "frame_count " "(int)",
+                                        "name": "INT_1",
                                         "type": "INT",
-                                        "links": [458],
+                                        "links": [598, 599],
                                     }
                                 ],
-                                "properties": {"Node name for S&R": "ComfySwitchNode"},
-                                "widgets_values": [False],
+                                "properties": {"previewExposures": []},
+                                "color": "#233",
+                                "bgcolor": "#355",
+                            },
+                            {
+                                "id": 273,
+                                "type": "bbf804fa-9048-4f18-a839-fc08700e415b",
+                                "pos": [-226.46206077210826, 3524.748999271473],
+                                "size": [334.6499938964844, 76],
+                                "flags": {},
+                                "order": 10,
+                                "mode": 0,
+                                "inputs": [
+                                    {
+                                        "label": "dimensity",
+                                        "localized_name": "values.a",
+                                        "name": "values.a",
+                                        "type": "FLOAT,INT,BOOLEAN",
+                                        "link": 783,
+                                    }
+                                ],
+                                "outputs": [
+                                    {
+                                        "label": "validated_value",
+                                        "localized_name": "INT",
+                                        "name": "INT",
+                                        "type": "INT",
+                                        "links": [597],
+                                    }
+                                ],
+                                "properties": {"previewExposures": []},
+                                "color": "#233",
+                                "bgcolor": "#355",
+                            },
+                            {
+                                "id": 274,
+                                "type": "60bae489-a352-4993-b7e4-70562bc926d7",
+                                "pos": [-227.71491427723873, 3407.2291217726474],
+                                "size": [334.6499938964844, 76],
+                                "flags": {},
+                                "order": 11,
+                                "mode": 0,
+                                "inputs": [
+                                    {
+                                        "label": "dimensity",
+                                        "localized_name": "values.a",
+                                        "name": "values.a",
+                                        "type": "FLOAT,INT,BOOLEAN",
+                                        "link": 782,
+                                    }
+                                ],
+                                "outputs": [
+                                    {
+                                        "label": "validated_value",
+                                        "localized_name": "INT",
+                                        "name": "INT",
+                                        "type": "INT",
+                                        "links": [596],
+                                    }
+                                ],
+                                "properties": {"previewExposures": []},
+                                "color": "#233",
+                                "bgcolor": "#355",
                             },
                         ],
                         "groups": [],
                         "links": [
                             {
-                                "id": 436,
-                                "origin_id": 336,
+                                "id": 142,
+                                "origin_id": 93,
                                 "origin_slot": 1,
-                                "target_id": 337,
-                                "target_slot": 0,
+                                "target_id": 89,
+                                "target_slot": 2,
                                 "type": "INT",
                             },
                             {
-                                "id": 435,
+                                "id": 208,
                                 "origin_id": -10,
                                 "origin_slot": 0,
-                                "target_id": 336,
+                                "target_id": 95,
                                 "target_slot": 0,
-                                "type": "INT",
+                                "type": "FLOAT",
                             },
                             {
-                                "id": 452,
-                                "origin_id": 337,
+                                "id": 209,
+                                "origin_id": -10,
                                 "origin_slot": 1,
-                                "target_id": 338,
+                                "target_id": 91,
                                 "target_slot": 0,
                                 "type": "INT",
                             },
                             {
-                                "id": 453,
-                                "origin_id": 339,
-                                "origin_slot": 0,
-                                "target_id": 338,
-                                "target_slot": 1,
-                                "type": "INT",
-                            },
-                            {
-                                "id": 455,
-                                "origin_id": 338,
-                                "origin_slot": 2,
-                                "target_id": 340,
-                                "target_slot": 2,
-                                "type": "BOOLEAN",
-                            },
-                            {
-                                "id": 456,
-                                "origin_id": 339,
-                                "origin_slot": 0,
-                                "target_id": 340,
-                                "target_slot": 1,
-                                "type": "INT",
-                            },
-                            {
-                                "id": 457,
-                                "origin_id": 337,
-                                "origin_slot": 1,
-                                "target_id": 340,
-                                "target_slot": 0,
-                                "type": "INT",
-                            },
-                            {
-                                "id": 458,
-                                "origin_id": 340,
+                                "id": 327,
+                                "origin_id": 76,
                                 "origin_slot": 0,
                                 "target_id": -20,
                                 "target_slot": 0,
+                                "type": "LATENT",
+                            },
+                            {
+                                "id": 328,
+                                "origin_id": 89,
+                                "origin_slot": 0,
+                                "target_id": -20,
+                                "target_slot": 1,
+                                "type": "LATENT",
+                            },
+                            {
+                                "id": 367,
+                                "origin_id": 157,
+                                "origin_slot": 0,
+                                "target_id": 89,
+                                "target_slot": 0,
+                                "type": "VAE",
+                            },
+                            {
+                                "id": 387,
+                                "origin_id": 75,
+                                "origin_slot": 0,
+                                "target_id": -20,
+                                "target_slot": 3,
+                                "type": "IMAGE",
+                            },
+                            {
+                                "id": 485,
+                                "origin_id": 91,
+                                "origin_slot": 0,
+                                "target_id": 93,
+                                "target_slot": 0,
                                 "type": "INT",
                             },
                             {
-                                "id": 558,
-                                "origin_id": 339,
+                                "id": 486,
+                                "origin_id": 93,
                                 "origin_slot": 0,
-                                "target_id": 337,
+                                "target_id": -20,
+                                "target_slot": 2,
+                                "type": "FLOAT",
+                            },
+                            {
+                                "id": 589,
+                                "origin_id": -10,
+                                "origin_slot": 3,
+                                "target_id": 75,
                                 "target_slot": 1,
                                 "type": "INT",
+                            },
+                            {
+                                "id": 596,
+                                "origin_id": 274,
+                                "origin_slot": 0,
+                                "target_id": 76,
+                                "target_slot": 0,
+                                "type": "INT",
+                            },
+                            {
+                                "id": 597,
+                                "origin_id": 273,
+                                "origin_slot": 0,
+                                "target_id": 76,
+                                "target_slot": 1,
+                                "type": "INT",
+                            },
+                            {
+                                "id": 598,
+                                "origin_id": 272,
+                                "origin_slot": 0,
+                                "target_id": 76,
+                                "target_slot": 2,
+                                "type": "INT",
+                            },
+                            {
+                                "id": 599,
+                                "origin_id": 272,
+                                "origin_slot": 0,
+                                "target_id": 89,
+                                "target_slot": 1,
+                                "type": "INT",
+                            },
+                            {
+                                "id": 600,
+                                "origin_id": 91,
+                                "origin_slot": 0,
+                                "target_id": 272,
+                                "target_slot": 1,
+                                "type": "INT",
+                            },
+                            {
+                                "id": 601,
+                                "origin_id": 95,
+                                "origin_slot": 0,
+                                "target_id": 272,
+                                "target_slot": 0,
+                                "type": "FLOAT",
+                            },
+                            {
+                                "id": 781,
+                                "origin_id": 87,
+                                "origin_slot": 0,
+                                "target_id": 75,
+                                "target_slot": 0,
+                                "type": "IMAGE",
+                            },
+                            {
+                                "id": 782,
+                                "origin_id": 87,
+                                "origin_slot": 1,
+                                "target_id": 274,
+                                "target_slot": 0,
+                                "type": "INT",
+                            },
+                            {
+                                "id": 783,
+                                "origin_id": 87,
+                                "origin_slot": 2,
+                                "target_id": 273,
+                                "target_slot": 0,
+                                "type": "INT",
+                            },
+                            {
+                                "id": 784,
+                                "origin_id": -10,
+                                "origin_slot": 2,
+                                "target_id": 87,
+                                "target_slot": 0,
+                                "type": "IMAGE",
                             },
                         ],
                         "extra": {},
                     },
                     {
-                        "id": "8dffd50e-776a-4551-9834-55bfd6053728",
+                        "id": "3757f676-cc28-4132-8dbe-c366a5dbeddc",
                         "version": 1,
                         "state": {
                             "lastGroupId": 0,
-                            "lastNodeId": 361,
-                            "lastLinkId": 728,
+                            "lastNodeId": 377,
+                            "lastLinkId": 788,
+                            "lastRerouteId": 0,
+                        },
+                        "revision": 0,
+                        "config": {},
+                        "name": "LTX Frame Calculation",
+                        "inputNode": {
+                            "id": -10,
+                            "bounding": [
+                                -924.5464317491604,
+                                4380.421533947579,
+                                155.11666870117188,
+                                88,
+                            ],
+                        },
+                        "outputNode": {
+                            "id": -20,
+                            "bounding": [
+                                -62.88650744207882,
+                                4390.421533947579,
+                                144.9000015258789,
+                                68,
+                            ],
+                        },
+                        "inputs": [
+                            {
+                                "id": "c6c3d8b6-43d9-42b3-b3a4-bf1185a3dd24",
+                                "name": "values.a",
+                                "type": "FLOAT,INT,BOOLEAN",
+                                "linkIds": [149],
+                                "localized_name": "values.a",
+                                "label": "duration " "(seconds)",
+                                "pos": [-793.4297630479886, 4404.421533947579],
+                            },
+                            {
+                                "id": "293760fb-3226-4b45-82ae-cadcf1f42af6",
+                                "name": "values.b",
+                                "type": "FLOAT,INT,BOOLEAN",
+                                "linkIds": [150],
+                                "localized_name": "values.b",
+                                "label": "fps",
+                                "shape": 7,
+                                "pos": [-793.4297630479886, 4424.421533947579],
+                            },
+                        ],
+                        "outputs": [
+                            {
+                                "id": "67860450-0b27-4c39-8fbb-3efc0f6d23f8",
+                                "name": "INT_1",
+                                "type": "INT",
+                                "linkIds": [487],
+                                "label": "frame_count " "(int)",
+                                "pos": [-38.88650744207882, 4414.421533947579],
+                            }
+                        ],
+                        "widgets": [],
+                        "nodes": [
+                            {
+                                "id": 258,
+                                "type": "ComfyMathExpression",
+                                "pos": [-736.5464317491604, 4339.185637909268],
+                                "size": [225, 164],
+                                "flags": {"collapsed": False},
+                                "order": 2,
+                                "mode": 0,
+                                "inputs": [
+                                    {
+                                        "label": "a",
+                                        "localized_name": "values.a",
+                                        "name": "values.a",
+                                        "type": "FLOAT,INT,BOOLEAN",
+                                        "link": 149,
+                                    },
+                                    {
+                                        "label": "b",
+                                        "localized_name": "values.b",
+                                        "name": "values.b",
+                                        "shape": 7,
+                                        "type": "FLOAT,INT,BOOLEAN",
+                                        "link": 150,
+                                    },
+                                    {
+                                        "label": "c",
+                                        "localized_name": "values.c",
+                                        "name": "values.c",
+                                        "shape": 7,
+                                        "type": "FLOAT,INT,BOOLEAN",
+                                        "link": None,
+                                    },
+                                ],
+                                "outputs": [
+                                    {
+                                        "localized_name": "FLOAT",
+                                        "name": "FLOAT",
+                                        "type": "FLOAT",
+                                        "links": [787],
+                                    },
+                                    {
+                                        "localized_name": "INT",
+                                        "name": "INT",
+                                        "type": "INT",
+                                        "links": [],
+                                    },
+                                    {
+                                        "localized_name": "BOOL",
+                                        "name": "BOOL",
+                                        "type": "BOOLEAN",
+                                        "links": None,
+                                    },
+                                ],
+                                "title": "frames",
+                                "properties": {
+                                    "Node name for S&R": "ComfyMathExpression"
+                                },
+                                "widgets_values": ["a " "* " "b"],
+                            },
+                            {
+                                "id": 259,
+                                "type": "ComfyMathExpression",
+                                "pos": [-735.320489809611, 4811.827517125361],
+                                "size": [299.0833435058594, 200],
+                                "flags": {},
+                                "order": 3,
+                                "mode": 0,
+                                "inputs": [
+                                    {
+                                        "label": "a",
+                                        "localized_name": "values.a",
+                                        "name": "values.a",
+                                        "type": "FLOAT,INT,BOOLEAN",
+                                        "link": 788,
+                                    },
+                                    {
+                                        "label": "b",
+                                        "localized_name": "values.b",
+                                        "name": "values.b",
+                                        "shape": 7,
+                                        "type": "FLOAT,INT,BOOLEAN",
+                                        "link": None,
+                                    },
+                                ],
+                                "outputs": [
+                                    {
+                                        "localized_name": "FLOAT",
+                                        "name": "FLOAT",
+                                        "type": "FLOAT",
+                                        "links": None,
+                                    },
+                                    {
+                                        "localized_name": "INT",
+                                        "name": "INT",
+                                        "type": "INT",
+                                        "links": [446, 450],
+                                    },
+                                    {
+                                        "localized_name": "BOOL",
+                                        "name": "BOOL",
+                                        "type": "BOOLEAN",
+                                        "links": None,
+                                    },
+                                ],
+                                "title": "correction",
+                                "properties": {
+                                    "Node name for S&R": "ComfyMathExpression"
+                                },
+                                "widgets_values": ["(a " "* " "8.0) " "+ " "1"],
+                            },
+                            {
+                                "id": 253,
+                                "type": "ComfyMathExpression",
+                                "pos": [-734.5939190615316, 5162.701707348348],
+                                "size": [400, 200],
+                                "flags": {},
+                                "order": 1,
+                                "mode": 0,
+                                "inputs": [
+                                    {
+                                        "label": "a",
+                                        "localized_name": "values.a",
+                                        "name": "values.a",
+                                        "type": "FLOAT,INT,BOOLEAN",
+                                        "link": 446,
+                                    },
+                                    {
+                                        "label": "b",
+                                        "localized_name": "values.b",
+                                        "name": "values.b",
+                                        "shape": 7,
+                                        "type": "FLOAT,INT,BOOLEAN",
+                                        "link": 449,
+                                    },
+                                    {
+                                        "label": "c",
+                                        "localized_name": "values.c",
+                                        "name": "values.c",
+                                        "shape": 7,
+                                        "type": "FLOAT,INT,BOOLEAN",
+                                        "link": None,
+                                    },
+                                ],
+                                "outputs": [
+                                    {
+                                        "localized_name": "FLOAT",
+                                        "name": "FLOAT",
+                                        "type": "FLOAT",
+                                        "links": None,
+                                    },
+                                    {
+                                        "localized_name": "INT",
+                                        "name": "INT",
+                                        "type": "INT",
+                                        "links": None,
+                                    },
+                                    {
+                                        "localized_name": "BOOL",
+                                        "name": "BOOL",
+                                        "type": "BOOLEAN",
+                                        "links": [447],
+                                    },
+                                ],
+                                "properties": {
+                                    "Node name for S&R": "ComfyMathExpression"
+                                },
+                                "widgets_values": ["a " "< " "b"],
+                            },
+                            {
+                                "id": 260,
+                                "type": "ComfySwitchNode",
+                                "pos": [-133.41913384410293, 5078.477882895587],
+                                "size": [270, 124],
+                                "flags": {},
+                                "order": 4,
+                                "mode": 0,
+                                "inputs": [
+                                    {
+                                        "localized_name": "on_false",
+                                        "name": "on_false",
+                                        "type": "INT",
+                                        "link": 450,
+                                    },
+                                    {
+                                        "localized_name": "on_true",
+                                        "name": "on_true",
+                                        "type": "INT",
+                                        "link": 448,
+                                    },
+                                    {
+                                        "localized_name": "switch",
+                                        "name": "switch",
+                                        "type": "BOOLEAN",
+                                        "widget": {"name": "switch"},
+                                        "link": 447,
+                                    },
+                                ],
+                                "outputs": [
+                                    {
+                                        "localized_name": "output",
+                                        "name": "output",
+                                        "type": "INT",
+                                        "links": [487],
+                                    }
+                                ],
+                                "properties": {"Node name for S&R": "ComfySwitchNode"},
+                                "widgets_values": [False],
+                            },
+                            {
+                                "id": 261,
+                                "type": "PrimitiveInt",
+                                "pos": [-1129.2617576242612, 5030.362625453301],
+                                "size": [270, 82],
+                                "flags": {},
+                                "order": 0,
+                                "mode": 0,
+                                "inputs": [],
+                                "outputs": [
+                                    {
+                                        "localized_name": "INT",
+                                        "name": "INT",
+                                        "type": "INT",
+                                        "links": [448, 449],
+                                    }
+                                ],
+                                "properties": {"Node name for S&R": "PrimitiveInt"},
+                                "widgets_values": [9, "fixed"],
+                            },
+                            {
+                                "id": 262,
+                                "type": "ComfyMathExpression",
+                                "pos": [-735.5348953595237, 4558.077612293833],
+                                "size": [299.0833435058594, 200],
+                                "flags": {},
+                                "order": 5,
+                                "mode": 0,
+                                "inputs": [
+                                    {
+                                        "label": "a",
+                                        "localized_name": "values.a",
+                                        "name": "values.a",
+                                        "type": "FLOAT,INT,BOOLEAN",
+                                        "link": 787,
+                                    },
+                                    {
+                                        "label": "b",
+                                        "localized_name": "values.b",
+                                        "name": "values.b",
+                                        "shape": 7,
+                                        "type": "FLOAT,INT,BOOLEAN",
+                                        "link": None,
+                                    },
+                                ],
+                                "outputs": [
+                                    {
+                                        "localized_name": "FLOAT",
+                                        "name": "FLOAT",
+                                        "type": "FLOAT",
+                                        "links": [788],
+                                    },
+                                    {
+                                        "localized_name": "INT",
+                                        "name": "INT",
+                                        "type": "INT",
+                                        "links": [],
+                                    },
+                                    {
+                                        "localized_name": "BOOL",
+                                        "name": "BOOL",
+                                        "type": "BOOLEAN",
+                                        "links": None,
+                                    },
+                                ],
+                                "title": "correction",
+                                "properties": {
+                                    "Node name for S&R": "ComfyMathExpression"
+                                },
+                                "widgets_values": ["(a " "* " "0.125) " "+ " "1"],
+                            },
+                        ],
+                        "groups": [],
+                        "links": [
+                            {
+                                "id": 149,
+                                "origin_id": -10,
+                                "origin_slot": 0,
+                                "target_id": 258,
+                                "target_slot": 0,
+                                "type": "FLOAT",
+                            },
+                            {
+                                "id": 150,
+                                "origin_id": -10,
+                                "origin_slot": 1,
+                                "target_id": 258,
+                                "target_slot": 1,
+                                "type": "INT",
+                            },
+                            {
+                                "id": 446,
+                                "origin_id": 259,
+                                "origin_slot": 1,
+                                "target_id": 253,
+                                "target_slot": 0,
+                                "type": "INT",
+                            },
+                            {
+                                "id": 447,
+                                "origin_id": 253,
+                                "origin_slot": 2,
+                                "target_id": 260,
+                                "target_slot": 2,
+                                "type": "BOOLEAN",
+                            },
+                            {
+                                "id": 448,
+                                "origin_id": 261,
+                                "origin_slot": 0,
+                                "target_id": 260,
+                                "target_slot": 1,
+                                "type": "INT",
+                            },
+                            {
+                                "id": 449,
+                                "origin_id": 261,
+                                "origin_slot": 0,
+                                "target_id": 253,
+                                "target_slot": 1,
+                                "type": "INT",
+                            },
+                            {
+                                "id": 450,
+                                "origin_id": 259,
+                                "origin_slot": 1,
+                                "target_id": 260,
+                                "target_slot": 0,
+                                "type": "INT",
+                            },
+                            {
+                                "id": 487,
+                                "origin_id": 260,
+                                "origin_slot": 0,
+                                "target_id": -20,
+                                "target_slot": 0,
+                                "type": "INT",
+                            },
+                            {
+                                "id": 787,
+                                "origin_id": 258,
+                                "origin_slot": 0,
+                                "target_id": 262,
+                                "target_slot": 0,
+                                "type": "FLOAT",
+                            },
+                            {
+                                "id": 788,
+                                "origin_id": 262,
+                                "origin_slot": 0,
+                                "target_id": 259,
+                                "target_slot": 0,
+                                "type": "FLOAT",
+                            },
+                        ],
+                        "extra": {},
+                    },
+                    {
+                        "id": "bbf804fa-9048-4f18-a839-fc08700e415b",
+                        "version": 1,
+                        "state": {
+                            "lastGroupId": 0,
+                            "lastNodeId": 377,
+                            "lastLinkId": 788,
                             "lastRerouteId": 0,
                         },
                         "revision": 0,
@@ -3253,7 +3693,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                         "widgets": [],
                         "nodes": [
                             {
-                                "id": 341,
+                                "id": 246,
                                 "type": "ComfyMathExpression",
                                 "pos": [222.53331480679805, 3134.0672485306923],
                                 "size": [225, 200],
@@ -3282,13 +3722,13 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                         "localized_name": "FLOAT",
                                         "name": "FLOAT",
                                         "type": "FLOAT",
-                                        "links": None,
+                                        "links": [786],
                                     },
                                     {
                                         "localized_name": "INT",
                                         "name": "INT",
                                         "type": "INT",
-                                        "links": [436],
+                                        "links": [],
                                     },
                                     {
                                         "localized_name": "BOOL",
@@ -3303,7 +3743,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                 "widgets_values": ["a " "* " "0.015625"],
                             },
                             {
-                                "id": 342,
+                                "id": 263,
                                 "type": "ComfyMathExpression",
                                 "pos": [222.82266112104568, 3388.9320133422284],
                                 "size": [400, 200],
@@ -3316,7 +3756,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                         "localized_name": "values.a",
                                         "name": "values.a",
                                         "type": "FLOAT,INT,BOOLEAN",
-                                        "link": 436,
+                                        "link": 786,
                                     },
                                     {
                                         "label": "b",
@@ -3361,7 +3801,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                 "widgets_values": ["a " "* " "b"],
                             },
                             {
-                                "id": 343,
+                                "id": 264,
                                 "type": "SimpleCalculatorKJ",
                                 "pos": [221.59499630404588, 3737.346195483185],
                                 "size": [400, 200],
@@ -3420,7 +3860,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                 "widgets_values": ["a " "< " "b"],
                             },
                             {
-                                "id": 344,
+                                "id": 265,
                                 "type": "PrimitiveInt",
                                 "pos": [-141.80467535468387, 3594.3422427162477],
                                 "size": [270, 82],
@@ -3440,7 +3880,7 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                                 "widgets_values": [64, "fixed"],
                             },
                             {
-                                "id": 345,
+                                "id": 266,
                                 "type": "ComfySwitchNode",
                                 "pos": [705.6813538182663, 3566.6388942685676],
                                 "size": [270, 124],
@@ -3483,64 +3923,56 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                         "groups": [],
                         "links": [
                             {
-                                "id": 436,
-                                "origin_id": 341,
-                                "origin_slot": 1,
-                                "target_id": 342,
-                                "target_slot": 0,
-                                "type": "INT",
-                            },
-                            {
                                 "id": 435,
                                 "origin_id": -10,
                                 "origin_slot": 0,
-                                "target_id": 341,
+                                "target_id": 246,
                                 "target_slot": 0,
                                 "type": "INT",
                             },
                             {
                                 "id": 452,
-                                "origin_id": 342,
+                                "origin_id": 263,
                                 "origin_slot": 1,
-                                "target_id": 343,
+                                "target_id": 264,
                                 "target_slot": 0,
                                 "type": "INT",
                             },
                             {
                                 "id": 453,
-                                "origin_id": 344,
+                                "origin_id": 265,
                                 "origin_slot": 0,
-                                "target_id": 343,
+                                "target_id": 264,
                                 "target_slot": 1,
                                 "type": "INT",
                             },
                             {
                                 "id": 455,
-                                "origin_id": 343,
+                                "origin_id": 264,
                                 "origin_slot": 2,
-                                "target_id": 345,
+                                "target_id": 266,
                                 "target_slot": 2,
                                 "type": "BOOLEAN",
                             },
                             {
                                 "id": 456,
-                                "origin_id": 344,
+                                "origin_id": 265,
                                 "origin_slot": 0,
-                                "target_id": 345,
+                                "target_id": 266,
                                 "target_slot": 1,
                                 "type": "INT",
                             },
                             {
                                 "id": 457,
-                                "origin_id": 342,
+                                "origin_id": 263,
                                 "origin_slot": 1,
-                                "target_id": 345,
+                                "target_id": 266,
                                 "target_slot": 0,
                                 "type": "INT",
                             },
                             {
                                 "id": 458,
-                                "origin_id": 345,
+                                "origin_id": 266,
                                 "origin_slot": 0,
                                 "target_id": -20,
                                 "target_slot": 0,
@@ -3548,11 +3980,378 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
                             },
                             {
                                 "id": 558,
-                                "origin_id": 344,
+                                "origin_id": 265,
                                 "origin_slot": 0,
-                                "target_id": 342,
+                                "target_id": 263,
                                 "target_slot": 1,
                                 "type": "INT",
+                            },
+                            {
+                                "id": 786,
+                                "origin_id": 246,
+                                "origin_slot": 0,
+                                "target_id": 263,
+                                "target_slot": 0,
+                                "type": "FLOAT",
+                            },
+                        ],
+                        "extra": {},
+                    },
+                    {
+                        "id": "60bae489-a352-4993-b7e4-70562bc926d7",
+                        "version": 1,
+                        "state": {
+                            "lastGroupId": 0,
+                            "lastNodeId": 377,
+                            "lastLinkId": 788,
+                            "lastRerouteId": 0,
+                        },
+                        "revision": 0,
+                        "config": {},
+                        "name": "LTX Dimension Validation",
+                        "inputNode": {
+                            "id": -10,
+                            "bounding": [
+                                34.533314806798046,
+                                3185.691001983322,
+                                128,
+                                68,
+                            ],
+                        },
+                        "outputNode": {
+                            "id": -20,
+                            "bounding": [
+                                933.438531359792,
+                                3185.691001983322,
+                                134.4000015258789,
+                                68,
+                            ],
+                        },
+                        "inputs": [
+                            {
+                                "id": "2de8ba3e-fb3f-4eb1-8ff1-c1c12ac56da2",
+                                "name": "values.a",
+                                "type": "FLOAT,INT,BOOLEAN",
+                                "linkIds": [435],
+                                "localized_name": "values.a",
+                                "label": "dimensity",
+                                "pos": [138.53331480679805, 3209.691001983322],
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "id": "c52f005c-2824-4a94-8319-fd4d8fba3f9d",
+                                "name": "INT",
+                                "type": "INT",
+                                "linkIds": [458],
+                                "localized_name": "INT",
+                                "label": "validated_value",
+                                "pos": [957.438531359792, 3209.691001983322],
+                            }
+                        ],
+                        "widgets": [],
+                        "nodes": [
+                            {
+                                "id": 267,
+                                "type": "ComfyMathExpression",
+                                "pos": [222.53331480679805, 3134.0672485306923],
+                                "size": [225, 200],
+                                "flags": {},
+                                "order": 1,
+                                "mode": 0,
+                                "inputs": [
+                                    {
+                                        "label": "a",
+                                        "localized_name": "values.a",
+                                        "name": "values.a",
+                                        "type": "FLOAT,INT,BOOLEAN",
+                                        "link": 435,
+                                    },
+                                    {
+                                        "label": "b",
+                                        "localized_name": "values.b",
+                                        "name": "values.b",
+                                        "shape": 7,
+                                        "type": "FLOAT,INT,BOOLEAN",
+                                        "link": None,
+                                    },
+                                ],
+                                "outputs": [
+                                    {
+                                        "localized_name": "FLOAT",
+                                        "name": "FLOAT",
+                                        "type": "FLOAT",
+                                        "links": [785],
+                                    },
+                                    {
+                                        "localized_name": "INT",
+                                        "name": "INT",
+                                        "type": "INT",
+                                        "links": [],
+                                    },
+                                    {
+                                        "localized_name": "BOOL",
+                                        "name": "BOOL",
+                                        "type": "BOOLEAN",
+                                        "links": None,
+                                    },
+                                ],
+                                "properties": {
+                                    "Node name for S&R": "ComfyMathExpression"
+                                },
+                                "widgets_values": ["a " "* " "0.015625"],
+                            },
+                            {
+                                "id": 268,
+                                "type": "ComfyMathExpression",
+                                "pos": [222.82266112104568, 3388.9320133422284],
+                                "size": [400, 200],
+                                "flags": {},
+                                "order": 2,
+                                "mode": 0,
+                                "inputs": [
+                                    {
+                                        "label": "a",
+                                        "localized_name": "values.a",
+                                        "name": "values.a",
+                                        "type": "FLOAT,INT,BOOLEAN",
+                                        "link": 785,
+                                    },
+                                    {
+                                        "label": "b",
+                                        "localized_name": "values.b",
+                                        "name": "values.b",
+                                        "shape": 7,
+                                        "type": "FLOAT,INT,BOOLEAN",
+                                        "link": 558,
+                                    },
+                                    {
+                                        "label": "c",
+                                        "localized_name": "values.c",
+                                        "name": "values.c",
+                                        "shape": 7,
+                                        "type": "FLOAT,INT,BOOLEAN",
+                                        "link": None,
+                                    },
+                                ],
+                                "outputs": [
+                                    {
+                                        "localized_name": "FLOAT",
+                                        "name": "FLOAT",
+                                        "type": "FLOAT",
+                                        "links": None,
+                                    },
+                                    {
+                                        "localized_name": "INT",
+                                        "name": "INT",
+                                        "type": "INT",
+                                        "links": [452, 457],
+                                    },
+                                    {
+                                        "localized_name": "BOOL",
+                                        "name": "BOOL",
+                                        "type": "BOOLEAN",
+                                        "links": None,
+                                    },
+                                ],
+                                "properties": {
+                                    "Node name for S&R": "ComfyMathExpression"
+                                },
+                                "widgets_values": ["a " "* " "b"],
+                            },
+                            {
+                                "id": 269,
+                                "type": "SimpleCalculatorKJ",
+                                "pos": [221.59499630404588, 3737.346195483185],
+                                "size": [400, 200],
+                                "flags": {},
+                                "order": 3,
+                                "mode": 0,
+                                "inputs": [
+                                    {
+                                        "label": "a",
+                                        "localized_name": "variables.a",
+                                        "name": "variables.a",
+                                        "shape": 7,
+                                        "type": "INT,FLOAT,BOOLEAN",
+                                        "link": 452,
+                                    },
+                                    {
+                                        "label": "b",
+                                        "localized_name": "variables.b",
+                                        "name": "variables.b",
+                                        "shape": 7,
+                                        "type": "INT,FLOAT,BOOLEAN",
+                                        "link": 453,
+                                    },
+                                    {
+                                        "label": "c",
+                                        "localized_name": "variables.c",
+                                        "name": "variables.c",
+                                        "shape": 7,
+                                        "type": "INT,FLOAT,BOOLEAN",
+                                        "link": None,
+                                    },
+                                ],
+                                "outputs": [
+                                    {
+                                        "localized_name": "FLOAT",
+                                        "name": "FLOAT",
+                                        "type": "FLOAT",
+                                        "links": None,
+                                    },
+                                    {
+                                        "localized_name": "INT",
+                                        "name": "INT",
+                                        "type": "INT",
+                                        "links": [],
+                                    },
+                                    {
+                                        "localized_name": "BOOLEAN",
+                                        "name": "BOOLEAN",
+                                        "type": "BOOLEAN",
+                                        "links": [455],
+                                    },
+                                ],
+                                "properties": {
+                                    "Node name for S&R": "SimpleCalculatorKJ"
+                                },
+                                "widgets_values": ["a " "< " "b"],
+                            },
+                            {
+                                "id": 270,
+                                "type": "PrimitiveInt",
+                                "pos": [-141.80467535468387, 3594.3422427162477],
+                                "size": [270, 82],
+                                "flags": {},
+                                "order": 0,
+                                "mode": 0,
+                                "inputs": [],
+                                "outputs": [
+                                    {
+                                        "localized_name": "INT",
+                                        "name": "INT",
+                                        "type": "INT",
+                                        "links": [453, 456, 558],
+                                    }
+                                ],
+                                "properties": {"Node name for S&R": "PrimitiveInt"},
+                                "widgets_values": [64, "fixed"],
+                            },
+                            {
+                                "id": 271,
+                                "type": "ComfySwitchNode",
+                                "pos": [705.6813538182663, 3566.6388942685676],
+                                "size": [270, 124],
+                                "flags": {},
+                                "order": 4,
+                                "mode": 0,
+                                "inputs": [
+                                    {
+                                        "localized_name": "on_false",
+                                        "name": "on_false",
+                                        "type": "INT",
+                                        "link": 457,
+                                    },
+                                    {
+                                        "localized_name": "on_true",
+                                        "name": "on_true",
+                                        "type": "INT",
+                                        "link": 456,
+                                    },
+                                    {
+                                        "localized_name": "switch",
+                                        "name": "switch",
+                                        "type": "BOOLEAN",
+                                        "widget": {"name": "switch"},
+                                        "link": 455,
+                                    },
+                                ],
+                                "outputs": [
+                                    {
+                                        "localized_name": "output",
+                                        "name": "output",
+                                        "type": "INT",
+                                        "links": [458],
+                                    }
+                                ],
+                                "properties": {"Node name for S&R": "ComfySwitchNode"},
+                                "widgets_values": [False],
+                            },
+                        ],
+                        "groups": [],
+                        "links": [
+                            {
+                                "id": 435,
+                                "origin_id": -10,
+                                "origin_slot": 0,
+                                "target_id": 267,
+                                "target_slot": 0,
+                                "type": "INT",
+                            },
+                            {
+                                "id": 452,
+                                "origin_id": 268,
+                                "origin_slot": 1,
+                                "target_id": 269,
+                                "target_slot": 0,
+                                "type": "INT",
+                            },
+                            {
+                                "id": 453,
+                                "origin_id": 270,
+                                "origin_slot": 0,
+                                "target_id": 269,
+                                "target_slot": 1,
+                                "type": "INT",
+                            },
+                            {
+                                "id": 455,
+                                "origin_id": 269,
+                                "origin_slot": 2,
+                                "target_id": 271,
+                                "target_slot": 2,
+                                "type": "BOOLEAN",
+                            },
+                            {
+                                "id": 456,
+                                "origin_id": 270,
+                                "origin_slot": 0,
+                                "target_id": 271,
+                                "target_slot": 1,
+                                "type": "INT",
+                            },
+                            {
+                                "id": 457,
+                                "origin_id": 268,
+                                "origin_slot": 1,
+                                "target_id": 271,
+                                "target_slot": 0,
+                                "type": "INT",
+                            },
+                            {
+                                "id": 458,
+                                "origin_id": 271,
+                                "origin_slot": 0,
+                                "target_id": -20,
+                                "target_slot": 0,
+                                "type": "INT",
+                            },
+                            {
+                                "id": 558,
+                                "origin_id": 270,
+                                "origin_slot": 0,
+                                "target_id": 268,
+                                "target_slot": 1,
+                                "type": "INT",
+                            },
+                            {
+                                "id": 785,
+                                "origin_id": 267,
+                                "origin_slot": 0,
+                                "target_id": 268,
+                                "target_slot": 0,
+                                "type": "FLOAT",
                             },
                         ],
                         "extra": {},
@@ -3562,10 +4361,10 @@ def build_extra_pnginfo() -> dict[str, Any] | None:
             "config": {},
             "extra": {
                 "ds": {
-                    "scale": 0.7891678469353185,
-                    "offset": [-778.7328590346762, -1298.63228175975],
+                    "scale": 0.7891678469353242,
+                    "offset": [-1546.0702222316631, -742.9079218591298],
                 },
-                "frontendVersion": "1.46.12",
+                "frontendVersion": "1.46.13",
                 "VHS_latentpreview": False,
                 "VHS_latentpreviewrate": 0,
                 "VHS_MetadataImage": True,
@@ -3579,28 +4378,22 @@ workflow = build_workflow()
 prompt = json.loads(json.dumps(workflow))
 extra_pnginfo = build_extra_pnginfo()
 
-def validate_frame_count(duration: float, fps: int) -> int:
-    frame_count = duration * fps
-    count_int = max(1, int(frame_count))
-    ceil_steps = (count_int + 6) // 8
-    return max(9, (ceil_steps * 8) + 1)
-
 def generate(
     prompt_text: str,
     image_path: str,
     duration: float,
     fps: int,
-    input_scale: float,
+    image_compression: int,
     unload_models: bool | None = None,
 ):
     bootstrap_comfyui_runtime()
     add_extra_model_paths()
     import_custom_nodes()
 
+    # Node imports
     from nodes import (
         CLIPTextEncode,
         ConditioningZeroOut,
-        ImageScaleBy,
         LoadImage,
         NODE_CLASS_MAPPINGS,
         VAEDecode,
@@ -3611,27 +4404,22 @@ def generate(
     try:
         with torch.inference_mode():
             loadimage = LoadImage()
-            loadimage_288 = loadimage.load_image(image=image_path)
-            intconstant = NODE_CLASS_MAPPINGS["INTConstant"]()
-            intconstant_291 = intconstant.get_value(value=fps)
-            intconstant_302 = intconstant.get_value(value=validate_frame_count(duration, fps))
-            floatconstant = NODE_CLASS_MAPPINGS["FloatConstant"]()
-            floatconstant_359 = floatconstant.get_value(value=float(1.0/input_scale))
+            loadimage_364 = loadimage.load_image(image=image_path)
             vaeloaderkj = NODE_CLASS_MAPPINGS["VAELoaderKJ"]()
             vaeloaderkj_286_218 = vaeloaderkj.load_vae(
-                vae_name="LTX23_video_vae_bf16.safetensors",
+                vae_name="ltx-2.3-22b-distilled_video_vae.safetensors",
                 device="main_device",
                 weight_dtype="bf16",
             )
             vaeloaderkj_286_219 = vaeloaderkj.load_vae(
-                vae_name="LTX23_audio_vae_bf16.safetensors",
+                vae_name="ltx-2.3-22b-distilled_audio_vae.safetensors",
                 device="main_device",
                 weight_dtype="bf16",
             )
             dualcliploadergguf = NODE_CLASS_MAPPINGS["DualCLIPLoaderGGUF"]()
             dualcliploadergguf_286_239 = dualcliploadergguf.load_clip(
                 clip_name1="gemma-3-12b-it-qat-UD-Q2_K_XL.gguf",
-                clip_name2="ltx-2.3_text_projection_bf16.safetensors",
+                clip_name2="ltx-2.3-22b-distilled_embeddings_connectors.safetensors",
                 type="ltxv",
             )
             unetloadergguf = NODE_CLASS_MAPPINGS["UnetLoaderGGUF"]()
@@ -3640,11 +4428,17 @@ def generate(
             )
             cliptextencode = CLIPTextEncode()
             cliptextencode_283_86 = cliptextencode.encode(
-                text=prompt_text, clip=get_value_at_index(dualcliploadergguf_286_239, 0)
+                text=prompt_text,
+                clip=get_value_at_index(dualcliploadergguf_286_239, 0),
             )
+            intconstant = NODE_CLASS_MAPPINGS["INTConstant"]()
+            intconstant_365_91 = intconstant.get_value(value=fps)
+            primitivefloat = NODE_CLASS_MAPPINGS["PrimitiveFloat"]()
+            primitivefloat_365_95 = primitivefloat.EXECUTE_NORMALIZED(value=duration)
             primitiveint = NODE_CLASS_MAPPINGS["PrimitiveInt"]()
-            primitiveint_346_339 = primitiveint.EXECUTE_NORMALIZED(value=64)
-            primitiveint_347_344 = primitiveint.EXECUTE_NORMALIZED(value=64)
+            primitiveint_365_272_261 = primitiveint.EXECUTE_NORMALIZED(value=9)
+            primitiveint_365_273_265 = primitiveint.EXECUTE_NORMALIZED(value=64)
+            primitiveint_365_274_270 = primitiveint.EXECUTE_NORMALIZED(value=64)
             randomnoise = NODE_CLASS_MAPPINGS["RandomNoise"]()
             node_284_85_noise_seed = prompt["284:85"]["inputs"]["noise_seed"] = (
                 random.randint(1, 2**64)
@@ -3660,11 +4454,9 @@ def generate(
             conditioningzeroout = ConditioningZeroOut()
             ltxvconditioning = NODE_CLASS_MAPPINGS["LTXVConditioning"]()
             cfgguider = NODE_CLASS_MAPPINGS["CFGGuider"]()
-            imagescaleby = ImageScaleBy()
-            getimagesize = NODE_CLASS_MAPPINGS["GetImageSize"]()
-            comfyswitchnode = NODE_CLASS_MAPPINGS["ComfySwitchNode"]()
-            imageresizekjv2 = NODE_CLASS_MAPPINGS["ImageResizeKJv2"]()
+            getimagesizeandcount = NODE_CLASS_MAPPINGS["GetImageSizeAndCount"]()
             ltxvpreprocess = NODE_CLASS_MAPPINGS["LTXVPreprocess"]()
+            comfyswitchnode = NODE_CLASS_MAPPINGS["ComfySwitchNode"]()
             emptyltxvlatentvideo = NODE_CLASS_MAPPINGS["EmptyLTXVLatentVideo"]()
             ltxvimgtovideoinplace = NODE_CLASS_MAPPINGS["LTXVImgToVideoInplace"]()
             ltxvemptylatentaudio = NODE_CLASS_MAPPINGS["LTXVEmptyLatentAudio"]()
@@ -3673,18 +4465,17 @@ def generate(
             samplercustomadvanced = NODE_CLASS_MAPPINGS["SamplerCustomAdvanced"]()
             ltxvseparateavlatent = NODE_CLASS_MAPPINGS["LTXVSeparateAVLatent"]()
             vaedecode = VAEDecode()
-            rtxvideosuperresolution = NODE_CLASS_MAPPINGS["RTXVideoSuperResolution"]()
             ltxvaudiovaedecode = NODE_CLASS_MAPPINGS["LTXVAudioVAEDecode"]()
             vhs_videocombine = NODE_CLASS_MAPPINGS["VHS_VideoCombine"]()
             for q in range(1):
-                comfynumberconvert_295 = comfynumberconvert.EXECUTE_NORMALIZED(
-                    value=get_value_at_index(intconstant_291, 0)
+                comfynumberconvert_365_93 = comfynumberconvert.EXECUTE_NORMALIZED(
+                    value=get_value_at_index(intconstant_365_91, 0)
                 )
                 conditioningzeroout_283_84 = conditioningzeroout.zero_out(
                     conditioning=get_value_at_index(cliptextencode_283_86, 0)
                 )
                 ltxvconditioning_283_90 = ltxvconditioning.EXECUTE_NORMALIZED(
-                    frame_rate=get_value_at_index(comfynumberconvert_295, 0),
+                    frame_rate=get_value_at_index(comfynumberconvert_365_93, 0),
                     positive=get_value_at_index(cliptextencode_283_86, 0),
                     negative=get_value_at_index(conditioningzeroout_283_84, 0),
                 )
@@ -3694,44 +4485,32 @@ def generate(
                     positive=get_value_at_index(ltxvconditioning_283_90, 0),
                     negative=get_value_at_index(ltxvconditioning_283_90, 1),
                 )
-                imagescaleby_357 = imagescaleby.upscale(
-                    upscale_method="nearest-exact",
-                    scale_by=get_value_at_index(floatconstant_359, 0),
-                    image=get_value_at_index(loadimage_288, 0),
+                getimagesizeandcount_365_87 = getimagesizeandcount.getsize(
+                    image=get_value_at_index(loadimage_364, 0)
                 )
-                getimagesize_348 = getimagesize.EXECUTE_NORMALIZED(
-                    image=get_value_at_index(imagescaleby_357, 0),
-                    unique_id=2010944877890533845,
+                ltxvpreprocess_365_75 = ltxvpreprocess.EXECUTE_NORMALIZED(
+                    img_compression=image_compression,
+                    image=get_value_at_index(getimagesizeandcount_365_87, 0),
                 )
-                comfyswitchnode_346_340 = comfyswitchnode.EXECUTE_NORMALIZED(
-                    switch=["346:338", 2],
-                    on_false=["346:337", 1],
-                    on_true=get_value_at_index(primitiveint_346_339, 0),
+                comfyswitchnode_365_274_271 = comfyswitchnode.EXECUTE_NORMALIZED(
+                    switch=["365:274:269", 2],
+                    on_false=["365:274:268", 1],
+                    on_true=get_value_at_index(primitiveint_365_274_270, 0),
                 )
-                comfyswitchnode_347_345 = comfyswitchnode.EXECUTE_NORMALIZED(
-                    switch=["347:343", 2],
-                    on_false=["347:342", 1],
-                    on_true=get_value_at_index(primitiveint_347_344, 0),
+                comfyswitchnode_365_273_266 = comfyswitchnode.EXECUTE_NORMALIZED(
+                    switch=["365:273:264", 2],
+                    on_false=["365:273:263", 1],
+                    on_true=get_value_at_index(primitiveint_365_273_265, 0),
                 )
-                imageresizekjv2_352 = imageresizekjv2.resize(
-                    width=get_value_at_index(comfyswitchnode_346_340, 0),
-                    height=get_value_at_index(comfyswitchnode_347_345, 0),
-                    upscale_method="bicubic",
-                    keep_proportion="crop",
-                    pad_color="0, 0, 0",
-                    crop_position="center",
-                    divisible_by=2,
-                    device="cpu",
-                    image=get_value_at_index(imagescaleby_357, 0),
-                    unique_id=16273955597045845525,
+                comfyswitchnode_365_272_260 = comfyswitchnode.EXECUTE_NORMALIZED(
+                    switch=["365:272:253", 2],
+                    on_false=["365:272:259", 1],
+                    on_true=get_value_at_index(primitiveint_365_272_261, 0),
                 )
-                ltxvpreprocess_297 = ltxvpreprocess.EXECUTE_NORMALIZED(
-                    img_compression=18, image=get_value_at_index(imageresizekjv2_352, 0)
-                )
-                emptyltxvlatentvideo_293 = emptyltxvlatentvideo.EXECUTE_NORMALIZED(
-                    width=get_value_at_index(imageresizekjv2_352, 1),
-                    height=get_value_at_index(imageresizekjv2_352, 2),
-                    length=get_value_at_index(intconstant_302, 0),
+                emptyltxvlatentvideo_365_76 = emptyltxvlatentvideo.EXECUTE_NORMALIZED(
+                    width=get_value_at_index(comfyswitchnode_365_274_271, 0),
+                    height=get_value_at_index(comfyswitchnode_365_273_266, 0),
+                    length=get_value_at_index(comfyswitchnode_365_272_260, 0),
                     batch_size=1,
                 )
                 ltxvimgtovideoinplace_284_145 = (
@@ -3739,19 +4518,19 @@ def generate(
                         strength=1,
                         bypass=False,
                         vae=get_value_at_index(vaeloaderkj_286_218, 0),
-                        image=get_value_at_index(ltxvpreprocess_297, 0),
-                        latent=get_value_at_index(emptyltxvlatentvideo_293, 0),
+                        image=get_value_at_index(ltxvpreprocess_365_75, 0),
+                        latent=get_value_at_index(emptyltxvlatentvideo_365_76, 0),
                     )
                 )
-                ltxvemptylatentaudio_294 = ltxvemptylatentaudio.EXECUTE_NORMALIZED(
-                    frames_number=get_value_at_index(intconstant_302, 0),
-                    frame_rate=get_value_at_index(comfynumberconvert_295, 1),
+                ltxvemptylatentaudio_365_89 = ltxvemptylatentaudio.EXECUTE_NORMALIZED(
+                    frames_number=get_value_at_index(comfyswitchnode_365_272_260, 0),
+                    frame_rate=get_value_at_index(comfynumberconvert_365_93, 1),
                     batch_size=1,
                     audio_vae=get_value_at_index(vaeloaderkj_286_219, 0),
                 )
                 ltxvconcatavlatent_284_144 = ltxvconcatavlatent.EXECUTE_NORMALIZED(
                     video_latent=get_value_at_index(ltxvimgtovideoinplace_284_145, 0),
-                    audio_latent=get_value_at_index(ltxvemptylatentaudio_294, 0),
+                    audio_latent=get_value_at_index(ltxvemptylatentaudio_365_89, 0),
                 )
                 ltxvscheduler_284_255 = ltxvscheduler.EXECUTE_NORMALIZED(
                     steps=8,
@@ -3775,32 +4554,24 @@ def generate(
                     samples=get_value_at_index(ltxvseparateavlatent_284_78, 0),
                     vae=get_value_at_index(vaeloaderkj_286_218, 0),
                 )
-                rtxvideosuperresolution_361 = (
-                    rtxvideosuperresolution.EXECUTE_NORMALIZED(
-                        resize_type="scale by multiplier",
-                        **{"resize_type.scale": ["360", 0]},
-                        quality="ULTRA",
-                        images=get_value_at_index(vaedecode_289_275, 0),
-                    )
-                )
                 ltxvaudiovaedecode_289_92 = ltxvaudiovaedecode.EXECUTE_NORMALIZED(
                     samples=get_value_at_index(ltxvseparateavlatent_284_78, 1),
                     audio_vae=get_value_at_index(vaeloaderkj_286_219, 0),
                 )
                 vhs_videocombine_287 = vhs_videocombine.combine_video(
-                    frame_rate=get_value_at_index(comfynumberconvert_295, 0),
+                    frame_rate=get_value_at_index(comfynumberconvert_365_93, 0),
                     loop_count=0,
                     filename_prefix="ltx23",
                     format="video/h264-mp4",
                     pix_fmt="yuv420p",
                     crf=19,
-                    save_metadata=True,
+                    save_metadata=False,
                     trim_to_audio=False,
                     pingpong=False,
                     save_output=True,
-                    images=get_value_at_index(rtxvideosuperresolution_361, 0),
+                    images=get_value_at_index(vaedecode_289_275, 0),
                     audio=get_value_at_index(ltxvaudiovaedecode_289_92, 0),
-                    unique_id=10930916802178507337,
+                    unique_id=9337684931871639701,
                     prompt=prompt,
                     extra_pnginfo=extra_pnginfo,
                 )

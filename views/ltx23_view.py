@@ -4,7 +4,7 @@ import tempfile
 from PIL import Image as PILImage
 
 
-def generate_image(prompt_text, img1, duration, fps, input_scale):
+def generate_image(prompt_text, img1, duration, fps, image_compression):
     img1_path = None
 
     if img1 is not None:
@@ -17,32 +17,24 @@ def generate_image(prompt_text, img1, duration, fps, input_scale):
         image_path=img1_path,
         duration=float(duration),
         fps=int(fps),
-        input_scale=float(input_scale)
+        image_compression=int(image_compression)
     )
 
     return result
 
-
 def toggle_generation():
     return gr.update(visible=False), gr.update(visible=True)
 
-
 def stop_generation():
     return gr.update(visible=True), gr.update(visible=False)
-
-input_scale_options = [1.0, 2.0, 4.0, 8.0]
 
 def create_ltx23_tab():
     with gr.Tab("LTX23"):
         with gr.Row():
             prompt = gr.Textbox(label="Prompt", value="helloworld", scale=4, lines=1)
             duration = gr.Number(label="Duration (seconds)", value=5)
-            fps = gr.Number(label="FPS", value=25, precision=0)
-            input_scale = gr.Dropdown(
-                choices=input_scale_options, 
-                label="Input Scale", 
-                value=1.0
-            )
+            fps = gr.Number(label="FPS", value=9, precision=0)
+            image_compression = gr.Number(label="Image Compression", value=18, precision=0, minimum=0, maximum=100)
             generate_btn = gr.Button("Generate", variant="primary", scale=1)
             stop_btn = gr.Button("Stop", variant="stop", scale=1, visible=False)
 
@@ -58,7 +50,7 @@ def create_ltx23_tab():
             outputs=[generate_btn, stop_btn],
         ).then(
             fn=generate_image,
-            inputs=[prompt, input_image, duration, fps, input_scale],
+            inputs=[prompt, input_image, duration, fps, image_compression],
             outputs=[output_video],
         ).then(
             fn=stop_generation,
