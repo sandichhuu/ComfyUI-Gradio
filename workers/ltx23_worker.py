@@ -3590,6 +3590,7 @@ def generate(
     image_path: str,
     duration: float,
     fps: int,
+    input_scale: float,
     unload_models: bool | None = None,
 ):
     bootstrap_comfyui_runtime()
@@ -3615,7 +3616,7 @@ def generate(
             intconstant_291 = intconstant.get_value(value=fps)
             intconstant_302 = intconstant.get_value(value=validate_frame_count(duration, fps))
             floatconstant = NODE_CLASS_MAPPINGS["FloatConstant"]()
-            floatconstant_359 = floatconstant.get_value(value=0.25)
+            floatconstant_359 = floatconstant.get_value(value=float(1.0/input_scale))
             vaeloaderkj = NODE_CLASS_MAPPINGS["VAELoaderKJ"]()
             vaeloaderkj_286_218 = vaeloaderkj.load_vae(
                 vae_name="LTX23_video_vae_bf16.safetensors",
